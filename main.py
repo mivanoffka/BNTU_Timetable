@@ -135,7 +135,8 @@ async def process_week_command(message: types.Message):
             await bot.send_message(chat_id, text=reply_text, parse_mode="Markdown")
 
     else:
-        reply_text = "Для начала нужно указать свою группу. \nЭто можно сделать при помощи команды\n   /set <номер_группы>"
+        reply_text = "Для начала нужно указать свою группу. " \
+                     "\nЭто можно сделать при помощи команды\n   /set <номер_группы>"
 
 
 @dp.message_handler(commands=['my_group'])
