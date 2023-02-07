@@ -3,18 +3,20 @@ import copy
 import codecs
 import json
 
-TIMES = [['8.00-9.35', "9.55-11.30", "11.40-13.15", "13.55-15.30", "15.40-17.15"], ['12.00-13.35', "13.55-15.30", "15.40-17.15", "17.45-19.20", "19.30-21.05"]]
+TIMES = [['8.00- 9.35', "9.55-11.30", "11.40-13.15", "13.55-15.30", "15.40-17.15"], ['12.00- 13.35', "13.55-15.30", "15.40-17.15", "17.45-19.20", "19.30-21.05"]]
 DAYS = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота']
 
 save_binary_info = False
 show_matrix = False
 
-day_format = "five_lessons"
-
+start_y = 0
 start_x = 0
+
+
+
 delta_x = 0
 from_start_to_names = 0
-start_y = 0
+
 shift = 1
 
 # СЛОВАРЬ ТЕРМИНОВ
@@ -54,7 +56,6 @@ def parce_workbook(out_schedule, filename):
 
     for key in schedule:
         out_schedule[key] = schedule[key]
-
 
 # Парсинг конкретной странички
 def parce_worksheet_start(workbook, index, out_schedule):
@@ -97,6 +98,8 @@ def parce_worksheet_end(worksheet):
 
 
 # Расписание одной группы
+# TODO: работа с произвольным числом строк в дне
+# TODO: или отдельную функцию для четырёх пар
 def get_timetable(worksheet, num, max=False):
     q = num + 1
     # получение элемента K в столбце Q
@@ -269,7 +272,7 @@ def process_sector(sector):
 
     elif type == [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]:
         if sector[0][0] == sector[2][0]:
-            info = "  * {}".format(sector[0][0])
+            info = "  • {}".format(sector[0][0])
         else:
             info_1 = "  * {}".format(sector[0][0])
             info_2 = "  * {}".format(sector[2][0])
@@ -342,7 +345,6 @@ def process_sector(sector):
 
     return info
 
-
 def is_group_num(txt):
     if txt == "":
         return False
@@ -352,7 +354,6 @@ def is_group_num(txt):
             return False
 
     return True
-
 
 # Получение списка групп (ключей для словаря)
 def get_group_names(worksheet):
@@ -442,7 +443,6 @@ def remove_spaces(txt):
 
     return new_txt
 
-
 # ---------------------------------------------------------
 # ПРОЧЕЕ
 
@@ -477,7 +477,7 @@ def convert_keys(dict_keys):
 
 # Сохранение расписания
 def save_json(schedule):
-    with codecs.open('schedule.json', 'w', encoding='utf-8') as f:
+    with codecs.open('schedule2.json', 'w', encoding='utf-8') as f:
         json.dump(schedule, f, ensure_ascii=False, indent=3)
 
     print("Расписание сохранено.")
@@ -485,18 +485,9 @@ def save_json(schedule):
 
 # -------------------------------------------------------
 
-def main():
-    schedule = {}
-
-    global day_format
-    day_format = "five_lessons"
-
-    parce_workbook(schedule, "2.xls")
-    parce_workbook(schedule, "3.xls")
-
-    save_json(schedule)
-
 
 if __name__ == '__main__':
-    main()
+    schedule = {}
+    parce_workbook(schedule, "5.xls")
+    save_json(schedule)
 

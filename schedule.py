@@ -12,7 +12,6 @@ def is_there_such_a_group(group):
 
 
 def read_json(filename):
-    global schedule
     schedule = {}
 
     with codecs.open('schedule.json', 'r', encoding='utf-8') as f:
@@ -20,6 +19,7 @@ def read_json(filename):
 
     print("Расписание открыто.\n")
 
+    return schedule
 
 def print_lesson(group, weekday):
     output = ""
@@ -36,7 +36,7 @@ def print_lesson(group, weekday):
         if info != "<Пусто>" and info is not None:
             #print("Пара в {}".format(time))
             #print("{}".format(day[time]))
-            output += "\n\n⏰ Пара в {}".format(time)
+            output += "\n\n⏰ *{}* ".format(time)
             output += "\n_{}_".format(day[time])
 
     return output
@@ -44,7 +44,13 @@ def print_lesson(group, weekday):
 
 def init():
     global schedule
-    read_json("schedule.json")
+    schedule = {}
+
+    schedule1 = read_json("schedule.json")
+    schedule2 = read_json("schedule2.json")
+
+    for key in schedule1:
+        schedule[key] = schedule1[key]
 
 
 if __name__ == '__main__':
