@@ -21,6 +21,20 @@ def read_json(filename):
 
     return schedule
 
+def get_day_message(user_group, weekday):
+    msg = ""
+    if weekday != 6:
+        weekday = WEEK_DAYS[weekday]
+
+        msg = "*Группа {}, {}*".format(user_group.upper(), weekday.upper())
+
+        msg += print_lesson(user_group, weekday)
+
+    else:
+        msg = "Сегодня воскресенье. Отдыхаем!"
+
+    return msg
+
 def print_lesson(group, weekday):
     output = ""
 

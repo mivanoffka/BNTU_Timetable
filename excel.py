@@ -296,8 +296,6 @@ def process_sector(sector):
         else:
             info = "  * {}".format(sector[0][0])
 
-        info = info.replace("2 нед.", "\n  * 2 нед.")
-
         if "2 нед" in info:
             info = info.replace("2 нед", "\n  * 2 нед")
         else:
@@ -605,6 +603,9 @@ def convert_keys(dict_keys):
 # Сохранение расписания
 def save_json(schedule):
     with codecs.open('schedule.json', 'w', encoding='utf-8') as f:
+        json.dump(schedule, f, ensure_ascii=False, indent=3)
+
+    with codecs.open("bot\schedule.json", 'w', encoding='utf-8') as f:
         json.dump(schedule, f, ensure_ascii=False, indent=3)
 
     print("Расписание сохранено.")
