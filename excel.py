@@ -80,8 +80,11 @@ def parce_worksheet_end(worksheet):
     num_of_groups = len(group_names)
 
     # Определение смены, в которую учится фалькультет
-    shift = what_shift(worksheet)
+    what_shift(worksheet)
 
+    global shift
+
+    print(shift)
     # Получение двух "сырых" табличек. В одной из них не учитываются объединённые ячейк, в другой - учитываются
     timetables_min = dict.fromkeys(group_names, [])
     timetables_max = dict.fromkeys(group_names, [])
@@ -91,6 +94,7 @@ def parce_worksheet_end(worksheet):
 
     # Новая табличка, правильно (надеюсь) отражающая расписание каждой группы
     shift_tab = TIMES[shift - 1]
+
     timetable = mix_tables(group_names, timetables_min, timetables_max, shift_tab)
 
     return timetable
@@ -195,8 +199,13 @@ def mix_tables(group_names, tb_min, tb_max, shift_tab):
                 if lesson_min == [['_', '_', '_', '_'], ['_', '_', '_', '_'], ['_', '_', '_', '_'], ['_', '_', '_', '_']]\
                         or lesson_min_top == [['_', '_', '_', '_'], ['_', '_', '_', '_']]\
                         or lesson_min_bottom == [['_', '_', '_', '_'], ['_', '_', '_', '_']]:
-                    lsn = copy.copy(lesson_max)
-                    lesson = lsn
+                    lsn = lesson_max
+
+                    lesson = lesson_min
+                    lesson[0][0] = lesson_max[0][0]
+                    lesson[2][0] = lesson_max[2][0]
+
+                    #lesson = lsn
                     #lesson = copy.copy(lesson_max)
                 else:
                     lesson = copy.copy(lesson_min)
@@ -207,7 +216,7 @@ def mix_tables(group_names, tb_min, tb_max, shift_tab):
             group_schedule[DAYS[i]] = day
         schedule[key] = group_schedule
 
-    print(schedule)
+    #print(schedule)
 
     return schedule
 
@@ -236,7 +245,6 @@ def find_delta_x(worksheet, begin_x, begin_y):
 
     global delta_x
     delta_x = dx
-    print(dx)
 
 
 # Бинарное представления сектора: 1 - запись есть, 0 - записи нет
@@ -264,6 +272,7 @@ def process_sector(sector):
 
     #print_sector(sector)
 
+
     if type == None:
         pass
 
@@ -275,44 +284,147 @@ def process_sector(sector):
             info_2 = "  * {}".format(sector[2][0])
             info = info_1 + "\n" + info_2
 
+    elif type == [[1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]:
+        info = "  * {}".format(sector[0][0])
+
+    elif type == [[1, 0, 0, 0], [1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]:
+        info = "  * {}, {}".format(sector[0][0], sector[1][0])
+
     elif type == [[1, 0, 0, 0], [0, 0, 0, 0], [1, 0, 0, 0], [0, 0, 0, 0]]:
-        info = "  * {}, {}".format(sector[0][0], sector[2][0])
+        if sector[0][0] != sector[2][0]:
+            info = "  * {}, {}".format(sector[0][0], sector[2][0])
+        else:
+            info = "  * {}".format(sector[0][0])
 
         info = info.replace("2 нед.", "\n  * 2 нед.")
+
+        if "2 нед" in info:
+            info = info.replace("2 нед", "\n  * 2 нед")
+        else:
+            info = info.replace("2 нед.", "\n  * 2 нед.")
+
+    elif type == [[1, 0, 0, 0], [1, 0, 0, 0], [0, 0, 1, 1], [1, 0, 0, 0]]:
+        info = "  * {} {}, {} {} {} {}, {}".format(sector[0][0], sector[1][0], sector[2][0], sector[2][1],
+                                                          sector[2][2], sector[2][3], sector[3][0])
 
     elif type == [[0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 1, 1], [1, 1, 1, 1]]:
         info = "  * {},{}".format(sector[2][0], sector[3][0])
 
+    elif type == [[1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [1, 0, 0, 0]]:
+        info = "  * {}, {}".format(sector[0][0], sector[3][0])
 
     elif type == [[1, 0, 1, 0], [1, 0, 1, 0], [1, 1, 1, 1], [1, 0, 1, 0]] \
         or type == [[1, 0, 1, 0], [0, 0, 1, 0], [1, 1, 1, 1], [1, 0, 1, 0]]\
         or type == [[1, 0, 1, 0], [1, 0, 1, 0], [1, 1, 1, 0], [1, 0, 1, 0]]\
-        or type == [[1, 0, 1, 0], [1, 0, 1, 0], [1, 0, 1, 1], [1, 0, 1, 0]]:
+        or type == [[1, 0, 1, 0], [1, 0, 1, 0], [1, 0, 1, 1], [1, 0, 1, 0]]\
+        or type == [[1, 0, 1, 0], [1, 0, 0, 0], [1, 1, 1, 1], [1, 0, 1, 0]]\
+        or type == [[1, 0, 1, 0], [0, 0, 0, 0], [1, 1, 1, 1], [1, 0, 1, 0]]\
+        or type == [[1, 0, 1, 0], [0, 0, 1, 0], [1, 0, 1, 0], [1, 0, 1, 0]]\
+        or type == [[1, 0, 1, 0], [0, 0, 1, 0], [1, 0, 1, 0], [1, 0, 1, 0]]\
+        or type == [[1, 0, 0, 0], [1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 1, 0]]\
+        or type == [[1, 0, 1, 0], [1, 0, 0, 0], [1, 1, 1, 0], [1, 0, 1, 0]]\
+        or type == [[1, 0, 1, 0], [0, 0, 1, 0], [1, 0, 1, 1], [1, 0, 1, 0]]\
+        or type == [[1, 0, 1, 0], [1, 0, 0, 0], [1, 0, 1, 0], [1, 0, 1, 0]]\
+        or type == [[1, 0, 1, 0], [0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 1, 0]]\
+        or type == [[1, 0, 1, 0], [1, 0, 1, 0], [1, 0, 1, 0], [1, 0, 1, 0]]\
+        or type == [[1, 0, 1, 0], [1, 0, 0, 0], [0, 0, 1, 1], [1, 0, 1, 0]]\
+        or type == [[1, 0, 1, 0], [1, 0, 1, 0], [0, 0, 1, 1], [1, 0, 1, 0]]\
+        or type == [[1, 0, 1, 0], [1, 0, 1, 0], [1, 1, 1, 1], [1, 0, 0, 0]]\
+        or type == [[1, 0, 1, 0], [1, 0, 1, 1], [1, 1, 0, 0], [1, 0, 1, 0]]\
+        or type == [[1, 0, 1, 0], [1, 1, 0, 0], [0, 0, 1, 1], [1, 0, 1, 0]]\
+        or type == [[1, 0, 1, 0], [0, 0, 1, 0], [1, 1, 1, 0], [1, 0, 1, 0]]:
         info_1 = "1-я подгруппа:\n  *  {} {}, {} {}, {}".format(sector[0][0], sector[1][0],
                                                                 sector[2][0], sector[2][1], sector[3][0])
         info_2 = "2-я подгруппа:\n  *  {} {}, {} {}, {}".format(sector[0][2], sector[1][2],
                                                                 sector[2][2], sector[2][3], sector[3][2])
         info = info_1 + "\n" + info_2
 
-    elif type == [[1, 1, 1, 1], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]]:
-        info = "  * {}, {}".format(sector[0][0], sector[1][0])
 
-    elif type == [[1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0]]:
+
+    elif type == [[1, 0, 0, 0], [1, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]:
+        if sector[1][0] == sector[1][1]:
+            sector[1][1] = sector[1][0]
+        info = "  * {}, {}, {}".format(sector[0][0], sector[1][0], sector[1][1])
+
+    elif type == [[0, 0, 0, 0], [0, 0, 0, 0], [1, 0, 0, 0], [1, 1, 0, 0]]:
+        if sector[3][0] == sector[3][1]:
+            sector[3][1] = sector[3][0]
+        info = "  * {}, {}, {}".format(sector[2][0], sector[3][0], sector[3][1])
+
+    elif type == [[1, 1, 1, 1], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]]:
+        if "1 нед." in sector[0][0] and "1 нед." in sector[0][2]:
+            info_1 = "1-я подгруппа:\n  *  {} {}, {} {}, {}".format(sector[0][0], sector[1][0],
+                                                                    sector[2][0], sector[2][1], sector[3][0])
+            info_2 = "2-я подгруппа:\n  *  {} {}, {} {}, {}".format(sector[0][2], sector[1][2],
+                                                                    sector[2][2], sector[2][3], sector[3][2])
+            info = info_1 + "\n" + info_2
+
+        else:
+
+            info = "  * {}, {}".format(sector[0][0], sector[1][0])
+
+    #?
+    elif type == [[1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0]]\
+        or type == [[1, 0, 0, 0], [0, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0]]:
         info_1 = "  * {}, {}".format(sector[0][0], sector[1][0])
         info_2 = "  * {}, {}".format(sector[2][0], sector[3][0])
 
         info = info_1 + "\n" + info_2
 
-    elif type == [[1, 0, 0, 0], [1, 0, 0, 0], [1, 1, 0, 0], [1, 0, 0, 0]]:
+        if "1 нед." in info:
+            info = info
+        else:
+            info = "  * {}{}, {}, {}".format(sector[0][0], sector[1][0], sector[2][0], sector[3][0])
+
+    elif type == [[1, 0, 0, 0], [1, 0, 0, 0], [1, 1, 0, 0], [1, 0, 0, 0]]\
+            or type == [[1, 0, 0, 0], [0, 0, 0, 0], [1, 1, 0, 0], [1, 0, 0, 0]]\
+            or type == [[1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [0, 0, 0, 0]]:
         info = "1-я подгруппа:\n  *  {} {}, {} {}, {}".format(sector[0][0], sector[1][0],
                                                                 sector[2][0], sector[2][1], sector[3][0])
 
-    elif type == [[0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 1], [0, 0, 1, 0]]:
+    elif type == [[0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 1], [0, 0, 1, 0]]\
+            or type == [[0, 0, 1, 0], [0, 0, 0, 0], [0, 0, 1, 1], [0, 0, 1, 0]]\
+            or type == [[0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0]]:
         info = "2-я подгруппа:\n  *  {} {}, {} {}, {}".format(sector[0][2], sector[1][2],
                                                               sector[2][2], sector[2][3], sector[3][2])
 
+    elif type == [[0, 0, 1, 1], [0, 0, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]]:
+        info = "2-я подгруппа:\n  *  {}, {}".format(sector[0][2], sector[1][2])
+
+    elif type == [[1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 1, 0], [1, 0, 1, 0]]:
+        info_1 = " * {}, {}".format(sector[0][0], sector[1][0])
+        info_2 = " * 3 нед.:  \n         - 1-я подгруппа:   {}, {} \n         - 2-я подгруппа:   {}, {}".format(sector[2][0], sector[3][0], sector[2][2], sector[3][2])
+        info_2 = info_2.replace("2 нед.", "")
+        info_2 = info_2.replace("3 нед.", "2 нед.")
+
+        info = info_1 + "\n" + info_2
+
+    elif type == [[1, 0, 1, 0], [1, 0, 1, 0], [1, 0, 0, 0], [1, 0, 0, 0]]:
+        if "1 нед." in sector[0][0] and "1 нед." in sector[0][2]:
+            info_1 = " * 0 нед.:  \n         - 1-я подгруппа:   {}, {} \n         - 2-я подгруппа:   {}, {}".format(
+                sector[0][0], sector[1][0], sector[0][2], sector[1][2])
+            info_1 = info_1.replace("1 нед.", "")
+            info_1 = info_1.replace("0 нед.", "1 нед.")
+            info_2 = " * {}, {}".format(sector[2][0], sector[3][0])
+
+            info = info_1 + "\n" + info_2
+        else:
+            for line in sector:
+                for i in range(0, 2):
+                    info += line[i] + " "
+            for line in sector:
+                for i in range(0, 2):
+                    info += line[i + 2] + " "
+
+            info = fix_info(info)
+
+            type = "Неисправимо."
+
     elif type == [[1, 0, 0, 0], [1, 0, 0, 0], [1, 1, 0, 0], [1, 1, 0, 0]]:
         info = "  * {}{} \n{}, {}\n{}, {}".format(sector[0][0], sector[1][0], sector[2][0], sector[2][1], sector[3][0], sector[3][1])
+
+    elif type == [[1, 1, 0, 0], [1, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]:
+        info = "  * {}, {}".format(sector[0][0], sector[1][0])
 
     elif type == [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 0, 0, 0]]:
         info = "  * {}, {}".format(sector[0][0], sector[3][0])
@@ -322,7 +434,7 @@ def process_sector(sector):
 
     else:
         #info = "Ошибка! Неизвестный шаблон"
-        info = "(!)    "
+        info = "(?) * "
         '''for line in sector:
             for txt in line:
                 info += txt + " "'''
@@ -359,7 +471,6 @@ def get_group_names(worksheet):
     groups = []
     x = 2
     y = copy.copy(start_y)
-    print(start_y)
 
 
     value = ""
@@ -390,12 +501,10 @@ def get_group_names(worksheet):
 # Определение смены, в которую учится факультет (ключи для словаря)
 def what_shift(worksheet):
     global shift
-    if worksheet.cell_value(14, 1) == "8.00- 9.35":
+    if worksheet.cell_value(start_y, 1) == "8.00- 9.35":
         shift = 1
     else:
         shift = 2
-
-    return shift
 
 
 # -------------------------------------------------------
@@ -430,8 +539,26 @@ def fix_info(info):
     info = info.replace("1-я", "   1-я")
     info = info.replace("2-я", "   2-я")
     info = info.replace("9.55", " ❗ 9.55  ❗ ")
+    info = info.replace("80-", "8.00-")
+    info = info.replace("80-", "8.00-")
 
     return info
+
+def fix_sector(sector):
+    print_sector(sector)
+
+    s = copy.copy(sector[0][0])
+    y_len = len(sector)
+    x_len = len(sector[0])
+
+    for i in range(0, y_len):
+        for j in range(0, x_len):
+            if not (i == 0 and j == 0):
+                if sector[i][j] == s:
+                    sector[i][j] = "_"
+
+    print(sector)
+    return sector
 
 
 def remove_spaces(txt):
@@ -491,8 +618,8 @@ def main():
     global day_format
     day_format = "five_lessons"
 
-    parce_workbook(schedule, "2.xls")
-    parce_workbook(schedule, "3.xls")
+    parce_workbook(schedule, "1kurs.xls")
+    parce_workbook(schedule, "2kurs.xls")
 
     save_json(schedule)
 
