@@ -1,5 +1,5 @@
-import data
-import lines
+from bot import data
+from bot import lines
 from bot import timetable
 
 from aiogram import types

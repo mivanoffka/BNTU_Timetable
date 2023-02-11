@@ -1,4 +1,4 @@
-import data
+from bot import data
 import codecs
 import json
 

@@ -1,6 +1,6 @@
-import data
+from bot import data
 from bot import timetable
-import exceptions
+from bot import exceptions
 from datetime import datetime
 
 from aiogram import types

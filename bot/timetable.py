@@ -1,4 +1,4 @@
-import data
+from bot import data
 import json
 import codecs
 from datetime import datetime
@@ -12,7 +12,7 @@ def is_there_such_a_group(group):
 def read_json(filename):
     schedule = {}
 
-    with codecs.open('../schedule.json', 'r', encoding='utf-8') as f:
+    with codecs.open('schedule.json', 'r', encoding='utf-8') as f:
         schedule = json.load(f)
 
     print("Расписание открыто.\n")

@@ -1,4 +1,4 @@
-import data
+from bot import data
 from bot import timetable
 from datetime import datetime
 
