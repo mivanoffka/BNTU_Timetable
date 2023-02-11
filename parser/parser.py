@@ -2,6 +2,7 @@ import xlrd
 import copy
 import codecs
 import json
+from sector import Sector
 
 TIMES = [['8.00-9.35', "9.55-11.30", "11.40-13.15", "13.55-15.30", "15.40-17.15"], ['12.00-13.35', "13.55-15.30", "15.40-17.15", "17.45-19.20", "19.30-21.05"]]
 DAYS = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота']
@@ -82,7 +83,6 @@ def parce_worksheet_end(worksheet):
 
     global shift
 
-    print(shift)
     # Получение двух "сырых" табличек. В одной из них не учитываются объединённые ячейк, в другой - учитываются
     timetables_min = dict.fromkeys(group_names, [])
     timetables_max = dict.fromkeys(group_names, [])
@@ -140,9 +140,6 @@ def get_timetable(worksheet, num, max=False):
             lesson.append(matrix[index + 2])
             lesson.append(matrix[index + 3])
 
-            if max:
-                print(lesson)
-
             day.append(lesson)
         table.append(day)
 
@@ -157,8 +154,6 @@ def get_timetable(worksheet, num, max=False):
         lesson.append(matrix[index + i * 4 + 2])
         lesson.append(matrix[index + i * 4 + 3])
 
-        if max:
-            print(lesson)
 
         day.append(lesson)
     table.append(day)
@@ -205,7 +200,7 @@ def mix_tables(group_names, tb_min, tb_max, shift_tab):
                         or lesson_min_bottom == [['_', '_', '_', '_'], ['_', '_', '_', '_']]:
                     lsn = lesson_max
 
-                    schedule.json
+
 
                     lesson = lesson_min
                     lesson[0][0] = lesson_max[0][0]
@@ -216,7 +211,10 @@ def mix_tables(group_names, tb_min, tb_max, shift_tab):
                 else:
                     lesson = copy.copy(lesson_min)
 
-                info = process_sector(lesson)
+                #info = process_sector(lesson)
+
+                sec = Sector(lesson_max)
+                info = sec.process()
 
                 day[shift_tab[j]] = info
             group_schedule[DAYS[i]] = day
@@ -608,10 +606,7 @@ def convert_keys(dict_keys):
 
 # Сохранение расписания
 def save_json(schedule):
-    with codecs.open('schedule.json', 'w', encoding='utf-8') as f:
-        json.dump(schedule, f, ensure_ascii=False, indent=3)
-
-    with codecs.open("bot\schedule.json", 'w', encoding='utf-8') as f:
+    with codecs.open('../schedule.json', 'w', encoding='utf-8') as f:
         json.dump(schedule, f, ensure_ascii=False, indent=3)
 
     print("Расписание сохранено.")
@@ -622,8 +617,8 @@ def save_json(schedule):
 def main():
     schedule = {}
 
-    parce_workbook(schedule, "1kurs.xls")
-    parce_workbook(schedule, "2kurs.xls")
+    parce_workbook(schedule, "sheets/1kurs.xls")
+    parce_workbook(schedule, "sheets/2kurs.xls")
 
     save_json(schedule)
 

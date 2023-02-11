@@ -1,10 +1,8 @@
 import data
-import lines
-import timetable
+from bot import timetable
 from datetime import datetime
 
 from aiogram import types
-from aiogram import Dispatcher
 
 schedule = data.schedule
 users_and_groups = data.users_and_groups
@@ -20,7 +18,7 @@ async def process_today_command(message: types.Message, delta=0):
     if user_id in data.users_and_groups:
         user_group = data.users_and_groups[user_id]
 
-        if user_group in timetable.schedule:
+        if user_group in data.schedule:
 
             date = datetime.today()
             weekday = datetime.weekday(date) + delta

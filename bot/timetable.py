@@ -1,25 +1,29 @@
-from excel import convert_keys
+import data
 import json
 import codecs
+from datetime import datetime
 
 WEEK_DAYS = ("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресение")
 
-schedule = None
-
-
 def is_there_such_a_group(group):
-    return group in schedule
+    return group in data.schedule
 
 
 def read_json(filename):
     schedule = {}
 
-    with codecs.open('schedule.json', 'r', encoding='utf-8') as f:
+    with codecs.open('../schedule.json', 'r', encoding='utf-8') as f:
         schedule = json.load(f)
 
     print("Расписание открыто.\n")
 
     return schedule
+
+
+def get_current_week():
+    week_number = datetime.today().isocalendar()[1] % 2 + 2
+    return week_number
+
 
 def get_day_message(user_group, weekday):
     msg = ""
@@ -35,12 +39,11 @@ def get_day_message(user_group, weekday):
 
     return msg
 
+
 def print_lesson(group, weekday):
     output = ""
 
-    global schedule
-
-    timetable = schedule[group]
+    timetable = data.schedule[group]
     day = timetable[weekday]
 
     for time in day:
@@ -57,15 +60,14 @@ def print_lesson(group, weekday):
 
 
 def init():
-    global schedule
     schedule = {}
 
-    schedule1 = read_json("schedule.json")
-    schedule2 = read_json("schedule2.json")
+    schedule1 = read_json("../schedule.json")
 
     for key in schedule1:
         schedule[key] = schedule1[key]
 
+    return schedule
 
 if __name__ == '__main__':
     init()

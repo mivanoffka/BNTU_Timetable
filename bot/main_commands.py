@@ -1,9 +1,8 @@
 import data
 import lines
-import timetable
+from bot import timetable
 
 from aiogram import types
-from aiogram import Dispatcher
 
 
 async def process_start_command(message: types.Message):
@@ -35,13 +34,12 @@ async def process_set_command(message: types.Message):
         reply_text += "Хорошо. Я запомнил, что ваша группа - {}".format(group)
         reply_text += "\nЧтобы узнать, что делать дальше, воспользуйтесь командой /help"
 
-        data.users_and_groups[user_id] = group
+        #data.users_and_groups[user_id] = group
 
     else:
-        reply_text = "К сожалению, расписания вашей группы у нас пока нет. Постараемся это исправить"
+        reply_text = "К сожалению, расписания для группы {} у нас пока нет. Постараемся это исправить".format(group)
 
-        if user_id in data.users_and_groups:
-            data.users_and_groups.pop(user_id)
+    data.users_and_groups[user_id] = group
 
     await message.reply(reply_text)
 
@@ -62,9 +60,12 @@ async def process_groups_command(message: types.Message):
     await data.bot.send_message(chat_id, text=reply_text)
 
 
-async def unknown_handler(msg: types.Message):
-    msg_text = "Неизвестная команда. Используйте /help для получения списка команд"
-    await data.bot.send_message(msg.from_user.id, msg_text)
+async def process_week_command(message: types.Message):
+    week_num = timetable.get_current_week()
+
+    msg_text = "Сейчас {}-я неделя.".format(week_num)
+
+    await data.bot.send_message(message.chat.id, text=msg_text)
 
 
 def setup():
@@ -72,3 +73,4 @@ def setup():
     data.dp.register_message_handler(process_help_command, commands="help", content_types=['text'], state='*')
     data.dp.register_message_handler(process_set_command, commands="set", content_types=['text'], state='*')
     data.dp.register_message_handler(process_groups_command, commands="groups", content_types=['text'], state='*')
+    data.dp.register_message_handler(process_week_command, commands="week", content_types=['text'], state='*')

@@ -1,6 +1,4 @@
-import copy
-import timetable
-import xlrd
+from bot import timetable
 
 import json
 import codecs

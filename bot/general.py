@@ -26,11 +26,9 @@ async def unknown_handler(msg: types.Message):
 
 
 if __name__ == '__main__':
-    timetable.init()
-
     print(TOKEN)
 
-    data.schedule = timetable.schedule
+    data.schedule = timetable.init()
     data.bot = Bot(token=TOKEN)
     data.dp = Dispatcher(data.bot)
     data.users_and_groups = in_out.read_userlist()

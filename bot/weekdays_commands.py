@@ -1,10 +1,9 @@
 import data
-import lines
-import timetable
+from bot import timetable
+import exceptions
 from datetime import datetime
 
 from aiogram import types
-from aiogram import Dispatcher
 
 schedule = data.schedule
 users_and_groups = data.users_and_groups
@@ -17,20 +16,17 @@ async def for_day_of_week(message: types.Message, weekday):
     chat_id = str(message.chat.id)
     user_group = ""
 
-    if user_id in data.users_and_groups:
+    try:
         user_group = data.users_and_groups[user_id]
 
         date = datetime.today()
 
         msg = timetable.get_day_message(user_group, weekday)
 
-    else:
-        if user_group in data.users_and_groups:
-            msg = "Извини, в данный момент у нас нет расписания твоей группы. "
-        else:
-            msg = "Для начала нужно указать свою группу. \nЭто можно сделать при помощи команды\n   /set <номер_группы>"
+        await data.bot.send_message(message.chat.id, text=msg, parse_mode="Markdown")
 
-    await data.bot.send_message(chat_id, text=msg, parse_mode="Markdown")
+    except:
+        await exceptions.handle_schedule_sending_exception(message)
 
 
 async def process_mon_command(message: types.Message):
@@ -55,6 +51,27 @@ async def process_fri_command(message: types.Message):
 
 async def process_sat_command(message: types.Message):
     await for_day_of_week(message, 5)
+
+async def is_user_set(user_id):
+    result = False
+
+    user_id = str(user_id)
+
+    if user_id in data.users_and_groups:
+        result = True
+
+    return result
+
+
+async def is_group_in_schedule(user_group):
+    result = False
+
+    user_group = str(user_group)
+
+    if user_group in data.schedule:
+        result = True
+
+    return result
 
 
 def setup():
