@@ -30,7 +30,7 @@ shift = 1
 def parce_workbook(out_schedule, filename):
     # Открытие файла
     workbook = xlrd.open_workbook(filename, formatting_info=True)
-    print("\n----------------------------------\nФайл {}".format(filename))
+    #print("\n----------------------------------\nФайл {}".format(filename))
 
 
     # Будущее расписание

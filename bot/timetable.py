@@ -1,7 +1,11 @@
+from pathlib import Path
+
 from bot import data
 import json
 import codecs
 from datetime import datetime
+
+from config import BASE_DIR
 
 WEEK_DAYS = ("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресение")
 
@@ -12,10 +16,8 @@ def is_there_such_a_group(group):
 def read_json(filename):
     schedule = {}
 
-    with codecs.open('schedule.json', 'r', encoding='utf-8') as f:
+    with open(Path(BASE_DIR / filename), 'r', encoding='UTF-8') as f:
         schedule = json.load(f)
-
-    print("Расписание открыто.\n")
 
     return schedule
 
@@ -62,7 +64,7 @@ def print_lesson(group, weekday):
 def init():
     schedule = {}
 
-    schedule1 = read_json("../schedule.json")
+    schedule1 = read_json("schedule.json")
 
     for key in schedule1:
         schedule[key] = schedule1[key]

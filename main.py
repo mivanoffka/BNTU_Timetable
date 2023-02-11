@@ -1,12 +1,10 @@
-import sys
-import locale
-
 from bot import in_out
 from bot import data
 from bot import timetable
 from bot import main_commands
 from bot import weekdays_commands
 from bot import days_commands
+
 
 
 from aiogram import Bot, types
@@ -30,10 +28,6 @@ async def unknown_handler(msg: types.Message):
 
 
 if __name__ == '__main__':
-    print(sys.getfilesystemencoding())
-    print(locale.getpreferredencoding())
-
-    print(TOKEN)
 
     data.schedule = timetable.init()
     data.bot = Bot(token=TOKEN)

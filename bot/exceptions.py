@@ -1,5 +1,6 @@
 from bot import data
 
+
 async def handle_schedule_sending_exception(message):
     msg_text = ""
 

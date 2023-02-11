@@ -2,6 +2,9 @@ import xlrd
 import copy
 import codecs
 import json
+from pathlib import Path
+from config import BASE_DIR
+
 from sector import Sector
 
 TIMES = [['8.00-9.35', "9.55-11.30", "11.40-13.15", "13.55-15.30", "15.40-17.15"], ['12.00-13.35', "13.55-15.30", "15.40-17.15", "17.45-19.20", "19.30-21.05"]]
@@ -606,10 +609,10 @@ def convert_keys(dict_keys):
 
 # Сохранение расписания
 def save_json(schedule):
-    with codecs.open('../schedule.json', 'w', encoding='utf-8') as f:
+    with open(Path(BASE_DIR / 'schedule.json'), 'w', encoding='UTF-8') as f:
         json.dump(schedule, f, ensure_ascii=False, indent=3)
 
-    print("Расписание сохранено.")
+    #print("Расписание сохранено.")
 
 
 # -------------------------------------------------------
@@ -617,8 +620,11 @@ def save_json(schedule):
 def main():
     schedule = {}
 
-    parce_workbook(schedule, "sheets/1kurs.xls")
-    parce_workbook(schedule, "sheets/2kurs.xls")
+    f1 = Path(BASE_DIR/"parser/sheets/1kurs.xls")
+    f2 = Path(BASE_DIR/"parser/sheets/2kurs.xls")
+
+    parce_workbook(schedule, f1)
+    parce_workbook(schedule, f2)
 
     save_json(schedule)
 
