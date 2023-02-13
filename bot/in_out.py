@@ -13,20 +13,24 @@ dr = data.dp
 def read_userlist(dump=False):
     users_and_groups = {}
 
-    with open(Path(BASE_DIR / "users.json"), 'r', encoding='UTF-8') as f:
-        users_and_groups = json.load(f)
-
-    for user in users_and_groups:
-        print("{} - {}".format(user, users_and_groups[user]))
-
-    if not users_and_groups:
-        with open(Path(BASE_DIR / "users_dump.json"), 'r', encoding='UTF-8') as f:
+    try:
+        with open(Path(BASE_DIR / "users.json"), 'r', encoding='UTF-8') as f:
             users_and_groups = json.load(f)
 
         for user in users_and_groups:
             print("{} - {}".format(user, users_and_groups[user]))
 
-    return users_and_groups
+        if not users_and_groups:
+            with open(Path(BASE_DIR / "users_dump.json"), 'r', encoding='UTF-8') as f:
+                users_and_groups = json.load(f)
+
+            for user in users_and_groups:
+                print("{} - {}".format(user, users_and_groups[user]))
+
+        return users_and_groups
+
+    except:
+        return {}
 
 
 def save_userlist(users_and_groups):
