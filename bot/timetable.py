@@ -23,7 +23,11 @@ def read_json(filename):
 
 
 def get_current_week():
-    week_number = datetime.today().isocalendar()[1] % 2 + 2
+    week_number = datetime.today().isocalendar()[1] % 2
+
+    if week_number == 0:
+        week_number = 2
+
     return week_number
 
 
@@ -32,7 +36,7 @@ def get_day_message(user_group, weekday):
     if weekday != 6:
         weekday = WEEK_DAYS[weekday]
 
-        msg = "*Группа {}, {}*".format(user_group.upper(), weekday.upper())
+        msg = "*{}, группа {}*".format(weekday, user_group)
 
         msg += print_lesson(user_group, weekday)
 

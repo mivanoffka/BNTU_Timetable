@@ -1,3 +1,0 @@
-from sector import Sector
-
-

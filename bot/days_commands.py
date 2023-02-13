@@ -1,7 +1,7 @@
 from bot import data
 from bot import timetable
 from datetime import datetime
-
+from bot import exceptions, keyboards
 from aiogram import types
 
 schedule = data.schedule
@@ -15,26 +15,19 @@ async def process_today_command(message: types.Message, delta=0):
     chat_id = str(message.chat.id)
     user_group = ""
 
-    if user_id in data.users_and_groups:
+    try:
         user_group = data.users_and_groups[user_id]
+        date = datetime.today()
+        weekday = datetime.weekday(date) + delta
 
-        if user_group in data.schedule:
+        weekday = weekday % 7
 
-            date = datetime.today()
-            weekday = datetime.weekday(date) + delta
+        msg = timetable.get_day_message(user_group, weekday)
 
-            weekday = weekday % 7
-
-            msg = timetable.get_day_message(user_group, weekday)
-        else:
-            msg = "Извините, в данный момент у нас нет расписания твоей группы. "
-
-    else:
-        msg = "Для начала нужно указать свою группу. \nЭто можно сделать при помощи команды\n   /set <номер_группы>"
-
-    #msg += warning_1
-
-    await data.bot.send_message(chat_id, text=msg, parse_mode="Markdown")
+        await data.bot.send_message(chat_id, text="Сейчас поглядим...", reply_markup=keyboards.short_keyborad)
+        await data.bot.send_message(chat_id, text=msg, parse_mode="Markdown", reply_markup=keyboards.bntu_keyboard)
+    except:
+        await exceptions.handle_schedule_sending_exception(message)
 
 
 async def process_tomorrow_command(message: types.Message):
@@ -51,6 +44,7 @@ async def process_schedule_command(message: types.Message):
     user_id = str(message.from_user.id)
     chat_id = str(message.chat.id)
     user_group = ""
+
 
     if user_id in data.users_and_groups:
         user_group = data.users_and_groups[user_id]

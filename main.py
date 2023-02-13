@@ -4,8 +4,10 @@ from bot import timetable
 from bot import main_commands
 from bot import weekdays_commands
 from bot import days_commands
+from bot import keyboards
+from bot import emulations
 
-
+import time
 
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
@@ -23,9 +25,10 @@ def setup_handlers():
 
 
 async def unknown_handler(msg: types.Message):
-    msg_text = "Неизвестная команда. Используйте /help для получения списка команд"
-    await data.bot.send_message(msg.from_user.id, msg_text)
 
+    if not await emulations.handle_emul_commands(msg):
+        msg_text = "Произошла ошибка. Возможно, вы что-то не то ввели."
+        await data.bot.send_message(msg.from_user.id, msg_text, reply_markup=keyboards.short_keyborad)
 
 if __name__ == '__main__':
 
