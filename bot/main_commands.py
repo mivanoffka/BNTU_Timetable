@@ -56,11 +56,12 @@ async def process_set_command(message: types.Message):
         reply_text += "*Отлично! 😋*"
         reply_text += "\n\n_Теперь вам доступно меню, из которого легко получить расписание на любой день._"
         await message.reply(reply_text, reply_markup=keyboards.short_keyborad, parse_mode="Markdown")
+        data.users_and_groups[user_id] = group
 
     else:
         reply_text = "Кажется, вы что-то не так ввели. Либо у меня пока нету расписания для вашей группы...\n\n❗ Обратите внимание! В данный момент я обслуживаю *только первые и вторые курсы* ❗"
         await message.reply(reply_text, reply_markup=keyboards.start_keyboard, parse_mode="Markdown")
-    data.users_and_groups[user_id] = group
+
 
 
 async def process_groups_command(message: types.Message):

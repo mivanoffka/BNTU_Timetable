@@ -8,7 +8,7 @@ async def handle_emul_commands(msg: types.message):
         await continue_setting(msg)
 
     else:
-        in_out.save_copy(data.users_and_groups)
+        await in_out.save_copy(data.users_and_groups)
 
         if msg.text == keyboards.today_button.text:
             await days_commands.process_today_command(msg)
