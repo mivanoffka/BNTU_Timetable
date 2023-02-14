@@ -68,7 +68,7 @@ def print_lesson(group, weekday):
 def init():
     schedule = {}
 
-    schedule1 = read_json("schedule.json")
+    schedule1 = read_json("datasource/schedule.json")
 
     for key in schedule1:
         schedule[key] = schedule1[key]

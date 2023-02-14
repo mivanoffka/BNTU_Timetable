@@ -33,7 +33,7 @@ shift = 1
 def parce_workbook(out_schedule, filename):
     # Открытие файла
     workbook = xlrd.open_workbook(filename, formatting_info=True)
-    print("\n----------------------------------\nФайл {}".format(filename))
+    print("\n----------------------------------\nBook {}".format(filename))
 
 
     # Будущее расписание
@@ -72,7 +72,7 @@ def parce_worksheet_start(workbook, index, out_schedule):
     for key in keys:
         out_schedule[key] = local_schedule[key]
 
-    print("Таблица {} успешно обработана".format(index + 1))
+    print("Sheet {} was successfully parsed".format(index + 1))
 
 
 def parce_worksheet_end(worksheet):
@@ -441,7 +441,7 @@ def convert_keys(dict_keys):
 
 # Сохранение расписания
 def save_json(schedule):
-    with open(Path(BASE_DIR / 'schedule.json'), 'w', encoding='UTF-8') as f:
+    with open(Path(BASE_DIR / 'datasource/schedule.json'), 'w', encoding='UTF-8') as f:
         json.dump(schedule, f, ensure_ascii=False, indent=3)
 
     #print("Расписание сохранено.")
@@ -452,8 +452,8 @@ def save_json(schedule):
 def main():
     schedule = {}
 
-    f1 = Path(BASE_DIR/"parser/sheets/1kurs.xls")
-    f2 = Path(BASE_DIR/"parser/sheets/2kurs.xls")
+    f1 = Path(BASE_DIR/"parsing/sheets/1kurs.xls")
+    f2 = Path(BASE_DIR/"parsing/sheets/2kurs.xls")
 
     parce_workbook(schedule, f1)
     parce_workbook(schedule, f2)

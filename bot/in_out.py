@@ -1,7 +1,13 @@
+import copy
+import sys
+import time
+
 from bot import data
 import codecs
 import json
 import random
+import threading
+import schedule
 
 from pathlib import Path
 from config import BASE_DIR
@@ -10,39 +16,38 @@ bot = data.bot
 dr = data.dp
 
 
-def read_userlist(dump=False):
+def read_userlist(filename="datasource/users.json"):
     users_and_groups = {}
 
     try:
-        with open(Path(BASE_DIR / "users.json"), 'r', encoding='UTF-8') as f:
+        with open(Path(BASE_DIR / filename), 'r', encoding='UTF-8') as f:
             users_and_groups = json.load(f)
 
-        for user in users_and_groups:
-            print("{} - {}".format(user, users_and_groups[user]))
-
-        if not users_and_groups:
-            with open(Path(BASE_DIR / "users_dump.json"), 'r', encoding='UTF-8') as f:
-                users_and_groups = json.load(f)
-
-            for user in users_and_groups:
-                print("{} - {}".format(user, users_and_groups[user]))
+        save_userlist(users_and_groups, "datasource/dump.json")
 
         return users_and_groups
-
     except:
         return {}
 
 
-def save_userlist(users_and_groups):
-    with open(Path(BASE_DIR / 'users.json'), 'w', encoding='UTF-8') as f:
+def save_userlist(users_and_groups, filename="datasource/users.json"):
+    with open(Path(BASE_DIR / filename), 'w', encoding='UTF-8') as f:
         json.dump(users_and_groups, f, ensure_ascii=False, indent=3)
 
-    #print("Список пользователей сохранён")
+
+def autosave():
+    try:
+        uag = copy.copy(data.users_and_groups)
+        save_userlist(uag)
+        print("Autosaving completed.")
+    except:
+        print("An error occured during autosaving...")
 
 
-async def save_copy(users_and_groups):
-    rand = random.randint(0, 15)
-    if rand == 14:
-        with open(Path(BASE_DIR / 'users_dump.json'), 'w', encoding='UTF-8') as f:
-            json.dump(users_and_groups, f, ensure_ascii=False, indent=3)
-        print("DUMP SAVED")
+def launch_autosaving():
+    schedule.every(1).minutes.do(autosave)
+
+    while not data.exit_event:
+        schedule.run_pending()
+        time.sleep(1)
+

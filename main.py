@@ -1,7 +1,10 @@
+import sys
+import threading
+
 from bot import in_out
 from bot import data
 from bot import timetable
-from bot import main_commands
+from bot import main_commands, admin_commands
 from bot import weekdays_commands
 from bot import days_commands
 from bot import keyboards
@@ -20,6 +23,8 @@ def setup_handlers():
     main_commands.setup()
     days_commands.setup()
     weekdays_commands.setup()
+    admin_commands.setup()
+
 
     data.dp.register_message_handler(unknown_handler, content_types=['text'], state='*')
 
@@ -37,7 +42,13 @@ if __name__ == '__main__':
     data.dp = Dispatcher(data.bot)
     data.users_and_groups = in_out.read_userlist()
 
+    auto_saving_thread = threading.Thread(target=in_out.launch_autosaving)
+    auto_saving_thread.daemon = True
+    auto_saving_thread.start()
+
+
     setup_handlers()
-    executor.start_polling(data.dp)
+    executor.start_polling(data.dp, skip_updates=True)
 
     in_out.save_userlist(data.users_and_groups)
+

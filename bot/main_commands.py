@@ -25,7 +25,6 @@ async def process_start_command(message: types.Message):
 
 
 
-
 async def process_help_command(message: types.Message):
     msg_text = ""
 
@@ -59,9 +58,9 @@ async def process_set_command(message: types.Message):
         data.users_and_groups[user_id] = group
 
     else:
-        reply_text = "Кажется, вы что-то не так ввели. Либо у меня пока нету расписания для вашей группы...\n\n❗ Обратите внимание! В данный момент я обслуживаю *только первые и вторые курсы* ❗"
+        reply_text = "Кажется, вы что-то не так ввели. Либо у меня пока нету расписания для вашей группы..." \
+                     "\n\n❗ Обратите внимание! В данный момент я обслуживаю *только первые и вторые курсы* ❗"
         await message.reply(reply_text, reply_markup=keyboards.start_keyboard, parse_mode="Markdown")
-
 
 
 async def process_groups_command(message: types.Message):
