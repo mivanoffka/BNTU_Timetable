@@ -1,4 +1,5 @@
 import copy
+import random
 from datetime import datetime
 
 from bot import data
@@ -52,16 +53,23 @@ async def process_set_command(message: types.Message):
     user_id = str(message.from_user.id)
 
     if timetable.is_there_such_a_group(group):
-        reply_text += "*Отлично! 😋*"
+        reply_text += "*Отлично! 🥳*"
         reply_text += "\n\n_Теперь вам доступно меню, из которого легко получить расписание на любой день._"
         await message.reply(reply_text, reply_markup=keyboards.short_keyborad, parse_mode="Markdown")
         data.users_and_groups[user_id] = group
 
     else:
-        reply_text = "Кажется, вы что-то не так ввели. Либо у меня пока нету расписания для вашей группы..." \
+        reply_text = "🥲 Кажется, вы что-то не так ввели. Либо у меня пока нету расписания для вашей группы..." \
                      "\n\n❗ Обратите внимание! В данный момент я обслуживаю *только первые и вторые курсы* ❗"
         await message.reply(reply_text, reply_markup=keyboards.start_keyboard, parse_mode="Markdown")
 
+
+async def advertise(user_id):
+    value = random.randint(0, 100)
+    print(value)
+    if value < 10:
+        msg = "<b>Если вам понравился бот, не забудьте рассказать о нём друзьям!</b>\n\n💫 http://t.me/bntu_timetable_bot"
+        await data.bot.send_message(user_id, text=msg, parse_mode="HTML", disable_web_page_preview=True)
 
 async def process_groups_command(message: types.Message):
     reply_text = ""
@@ -89,9 +97,9 @@ async def process_week_command(message: types.Message):
             weekday = 2
         else:
             weekday = 1
-        msg_text = "С понедельника начнётся {}-я неделя 👌".format(weekday)
+        msg_text = "_С понедельника начнётся {}-я неделя..._ 👌".format(weekday)
     else:
-        msg_text = "Сейчас {}-я неделя 👌".format(week_num)
+        msg_text = "_Сейчас {}-я неделя!_ 👌".format(week_num)
 
     await data.bot.send_message(message.chat.id, text=msg_text, parse_mode="Markdown", reply_markup=keyboards.bntu_keyboard)
 

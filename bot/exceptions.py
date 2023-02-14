@@ -15,7 +15,7 @@ async def handle_schedule_sending_exception(message):
             msg_text = "Мы не обслуживаем группу, номер которой вы указывали ранее, либо он был указан с ошибкой."
 
     else:
-        msg_text = "Вы ранее не указывали номер группы."
+        msg_text = "Кажется, ранее не указывали номер группы... Либо я его забыл 🫣"
 
     if msg_text != "":
         await data.bot.send_message(user_id, text=msg_text, parse_mode="Markdown", reply_markup=keyboards.new_group_button)

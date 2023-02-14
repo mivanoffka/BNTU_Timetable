@@ -45,7 +45,7 @@ def autosave():
 
 
 def launch_autosaving():
-    schedule.every(1).minutes.do(autosave)
+    schedule.every(15).minutes.do(autosave)
 
     while not data.exit_event:
         schedule.run_pending()

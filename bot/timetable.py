@@ -36,7 +36,7 @@ def get_day_message(user_group, weekday):
     if weekday != 6:
         weekday = WEEK_DAYS[weekday]
 
-        msg = "*{}, группа {}*".format(weekday, user_group)
+        msg = "*{}, группа {}.*".format(weekday, user_group)
 
         msg += print_lesson(user_group, weekday)
 

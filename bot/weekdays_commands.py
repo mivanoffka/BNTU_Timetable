@@ -2,6 +2,9 @@ from bot import data
 from bot import timetable
 from bot import exceptions, keyboards
 from datetime import datetime
+from bot import main_commands
+
+import random
 
 from aiogram import types
 
@@ -23,8 +26,10 @@ async def for_day_of_week(message: types.Message, weekday):
 
         msg = timetable.get_day_message(user_group, weekday)
 
-        await data.bot.send_message(chat_id, text="Сейчас поглядим...", reply_markup=keyboards.short_keyborad_2)
+        await data.bot.send_message(chat_id, text="_Сейчас поглядим..._", parse_mode="Markdown", reply_markup=keyboards.short_keyborad_2)
         await data.bot.send_message(message.chat.id, text=msg, parse_mode="Markdown", reply_markup=keyboards.bntu_keyboard)
+
+        await main_commands.advertise(user_id)
 
     except:
         await exceptions.handle_schedule_sending_exception(message)

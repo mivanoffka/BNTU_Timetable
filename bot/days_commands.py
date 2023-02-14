@@ -1,8 +1,9 @@
 from bot import data
 from bot import timetable
 from datetime import datetime
-from bot import exceptions, keyboards
+from bot import exceptions, keyboards, main_commands
 from aiogram import types
+import random
 
 schedule = data.schedule
 users_and_groups = data.users_and_groups
@@ -24,8 +25,11 @@ async def process_today_command(message: types.Message, delta=0):
 
         msg = timetable.get_day_message(user_group, weekday)
 
-        await data.bot.send_message(chat_id, text="Сейчас поглядим...", reply_markup=keyboards.short_keyborad)
+        await data.bot.send_message(chat_id, text="_Сейчас поглядим..._", parse_mode="Markdown", reply_markup=keyboards.short_keyborad)
         await data.bot.send_message(chat_id, text=msg, parse_mode="Markdown", reply_markup=keyboards.bntu_keyboard)
+
+        await main_commands.advertise(user_id)
+
     except:
         await exceptions.handle_schedule_sending_exception(message)
 
@@ -60,7 +64,7 @@ async def process_schedule_command(message: types.Message):
 
     else:
         if user_group in data.users_and_groups:
-            reply_text = "Извини, в данный момент у нас нет расписания твоей группы. "
+            reply_text = "Извините, в данный момент у нас нет расписания твоей группы. "
         else:
             reply_text = "Для начала нужно указать свою группу. " \
                          "\nЭто можно сделать при помощи команды\n   /set <номер_группы>"
