@@ -12,10 +12,11 @@ async def handle_schedule_sending_exception(message):
         if user_group in data.schedule:
             msg_text = "Неизвестная ошибка."
         else:
-            msg_text = "Мы не обслуживаем группу, номер которой вы указывали ранее, либо он был указан с ошибкой."
+            msg_text = "В данный момент у меня нет доступа к расписанию вашей группы. Прошу прощения..."
+            await data.bot.send_message(user_id, text=msg_text, parse_mode="Markdown",
+                                        reply_markup=keyboards.short_keyborad)
 
     else:
         msg_text = "_Кажется, вы ранее не указывали номер группы. Либо я его забыл... 🫣_"
-
-    if msg_text != "":
         await data.bot.send_message(user_id, text=msg_text, parse_mode="Markdown", reply_markup=keyboards.start_keyboard)
+

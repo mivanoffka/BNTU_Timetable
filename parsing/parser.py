@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from config import BASE_DIR
 
-from sector import Sector
+from parsing.sector import Sector
 
 TIMES = [['8.00-9.35', "9.55-11.30", "11.40-13.15", "13.55-15.30", "15.40-17.15"], ['12.00-13.35', "13.55-15.30", "15.40-17.15", "17.45-19.20", "19.30-21.05"]]
 DAYS = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота']

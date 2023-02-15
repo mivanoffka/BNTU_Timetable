@@ -1,12 +1,8 @@
 import copy
-import sys
 import time
 
 from bot import data
-import codecs
 import json
-import random
-import threading
 import schedule
 
 from pathlib import Path

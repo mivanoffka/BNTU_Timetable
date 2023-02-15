@@ -2,7 +2,6 @@ from pathlib import Path
 
 from bot import data
 import json
-import codecs
 from datetime import datetime
 
 from config import BASE_DIR

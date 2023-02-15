@@ -1,9 +1,8 @@
-from bot import data
-from bot import timetable
+from bot import *
 from datetime import datetime
-from bot import exceptions, keyboards, main_commands
 from aiogram import types
-import random
+
+from bot.commands import general, exceptions
 
 schedule = data.schedule
 users_and_groups = data.users_and_groups
@@ -28,7 +27,7 @@ async def process_today_command(message: types.Message, delta=0):
         await data.bot.send_message(chat_id, text="_Сейчас поглядим..._", parse_mode="Markdown", reply_markup=keyboards.short_keyborad)
         await data.bot.send_message(chat_id, text=msg, parse_mode="Markdown", reply_markup=keyboards.bntu_keyboard)
 
-        await main_commands.advertise(user_id)
+        await general.advertise(user_id)
 
     except:
         await exceptions.handle_schedule_sending_exception(message)

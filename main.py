@@ -1,13 +1,8 @@
 import threading
 
-from bot import in_out
-from bot import data
-from bot import timetable
-from bot import main_commands
-from bot import admin_commands
-from bot import weekdays_commands, emulations
-from bot import days_commands
-from bot import keyboards
+from bot import data, timetable, in_out, keyboards
+import bot.commands
+from bot.commands import general, days, weekdays, admin, buttoned
 
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
@@ -17,20 +12,20 @@ from config import TOKEN
 
 
 def setup_handlers():
-    main_commands.setup()
-    days_commands.setup()
-    weekdays_commands.setup()
-    admin_commands.setup()
-
+    general.setup()
+    days.setup()
+    weekdays.setup()
+    admin.setup()
 
     data.dp.register_message_handler(unknown_handler, content_types=['text'], state='*')
 
 
 async def unknown_handler(msg: types.Message):
 
-    if not await emulations.handle_emul_commands(msg):
+    if not await buttoned.handle(msg):
         msg_text = "Кажется, вы что-то не то ввели... 🫠"
         await data.bot.send_message(msg.from_user.id, msg_text, reply_markup=keyboards.short_keyborad)
+
 
 if __name__ == '__main__':
 

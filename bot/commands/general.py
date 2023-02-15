@@ -1,11 +1,7 @@
-import copy
 import random
 from datetime import datetime
 
-from bot import data
-from bot import lines
-from bot import timetable
-from bot import keyboards, exceptions
+from bot import *
 
 from aiogram import types
 
@@ -24,26 +20,6 @@ async def process_start_command(message: types.Message):
 
     await data.bot.send_message(chat_id, text=msg, parse_mode="Markdown", reply_markup=keyboards.ReplyKeyboardRemove())
 
-
-
-async def process_help_command(message: types.Message):
-    msg_text = ""
-
-    chat_id = str(message.chat.id)
-
-    hlp = "Список команд:   "
-    hlp += "\n   /start - начало работы с ботом"
-    hlp += "\n   /set <номер_группы> - так вы укажете вашу группу"
-    hlp += "\n   /groups - узнать, какие группы мы обслуживаем"
-    hlp += "\n   /today, /yesterday, /tomorrow - вывод расписание на сегодня, вчера и завтра соответственно"
-    hlp += "\n   /schedule - расписание на всю неделю"
-    hlp += "\n   /week - узнать, какая сейчас неделя (1-я или 2-я)"
-    hlp += "\n   /mon, /tue, /wed, /thu, /fri, /sat - вывод расписания на соотв. день недели"
-    hlp += "\n   /help - справка о командах (которую вы сейчас наблюдаете)"
-
-    msg_text = hlp
-
-    await data.bot.send_message(chat_id, text=msg_text)
 
 async def process_set_command(message: types.Message):
     reply_text = ""
@@ -66,25 +42,10 @@ async def process_set_command(message: types.Message):
 
 async def advertise(user_id):
     value = random.randint(0, 100)
-    print(value)
     if value < 10:
-        msg = "<b>Если вам понравился бот, не забудьте рассказать о нём друзьям!</b>\n\n💫 http://t.me/bntu_timetable_bot"
+        msg = "<b>Если вам понравился бот, не забудьте " \
+              "рассказать о нём друзьям!</b>\n\n💫 http://t.me/bntu_timetable_bot"
         await data.bot.send_message(user_id, text=msg, parse_mode="HTML", disable_web_page_preview=True)
-
-async def process_groups_command(message: types.Message):
-    reply_text = ""
-
-    chat_id = str(message.chat.id)
-
-    reply_text += "В данный момент я обслуживаю только 1-й и 2-й курсы дневной формы обучения."
-    reply_text += "\nРазбираться с мириадой файлов расписаний старших курсов меня пока не научили..."
-
-    reply_text += "\n\nСписок групп:\n\n"
-
-    for key in data.schedule:
-        reply_text += "{}, ".format(key)
-
-    await data.bot.send_message(chat_id, text=reply_text)
 
 
 async def process_week_command(message: types.Message):
@@ -103,13 +64,8 @@ async def process_week_command(message: types.Message):
 
     await data.bot.send_message(message.chat.id, text=msg_text, parse_mode="Markdown", reply_markup=keyboards.bntu_keyboard)
 
-async def process_remove_command(message: types.Message):
-    await message.reply("Убираем шаблоны сообщений", reply_markup=keyboards.ReplyKeyboardRemove())
 
 def setup():
     data.dp.register_message_handler(process_start_command, commands="start", content_types=['text'], state='*')
-    data.dp.register_message_handler(process_help_command, commands="help", content_types=['text'], state='*')
     data.dp.register_message_handler(process_set_command, commands="set", content_types=['text'], state='*')
-    data.dp.register_message_handler(process_groups_command, commands="groups", content_types=['text'], state='*')
     data.dp.register_message_handler(process_week_command, commands="week", content_types=['text'], state='*')
-    data.dp.register_message_handler(process_remove_command, commands="remove", content_types=['text'], state='*')
