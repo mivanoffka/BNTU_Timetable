@@ -31,12 +31,9 @@ shift = 1
 # Начало парсинга всей книги
 
 def parce_workbook(out_schedule, filename):
-    # Открытие файла
     workbook = xlrd.open_workbook(filename, formatting_info=True)
     print("\n----------------------------------\nBook {}".format(filename))
 
-
-    # Будущее расписание
     schedule = {}
 
     # Число страничек
@@ -45,13 +42,11 @@ def parce_workbook(out_schedule, filename):
 
     # Парсинг каждой странички
     for s in range(0, sheet_num):
-        parce_worksheet_start(workbook, s, schedule)
-
-        '''try:
+        try:
             parce_worksheet_start(workbook, s, schedule)
         except:
-            print("Исключение при обработке {}-й таблицы".format(s + 1))
-            continue'''
+            print("An error occured while parsing sheet #{}".format(s + 1))
+            continue
 
     for key in schedule:
         out_schedule[key] = schedule[key]
@@ -72,7 +67,7 @@ def parce_worksheet_start(workbook, index, out_schedule):
     for key in keys:
         out_schedule[key] = local_schedule[key]
 
-    print("Sheet {} was successfully parsed".format(index + 1))
+    print("Sheet #{} was successfully parsed".format(index + 1))
 
 
 def parce_worksheet_end(worksheet):
