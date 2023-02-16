@@ -43,7 +43,7 @@ async def process_set_command(message: types.Message):
 async def advertise(user_id):
     value = random.randint(0, 100)
     if value < 10:
-        msg = "<b>Если вам понравился бот, не забудьте " \
+        msg = "<b>Если вы довольны ботом, не забудьте " \
               "рассказать о нём друзьям!</b>\n\n💫 http://t.me/bntu_timetable_bot"
         await data.bot.send_message(user_id, text=msg, parse_mode="HTML", disable_web_page_preview=True)
 

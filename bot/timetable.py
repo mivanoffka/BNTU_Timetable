@@ -40,7 +40,7 @@ def get_day_message(user_group, weekday):
         msg += print_lesson(user_group, weekday)
 
     else:
-        msg = "Сегодня воскресенье. Отдыхаем!"
+        msg = "Выходной. Отдыхаем!"
 
     return msg
 

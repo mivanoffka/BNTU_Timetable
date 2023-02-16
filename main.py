@@ -39,6 +39,7 @@ if __name__ == '__main__':
     auto_saving_thread.daemon = True
     auto_saving_thread.start()
 
+
     setup_handlers()
 
     print("Launching bot...")
