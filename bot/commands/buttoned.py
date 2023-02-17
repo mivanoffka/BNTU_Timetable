@@ -11,9 +11,13 @@ async def handle(msg: types.message):
 
     else:
         if msg.text == keyboards.today_button.text:
+            if data.interactions_count["today"] < 9999999:
+                data.interactions_count["today"] += 1
             await days.process_today_command(msg)
 
         elif msg.text == keyboards.tomorrow_button.text:
+            if data.interactions_count["tomorrow"] < 9999999:
+                data.interactions_count["tomorrow"] += 1
             await days.process_tomorrow_command(msg)
 
         elif msg.text == keyboards.set_button.text or msg.text == keyboards.new_group_button.text:
@@ -55,6 +59,9 @@ async def handle(msg: types.message):
             await general.advertise(msg.from_user.id)
 
         elif msg.text == keyboards.help_button.text:
+            if data.interactions_count["help"] < 9999999:
+                data.interactions_count["help"] += 1
+
             txt = "<u>Ответы на вопросы, которые могли у вас возникнуть.</u>"\
                     "<b>\n\n❓ Почему бот доступен только для студентов 1-го и 2-го курса?</b>"\
                     "<i>\n\nК сожалению, расписания занятий сведены в одну таблицу Excel только для младших курсов." \
@@ -84,6 +91,9 @@ async def handle(msg: types.message):
             await general.advertise(msg.from_user.id)
 
         elif msg.text == keyboards.settings_button.text:
+            if data.interactions_count["settings"] < 9999999:
+                data.interactions_count["settings"] += 1
+
             await data.bot.send_message(msg.from_user.id, text="_Открываем опции..._",
                                         reply_markup=keyboards.options_keyboard, parse_mode="Markdown")
             await general.advertise(msg.from_user.id)
@@ -109,6 +119,9 @@ async def handle(msg: types.message):
 
 
 async def mivanoffka(message: types.Message):
+    if data.interactions_count["mivanoffka"] < 9999999:
+        data.interactions_count["mivanoffka"] += 1
+
     msg = "<b>Вот он — <u>Максимка Иваноффка!</u></b> 🤗 \n"\
           "<i>\nМой бесподобный создатель, заботливый администратор да и просто замечательный человек!</i>"
 

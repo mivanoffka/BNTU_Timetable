@@ -1,3 +1,5 @@
+import dataclasses
+
 from bot import *
 from datetime import datetime
 from aiogram import types

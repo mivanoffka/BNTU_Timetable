@@ -1,5 +1,6 @@
 import threading
 
+from datetime import datetime
 from bot import data, timetable, in_out, keyboards
 import bot.commands
 from bot.commands import general, days, weekdays, admin, buttoned
@@ -29,6 +30,14 @@ async def unknown_handler(msg: types.Message):
 
 if __name__ == '__main__':
 
+    data.interactions_count = dict.fromkeys(["today", "tomorrow", "weekdays", "week", "settings", "mivanoffka", "help"])
+    for key in data.interactions_count:
+        data.interactions_count[key] = 0
+
+    now = datetime.now()
+    data.interactions_count["time"] = now.strftime("%d/%m/%Y %H:%M:%S")
+
+
     data.schedule = timetable.init()
     data.bot = Bot(token=TOKEN)
     data.dp = Dispatcher(data.bot)
@@ -47,4 +56,5 @@ if __name__ == '__main__':
     executor.start_polling(data.dp, skip_updates=True)
 
     in_out.save_userlist(data.users_and_groups)
+    print("Data saved.")
 

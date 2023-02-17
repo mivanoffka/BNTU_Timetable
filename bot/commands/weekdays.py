@@ -14,6 +14,9 @@ users_and_groups = data.users_and_groups
 async def for_day_of_week(message: types.Message, weekday):
     msg = "-"
 
+    if data.interactions_count["weekdays"] < 9999999:
+        data.interactions_count["weekdays"] += 1
+
     user_id = str(message.from_user.id)
     chat_id = str(message.chat.id)
     user_group = ""

@@ -49,8 +49,11 @@ async def advertise(user_id):
 
 
 async def process_week_command(message: types.Message):
-    week_num = timetable.get_current_week()
+    if data.interactions_count["week"] < 9999999:
+        data.interactions_count["week"] += 1
 
+    week_num = timetable.get_current_week()
+    data.interactions_count["week"] += 1
     date = datetime.today()
     weekday = datetime.weekday(date)
     if weekday == 6:
