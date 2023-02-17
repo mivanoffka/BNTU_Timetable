@@ -30,7 +30,7 @@ async def process_inform_command(message: types.Message):
                                             reply_markup=keyboards.short_keyborad)
 
 
-async def process_userslist_command(message: types.Message):
+async def process_users_command(message: types.Message):
     if str(message.from_user.id) != config.ADMIN_ID:
         await data.bot.send_message(message.chat.id, text="У вас нет прав для выполнения данной команды.", parse_mode="Markdown",
                                     reply_markup=keyboards.short_keyborad)
@@ -38,6 +38,36 @@ async def process_userslist_command(message: types.Message):
         text = "Список авторизованных пользователей:\n"
         for num in data.users_and_groups:
             text += num + " - " + data.users_and_groups[num] + "\n"
+        await data.bot.send_message(message.chat.id, text=text, parse_mode="Markdown",
+                                    reply_markup=keyboards.short_keyborad)
+
+
+async def process_stats_command(message: types.Message):
+    if str(message.from_user.id) != config.ADMIN_ID:
+        await data.bot.send_message(message.chat.id, text="У вас нет прав для выполнения данной команды.", parse_mode="Markdown",
+                                    reply_markup=keyboards.short_keyborad)
+    else:
+        text = "Статистика пользователей:"
+
+        group_keys = []
+        for user in data.users_and_groups:
+            if data.users_and_groups[user] not in group_keys:
+                group_keys.append(data.users_and_groups[user])
+
+        stats_dict = dict.fromkeys(group_keys, 0)
+
+        for group in group_keys:
+            for user in data.users_and_groups:
+                if data.users_and_groups[user] == group:
+                    stats_dict[group] += 1
+
+        sum = 0
+        for group in stats_dict:
+            text += "\n    Гр. {} ({} чел.)".format(group, stats_dict[group])
+            sum += stats_dict[group]
+
+        text += "\n\nИтого {} чел.".format(sum)
+
         await data.bot.send_message(message.chat.id, text=text, parse_mode="Markdown",
                                     reply_markup=keyboards.short_keyborad)
 
@@ -62,6 +92,7 @@ async def process_menu_command(message: types.Message):
 
 
 def setup():
-    data.dp.register_message_handler(process_userslist_command, commands="users", content_types=['text'], state='*')
+    data.dp.register_message_handler(process_users_command, commands="users", content_types=['text'], state='*')
+    data.dp.register_message_handler(process_stats_command, commands="stats", content_types=['text'], state='*')
     data.dp.register_message_handler(process_inform_command, commands="inform", content_types=['text'], state='*')
     data.dp.register_message_handler(process_update_command, commands="update", content_types=['text'], state='*')
