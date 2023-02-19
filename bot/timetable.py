@@ -37,7 +37,7 @@ def get_day_message(user_group, weekday):
 
         msg = "*{}, группа {}.*".format(weekday, user_group)
 
-        msg += print_lesson(user_group, weekday)
+        msg += day_to_str(user_group, weekday)
 
     else:
         msg = "Выходной. Отдыхаем!"
@@ -45,7 +45,7 @@ def get_day_message(user_group, weekday):
     return msg
 
 
-def print_lesson(group, weekday):
+def day_to_str(group, weekday):
     output = ""
 
     timetable = data.schedule[group]
@@ -56,8 +56,6 @@ def print_lesson(group, weekday):
         info = day[time]
 
         if info != "<Пусто>" and info is not None:
-            #print("Пара в {}".format(time))
-            #print("{}".format(day[time]))
             output += "\n\n⏰ *{}* ".format(time)
             output += "\n_{}_".format(day[time])
 
@@ -73,6 +71,7 @@ def init():
         schedule[key] = schedule1[key]
 
     return schedule
+
 
 if __name__ == '__main__':
     init()

@@ -60,7 +60,7 @@ async def process_schedule_command(message: types.Message):
             weekday = timetable.WEEK_DAYS[i]
             reply_text += "--------------------------------\n"
             reply_text += "*{}*".format(weekday.upper())
-            reply_text += timetable.print_lesson(user_group, weekday)
+            reply_text += timetable.day_to_str(user_group, weekday)
             reply_text += "\n\n"
 
     else:

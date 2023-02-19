@@ -14,7 +14,7 @@ async def is_admin(user_id):
         return True
 
 
-async def process_inform_command(message: types.Message):
+async def process_notify_command(message: types.Message):
     if str(message.from_user.id) != config.ADMIN_ID:
         await data.bot.send_message(message.chat.id, text="У вас нет прав для выполнения данной команды.", parse_mode="Markdown",
                                     reply_markup=keyboards.short_keyborad)
@@ -30,38 +30,30 @@ async def process_inform_command(message: types.Message):
                                             reply_markup=keyboards.short_keyborad)
 
 
-async def process_users_command(message: types.Message):
+async def process_stats_command(message: types.Message):
     if str(message.from_user.id) != config.ADMIN_ID:
         await data.bot.send_message(message.chat.id, text="У вас нет прав для выполнения данной команды.", parse_mode="Markdown",
                                     reply_markup=keyboards.short_keyborad)
     else:
-        text = "Список авторизованных пользователей:\n"
-        for num in data.users_and_groups:
-            text += num + " - " + data.users_and_groups[num] + "\n"
-        await data.bot.send_message(message.chat.id, text=text, parse_mode="Markdown",
-                                    reply_markup=keyboards.short_keyborad)
+        arg = message.get_args()
 
-
-async def process_actions_command(message: types.Message):
-    if str(message.from_user.id) != config.ADMIN_ID:
-        await data.bot.send_message(message.chat.id, text="У вас нет прав для выполнения данной команды.", parse_mode="Markdown",
-                                    reply_markup=keyboards.short_keyborad)
-    else:
         text = "Действия пользователей, начиная с {}:\n".format(data.interactions_count["time"])
 
         for key in data.interactions_count:
             if key != "time":
                 text += "\n   {}: {} раз(а)".format(key, data.interactions_count[key])
-                data.interactions_count[key] = 0
+                if arg == "reset":
+                    data.interactions_count[key] = 0
 
-        now = datetime.now()
-        data.interactions_count["time"] = now.strftime("%d/%m/%Y %H:%M:%S")
+        if arg == "reset":
+            now = datetime.now()
+            data.interactions_count["time"] = now.strftime("%d/%m/%Y %H:%M:%S")
 
         await data.bot.send_message(message.chat.id, text=text, parse_mode="Markdown",
                                     reply_markup=keyboards.short_keyborad)
 
 
-async def process_stats_command(message: types.Message):
+async def process_users_command(message: types.Message):
     if str(message.from_user.id) != config.ADMIN_ID:
         await data.bot.send_message(message.chat.id, text="У вас нет прав для выполнения данной команды.", parse_mode="Markdown",
                                     reply_markup=keyboards.short_keyborad)
@@ -113,6 +105,6 @@ async def process_menu_command(message: types.Message):
 def setup():
     data.dp.register_message_handler(process_users_command, commands="users", content_types=['text'], state='*')
     data.dp.register_message_handler(process_stats_command, commands="stats", content_types=['text'], state='*')
-    data.dp.register_message_handler(process_inform_command, commands="inform", content_types=['text'], state='*')
+    data.dp.register_message_handler(process_notify_command, commands="notify", content_types=['text'], state='*')
     data.dp.register_message_handler(process_update_command, commands="update", content_types=['text'], state='*')
-    data.dp.register_message_handler(process_actions_command, commands="actions", content_types=['text'], state='*')
+

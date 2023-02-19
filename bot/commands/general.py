@@ -57,7 +57,7 @@ async def process_week_command(message: types.Message):
     date = datetime.today()
     weekday = datetime.weekday(date)
     if weekday == 6:
-        if weekday == 1:
+        if week_num == 1:
             weekday = 2
         else:
             weekday = 1
