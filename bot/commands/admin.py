@@ -1,3 +1,5 @@
+import asyncio
+import aiogram.utils.exceptions
 import config
 from bot import data, keyboards, timetable
 from datetime import datetime
@@ -25,9 +27,23 @@ async def process_notify_command(message: types.Message):
                                         parse_mode="Markdown",
                                         reply_markup=keyboards.short_keyborad)
         else:
+            mx = len(data.users_and_groups)
+            mn = 0
             for user_id in data.users_and_groups:
-                await data.bot.send_message(user_id, text=inf_mes, parse_mode="HTML",
+                try:
+                    if not data.users_and_groups[user_id] == "BLOCKED":
+                        await data.bot.send_message(user_id, text=inf_mes, parse_mode="HTML",
                                             reply_markup=keyboards.short_keyborad)
+                        mn += 1
+
+                    await asyncio.sleep(1)
+                except aiogram.utils.exceptions.BotBlocked:
+                    data.users_and_groups[user_id] = "BLOCKED"
+                except:
+                    pass
+
+            await data.bot.send_message(config.ADMIN_ID, text="Рассылка завершена!\n{}/{}".format(mn, mx), parse_mode="HTML",
+                                        reply_markup=keyboards.short_keyborad)
 
 
 async def process_stats_command(message: types.Message):
