@@ -19,14 +19,14 @@ async def process_notify_command(message: types.Message):
         await data.bot.send_message(message.chat.id, text="У вас нет прав для выполнения данной команды.", parse_mode="Markdown",
                                     reply_markup=keyboards.short_keyborad)
     else:
-        inf_mes = message.text[8:]
+        inf_mes = message.html_text[8:]
         if len(inf_mes) > 4000:
             await data.bot.send_message(message.chat.id, text="Слишком длинное...",
                                         parse_mode="Markdown",
                                         reply_markup=keyboards.short_keyborad)
         else:
             for user_id in data.users_and_groups:
-                await data.bot.send_message(user_id, text=inf_mes, parse_mode="Markdown",
+                await data.bot.send_message(user_id, text=inf_mes, parse_mode="HTML",
                                             reply_markup=keyboards.short_keyborad)
 
 
