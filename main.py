@@ -52,6 +52,7 @@ if __name__ == '__main__':
     setup_handlers()
 
     print("Launching bot...")
+    print("Version 1.1.X")
 
     executor.start_polling(data.dp, skip_updates=True)
 
