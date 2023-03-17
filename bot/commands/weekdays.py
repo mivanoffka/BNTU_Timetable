@@ -60,6 +60,7 @@ async def process_fri_command(message: types.Message):
 async def process_sat_command(message: types.Message):
     await for_day_of_week(message, 5)
 
+
 async def is_user_set(user_id):
     result = False
 

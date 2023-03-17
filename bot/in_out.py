@@ -39,9 +39,12 @@ def autosave():
     except:
         print("An error occured during autosaving...")
 
+def clear_recent_reports():
+    data.recently_sended_report.clear()
 
 def launch_autosaving():
     schedule.every(15).minutes.do(autosave)
+    schedule.every(5).minutes.do(clear_recent_reports)
 
     while not data.exit_event:
         schedule.run_pending()

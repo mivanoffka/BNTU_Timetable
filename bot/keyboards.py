@@ -41,7 +41,7 @@ weekdays_keyboard.row(fri_button)
 weekdays_keyboard.insert(sat_button)
 
 schedule_button = KeyboardButton("На всю неделю 🗓️")
-ret_button = KeyboardButton("Вернуться назад ↩️")
+ret_button = KeyboardButton("Назад ↩️")
 
 weekdays_keyboard.add(ret_button)
 
@@ -60,12 +60,17 @@ new_group_button = KeyboardButton("Заново указать группу ✏�
 mivanoffka_button = KeyboardButton("Познакомиться с разработчиком 🥰")
 help_button = KeyboardButton("Справка 💡")
 bntu_button_3 = KeyboardButton("Сайт БНТУ🏛️")
+report_button = KeyboardButton("Оставить отзыв 📬️")
+
 
 options_keyboard.row(bntu_button_3)
 options_keyboard.insert(new_group_button)
 options_keyboard.row(mivanoffka_button)
 options_keyboard.row(ret_button)
+options_keyboard.insert(report_button)
 options_keyboard.insert(help_button)
+
+
 
 links_keyboard = InlineKeyboardMarkup()
 vk_button = InlineKeyboardButton("VK", url='https://vk.com/maksimka_ivanoffka')

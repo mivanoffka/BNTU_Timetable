@@ -34,6 +34,7 @@ async def process_notify_command(message: types.Message):
                     if not data.users_and_groups[user_id] == "BLOCKED":
                         await data.bot.send_message(user_id, text=inf_mes, parse_mode="HTML",
                                             reply_markup=keyboards.short_keyborad)
+                        print("Message #{} sent.".format(mn))
                         mn += 1
 
                     await asyncio.sleep(1)
@@ -61,9 +62,12 @@ async def process_stats_command(message: types.Message):
                 if arg == "reset":
                     data.interactions_count[key] = 0
 
+        text += "\n\nУникальных пользователей: " + str(len(data.recent_users))
+
         if arg == "reset":
             now = datetime.now()
             data.interactions_count["time"] = now.strftime("%d/%m/%Y %H:%M:%S")
+            data.recent_users.clear()
 
         await data.bot.send_message(message.chat.id, text=text, parse_mode="Markdown",
                                     reply_markup=keyboards.short_keyborad)
@@ -101,7 +105,7 @@ async def process_users_command(message: types.Message):
 
 async def process_update_command(message: types.Message):
     if await is_admin(message.from_user.id):
-        await data.bot.send_message(message.chat.id, text="Начинаем обновление расписания. 🔄")
+        await data.bot.send_message(message.chat.id, text="Начинаем обновление... 🔄")
         try:
             print("Schedule updating started...")
             autoparser.download_and_parse()
@@ -118,9 +122,34 @@ async def process_menu_command(message: types.Message):
         await data.bot.send_message(message.chat.id, text="Возвращаю меню...", reply_markup=keyboards)
 
 
+async def process_danik_command(message: types.Message):
+    if await is_admin(message.from_user.id):
+        msg = "даник, иди нахуй"
+        await data.bot.send_message("1344775275", text=msg)
+
+
+async def process_reply_command(message: types.Message):
+    if await is_admin(message.from_user.id):
+        args = message.get_args()
+        id = str(args.split()[0])
+
+        mes = args[len(id)+1:]
+
+        text = "*Вам поступило сообщение*!\n\n_{}_".format(mes)
+        try:
+            await data.bot.send_message(id, text=text, parse_mode="Markdown", reply_markup=keyboards.short_keyborad)
+            await data.bot.send_message(config.ADMIN_ID, text="Сообщение успешно отправлено!",
+                                        parse_mode="Markdown", reply_markup=keyboards.short_keyborad)
+        except:
+            await data.bot.send_message(config.ADMIN_ID, text="Не удалось отправить сообщение...",
+                                        parse_mode="Markdown", reply_markup=keyboards.short_keyborad)
+
+
 def setup():
+    data.dp.register_message_handler(process_danik_command, commands="danik", content_types=['text'], state='*')
     data.dp.register_message_handler(process_users_command, commands="users", content_types=['text'], state='*')
     data.dp.register_message_handler(process_stats_command, commands="stats", content_types=['text'], state='*')
     data.dp.register_message_handler(process_notify_command, commands="notify", content_types=['text'], state='*')
     data.dp.register_message_handler(process_update_command, commands="update", content_types=['text'], state='*')
+    data.dp.register_message_handler(process_reply_command, commands="reply", content_types=['text'], state='*')
 

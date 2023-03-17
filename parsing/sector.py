@@ -10,12 +10,26 @@ class Sector:
 
     __pattern = -1
 
-    def __init__(self, sector_list):
+    mode = ""
 
+    def __init__(self, sector_list, mode="default"):
         self.__processors = [self.process_0, self.process_1, self.process_2, self.process_3, self.process_4,
                              self.process_5, self.process_6, self.process_7, self.process_8, self.process_9,
                              self.process_10, self.process_11, self.process_12, self.process_13, self.process_14,
                              self.process_15, self.process_error]
+
+        w = len(sector_list[0])
+        h = len(sector_list)
+
+        if w == 4 and h == 4:
+            pass
+        elif w == 2 and h == 4:
+            sector_list = self.reformat_2x4(sector_list)
+        elif w == 1 and h == 4:
+            sector_list = self.reformat_1x4(sector_list)
+        else:
+            self.list = None
+            return
 
         s = sector_list
         a = [[s[0][0], s[0][1]], [s[1][0], s[1][1]]]
@@ -30,50 +44,206 @@ class Sector:
         self.c = c
         self.d = d
 
+    @staticmethod
+    def reformat_2x4(sector_list):
+        s = sector_list
+        new_list = [[s[0][0], s[0][0], s[0][1], s[0][1]],
+                    [s[1][0], s[1][0], s[1][1], s[1][1]],
+                    [s[2][0], s[2][0], s[2][1], s[2][1]],
+                    [s[3][0], s[3][0], s[3][1], s[3][1]]]
+        return new_list
+
+    @staticmethod
+    def reformat_2x2(sector_list):
+        s = sector_list
+        new_list = [[s[0][0], s[0][0], s[0][1], s[0][1]],
+                    [s[0][0], s[0][0], s[0][1], s[0][1]],
+                    [s[2][0], s[2][0], s[2][1], s[2][1]],
+                    [s[2][0], s[2][0], s[2][1], s[2][1]]]
+        return new_list
+
+    @staticmethod
+    def reformat_1x4(sector_list):
+        s = sector_list
+        new_list = [[s[0][0], s[0][0], s[0][0], s[0][0]],
+                    [s[1][0], s[1][0], s[1][0], s[1][0]],
+                    [s[2][0], s[2][0], s[2][0], s[2][0]],
+                    [s[3][0], s[3][0], s[3][0], s[3][0]]]
+        return new_list
+
+
+    def init2x4(self, sector_list):
+        s = sector_list
+        a = [[s[0][0]], [s[1][0]]]
+        b = [[s[0][1]], [s[1][1]]]
+        c = [[s[2][0]], [s[3][0]]]
+        d = [[s[2][1]], [s[3][1]]]
+
+        self.list = sector_list
+
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+
+    def remove_weeks(self, txt: str):
+        txt = txt.replace("1 нед.", "1 нед")
+        txt = txt.replace("1 нед", "")
+
+        txt = txt.replace("2 нед.", "2 нед")
+        txt = txt.replace("2 нед", "")
+
+        return txt
+
+    def has_nums(self, txt: str):
+        txt = txt.replace("СГМ 1", "СГМ_1")
+        txt = txt.replace("СГМ 2", "СГМ_2")
+        txt = txt.replace("СГМ 3", "СГМ_3")
+
+        txt = txt.replace("1 нед.", "1 нед")
+        txt = txt.replace("1 нед", "")
+
+        txt = txt.replace("2 нед.", "2 нед")
+        txt = txt.replace("2 нед", "")
+
+        words = txt.split()
+        # print(words)
+
+        for word in words:
+            if word.isdigit() or (word[-1] in ('а', 'б', 'в', 'a') and word[:-1].isdigit()):
+                return True
+
+        return False
+
+    def are_brothers(self, x: str, y: str):
+        return (not self.has_nums(x) and self.has_nums(y)) or (x == y)
+
+    def sum_if_not_equal(self, x: str, y: str):
+        if x == y:
+            return x
+        else:
+            return x+y
+    def binary_sector(self):
+        binary_sector = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+
+        for i in range(0, 4):
+            for j in range(0, 4):
+                if self.list[i][j] != '_':
+                    binary_sector[i][j] = 1
+                else:
+                    binary_sector[i][j] = 0
+
+        return binary_sector
+
+    def is_time(txt: str):
+        if len(txt) == 5:
+            return txt[0].isdigit() and txt[1].isdigit() and (txt[2] == "." or txt[2] == ":") \
+                and txt[3].isdigit() and txt[4].isdigit()
+
+        elif len(txt) == 4:
+            return txt[0].isdigit() and (txt[1] == "." or txt[1] == ":") and txt[2].isdigit() and txt[3].isdigit()
+
+        else:
+            return False
+
+
     def process_0(self):
         return "<Пусто>"
 
     def process_1(self):
+        eq = self.are_brothers
+
         a = self.A()
         b = self.B()
         c = self.C()
         d = self.D()
 
+        eq_ac = eq(a, c)
+        eq_bd = eq(b, d)
+
+        a1 = a.lower()
+
+        '''l1 = self.unisum(self.list[0])
+        l2 = self.unisum(self.list[1])
+        l3 = self.unisum(self.list[2])
+        l4 = self.unisum(self.list[3])'''
+
+
+        l1 = self.list[0][0]
+        l2 = self.list[1][0]
+        l3 = self.list[2][0]
+        l4 = self.list[3][0]
+
         info = ""
 
-        tp = ""
+        # 1.1
+        if (a == b and c == d and eq_ac and eq_bd) or (
+                l1 == l2 and l2 == l3 and l3 != l4) or "физическая культура" in a1:
+            info += "\n      •  " + self.L(1, 4)
 
-        if (a == b and a == c and d == b and d == c) or (a == b and a != c and d != b and d == c):
-            tp = "А"
-            info = "      •  " + self.L(1, 4)
-            info = info.replace("2 нед", "\n      •  2 нед")
-        elif a != b and a == c and d != b and d == c or (a != b and a != c and d != b and d != c):
-            tp = "Б1"
-            info_1 = "   1-я подгруппа:\n       •  " + a + c
-            info_2 = "   2-я подгруппа:\n       •  " + b + d
-            info = info_1 + "\n" + info_2
-        elif a == b and a != c and d != b and d != c:
-            if " нед" in a + b + c + d:
-                tp = "В1"
+        # 1.2
+        elif a != b and c != d and not eq_ac and not eq_bd:
+            info += "\n   1-я неделя:"
+            info += "\n      •  " + "1-я подгруппа — " + a
+            info += "\n      •  " + "2-я подгруппа — " + b
 
-                info += "   {}\n".format(a)
+            info += "\n   2-я неделя:"
+            info += "\n      •  " + "1-я подгруппа — " + c
+            info += "\n      •  " + "2-я подгруппа — " + d
 
-                info += "   2 нед.\n"
-                info += "      • 1-я подгруппа - {}\n".format(c)
-                info += "      • 2-я подгруппа - {}\n".format(d)
-            else:
-                tp = "В2 (Б1)"
-                info_1 = "   1-я подгруппа:\n      • " + a + c
-                info_2 = "   2-я подгруппа:\n      • " + b + d
-                info = info_1 + "\n" + info_2
-        elif a != b and a != c and d != b and d == c:
-            tp = "Д"
+        # 1.3
+        elif a == b and c == d and not eq_ac and not eq_bd:
+            info += "\n      •  " + "1-я неделя — " + a
+            info += "\n      •  " + "2-я неделя — " + c
 
-            info += "   1-я неделя\n"
-            info += "      •  1-я подгруппа - {}\n".format(a)
-            info += "      •  2-я подгруппа - {}\n".format(b)
+        # 1.4
+        elif a != b and c != d and eq_ac and eq_bd:
+            info += "\n   1-я подгруппа:"
+            info += "\n      •  " + self.sum_if_not_equal(a, c)
 
-            info += "   {}\n".format(c)
+            info += "\n   2-я подгруппа:"
+            info += "\n      •  " + self.sum_if_not_equal(b, d)
+
+        # 1.5
+        elif a == b and c == d and not eq_ac and not eq_bd:
+            info += "\n   1-я неделя:"
+            info += "\n      •  " + "1-я подгруппа — " + a
+            info += "\n      •  " + "2-я подгруппа — " + b
+
+            info += "\n   2-я неделя:"
+            info += "\n      •  " + c
+
+        # 1.6
+        elif a == b and c != d and not eq_ac and not eq_bd:
+            info += "\n   1-я неделя:"
+            info += "\n      •  " + a
+
+            info += "\n   2-я неделя:"
+            info += "\n      •  " + "1-я подгруппа — " + c
+            info += "\n      •  " + "2-я подгруппа — " + d
+
+        # 1.7
+        elif a != b and c != d and eq_ac and not eq_bd:
+            info += "\n   1-я подгруппа:"
+            info += "\n      •  " + self.sum_if_not_equal(a, c)
+
+            info += "\n   2-я подгруппа:"
+            info += "\n      •  " + "1-я неделя — " + b
+            info += "\n      •  " + "2-я неделя — " + d
+
+        # 1.8
+        elif a != b and c != d and not eq_ac and eq_bd:
+            info += "\n   1-я подгруппа:"
+            info += "\n      •  " + "1-я неделя — " + a
+            info += "\n      •  " + "2-я неделя — " + c
+
+            info += "\n   2-я подгруппа:"
+            info += "\n      •  " + self.sum_if_not_equal(b, d)
+
+        # 1.0
+        else:
+            info = "\n      •  " + self.L(1, 4)
+            pass
 
         return info
 
@@ -82,16 +252,14 @@ class Sector:
         b = self.B()
 
         info = ""
-        tp = ""
 
-        if a == b:
-            tp = "А"
-            info = "      •  " + self.L(1, 2)
+        if a != b:
+            info += "\n   1-я неделя:"
+            info += "\n      •  " + "1-я подгруппа — " + a
+            info += "\n      •  " + "2-я подгруппа — " + b
         else:
-            tp = "В"
-            info_1 = "   1-я подгруппа:\n      •  " + a
-            info_2 = "   2-я подгруппа:\n      •  " + b
-            info = info_1 + "\n" + info_2
+            info += "\n   1-я неделя:"
+            info += "\n      •  " + a
 
         return info
 
@@ -100,16 +268,14 @@ class Sector:
         d = self.D()
 
         info = ""
-        tp = ""
 
-        if c == d:
-            tp = "А"
-            info = "      •  " + self.L(3, 4)
+        if c != d:
+            info += "\n   2-я неделя:"
+            info += "\n      •  " + "1-я подгруппа — " + c
+            info += "\n      •  " + "2-я подгруппа — " + d
         else:
-            tp = "В"
-            info_1 = "   1-я подгруппа:\n      •  " + c
-            info_2 = "   2-я подгруппа:\n      •  " + d
-            info = info_1 + "\n" + info_2
+            info += "\n   2-я неделя:"
+            info += "\n      •  " + c
 
         return info
 
@@ -118,17 +284,14 @@ class Sector:
         c = self.C()
 
         info = ""
-        tp = ""
 
-        if "нед" in a+c:
-            tp = "B"
-            info = "   1-я подгруппа:\n"
-            info += "      •  {}\n".format(a)
-            info += "      •  {}".format(c)
+        if self.are_brothers(a, c):
+            info += "\n   1-я подгруппа:"
+            info += "\n      •  " + self.sum_if_not_equal(a, c)
         else:
-            tp = "А"
-            info = "   1-я подгруппа:\n"
-            info += "      •  {}".format(a+c)
+            info += "\n   1-я подгруппа:"
+            info += "\n      •  " + "1-я неделя — " + a
+            info += "\n      •  " + "2-я неделя — " + c
 
         return info
 
@@ -139,17 +302,14 @@ class Sector:
         d = self.D()
 
         info = ""
-        tp = ""
 
-        if "нед" in b+d:
-            tp = "B"
-            info += "   2-я подгруппа:\n"
-            info += "      •  {}\n".format(b)
-            info += "      •  {}".format(d)
+        if self.are_brothers(b, d):
+            info += "\n   2-я подгруппа:"
+            info += "\n      •  " + self.sum_if_not_equal(b, d)
         else:
-            tp = "А"
-            info += "   2-я подгруппа:\n"
-            info += "      •  {}".format(b+d)
+            info += "\n   2-я подгруппа:"
+            info += "\n      •  " + "1-я неделя — " + b
+            info += "\n      •  " + "2-я неделя — " + d
 
         return info
 
@@ -158,27 +318,31 @@ class Sector:
         c = self.C()
         d = self.D()
 
+        eq = self.are_brothers(a, c)
+
         info = ""
 
-        if a != c and c == d:
-            info += "   1 нед.\n"
-            info += "      •  1-я подгруппа - {}\n".format(a)
+        if eq:
+            info += "\n   1-я подгруппа:"
+            info += "\n      •  " + self.sum_if_not_equal(a, c)
 
-            info += "   2 нед.\n"
-            info += "      •  {}\n".format(c)
-
-        elif a == c and c != d:
-            info_1 = "   1-я подгруппа:\n      •  {}\n".format(a)
-            info_2 = "   2-я подгруппа:\n      •  {}".format(d)
-            info = info_1 + "\n" + info_2
-
+            info += "\n   2-я подгруппа:"
+            info += "\n      •  " + "2-я неделя — " + d
         else:
-            info += "   1 нед.\n"
-            info += "      •  1-я подгруппа - {}\n".format(a)
+            if c == d:
+                info += "\n   1-я неделя:"
+                info += "\n      •  " + "1-я подгруппа — " + a
 
-            info += "   2 нед.\n"
-            info += "      •  1-я подгруппа - {}\n".format(c)
-            info += "      •  2-я подгруппа - {}\n".format(d)
+                info += "\n   2-я неделя:"
+                info += "\n      •  " + c
+
+            else:
+                info += "\n   1-я неделя:"
+                info += "\n      •  " + "1-я подгруппа — " + a
+
+                info += "\n   2-я неделя:"
+                info += "\n      •  " + "1-я подгруппа — " + c
+                info += "\n      •  " + "2-я подгруппа — " + d
 
         return info
 
@@ -187,27 +351,31 @@ class Sector:
         c = self.C()
         d = self.D()
 
+        eq = self.are_brothers(b, d)
+
         info = ""
 
-        if b != d and c == d:
-            info += "   1 нед.\n"
-            info += "      •  2-я подгруппа - {}\n".format(b)
+        if eq:
+            info += "\n   1-я подгруппа:"
+            info += "\n      •  " + "2-я неделя — " + c
 
-            info += "   2 нед.\n"
-            info += "      •  {}\n".format(c)
-
-        elif b == d and c != d:
-            info_1 = "   1-я подгруппа:\n      •  {}\n".format(c)
-            info_2 = "   2-я подгруппа:\n      •  {}".format(b)
-            info = info_1 + "\n" + info_2
-
+            info += "\n   2-я подгруппа:"
+            info += "\n      •  " + self.sum_if_not_equal(b, d)
         else:
-            info += "   1 нед.\n"
-            info += "      •  2-я подгруппа - {}\n".format(b)
+            if c == d:
+                info += "\n   1-я неделя:"
+                info += "\n      •  " + "2-я подгруппа — " + b
 
-            info += "   2 нед.\n"
-            info += "      •  1-я подгруппа - {}\n".format(c)
-            info += "      •  2-я подгруппа - {}\n".format(d)
+                info += "\n   2-я неделя:"
+                info += "\n      •  " + c
+
+            else:
+                info += "\n   1-я неделя:"
+                info += "\n      •  " + "2-я подгруппа — " + b
+
+                info += "\n   2-я неделя:"
+                info += "\n      •  " + "1-я подгруппа — " + c
+                info += "\n      •  " + "2-я подгруппа — " + d
 
         return info
 
@@ -216,28 +384,31 @@ class Sector:
         b = self.B()
         d = self.D()
 
+        eq = self.are_brothers(b, d)
+
         info = ""
 
-        if a == b and b != d:
-            info += "   1 нед.\n"
-            info += "      •  {}\n".format(a)
+        if eq:
+            info += "\n   1-я подгруппа:"
+            info += "\n      •  " + "1-я неделя — " + a
 
-            info += "   2 нед.\n"
-            info += "      •  2-я подгруппа - {}\n".format(d)
-
-        elif a != b and b == d:
-            info_1 = "   1-я подгруппа:\n      •  {}\n".format(a)
-            info_2 = "   2-я подгруппа:\n      •  {}".format(b)
-            info = info_1 + "\n" + info_2
-
+            info += "\n   2-я подгруппа:"
+            info += "\n      •  " + self.sum_if_not_equal(b, d)
         else:
+            if a == b:
+                info += "\n   1-я неделя:"
+                info += "\n      •  " + a
 
-            info += "   1 нед.\n"
-            info += "      •  1-я подгруппа - {}\n".format(a)
-            info += "      •  2-я подгруппа - {}\n".format(b)
+                info += "\n   2-я неделя:"
+                info += "\n      •  " + "2-я подгруппа — " + d
 
-            info += "   2 нед.\n"
-            info += "      •  2-я подгруппа - {}\n".format(d)
+            else:
+                info += "\n   1-я неделя:"
+                info += "\n      •  " + "1-я подгруппа — " + a
+                info += "\n      •  " + "2-я подгруппа — " + b
+
+                info += "\n   2-я неделя:"
+                info += "\n      •  " + "2-я подгруппа — " + d
 
         return info
 
@@ -246,59 +417,71 @@ class Sector:
         b = self.B()
         c = self.C()
 
+        eq = self.are_brothers(a, c)
+
         info = ""
 
-        if a == b and a != c:
-            info += "   1 нед.\n"
-            info += "      •  {}\n".format(a)
+        if eq:
+            info += "\n   1-я подгруппа:"
+            info += "\n      •  " + self.sum_if_not_equal(a, c)
 
-            info += "   2 нед.\n"
-            info += "      •  1-я подгруппа - {}\n".format(c)
-
-        elif a != b and a == c:
-            info_1 = "   1-я подгруппа:\n      •  {}\n".format(a)
-            info_2 = "   2-я подгруппа:\n      •  {}".format(b)
-            info = info_1 + "\n" + info_2
-
+            info += "\n   2-я подгруппа:"
+            info += "\n      •  " + "2-я неделя — " + b
         else:
-            info += "   1 нед.\n"
-            info += "      •  1-я подгруппа - {}\n".format(a)
-            info += "      •  2-я подгруппа - {}\n".format(b)
+            if a == b:
+                info += "\n   1-я неделя:"
+                info += "\n      •  " + a
 
-            info += "   2 нед.\n"
-            info += "      •  1-я подгруппа - {}\n".format(c)
+                info += "\n   2-я неделя:"
+                info += "\n      •  " + "1-я подгруппа — " + c
+
+            else:
+                info += "\n   1-я неделя:"
+                info += "\n      •  " + "1-я подгруппа — " + a
+                info += "\n      •  " + "2-я подгруппа — " + b
+
+                info += "\n   2-я неделя:"
+                info += "\n      •  " + "1-я подгруппа — " + c
 
         return info
 
     def process_10(self):
         a = self.A()
 
-        info = "   1-я подгруппа:\n"
-        info += "      •  {}".format(a)
+        info = ""
+
+        info += "\n   1-я неделя:"
+        info += "\n      •  " + "1-я подгруппа — " + a
 
         return info
 
     def process_11(self):
         b = self.B()
 
-        info = "   2-я подгруппа:\n"
-        info += "      •  {}".format(b)
+        info = ""
+
+        info += "\n   1-я неделя:"
+        info += "\n      •  " + "2-я подгруппа — " + b
 
         return info
 
     def process_12(self):
         c = self.C()
 
-        info = "   1-я подгруппа:\n"
-        info += "      •  {}".format(c)
+        info = ""
+
+        info += "\n   2-я неделя:"
+        info += "\n      •  " + "1-я подгруппа — " + c
 
         return info
 
     def process_13(self):
         d = self.D()
 
-        info = "   2-я подгруппа:\n"
-        info += "      •  {}".format(d)
+        info = ""
+
+        info += "\n   2-я неделя:"
+        info += "\n      •  " + "2-я подгруппа — " + d
 
         return info
 
@@ -308,9 +491,11 @@ class Sector:
 
         info = ""
 
-        info_1 = "   1-я подгруппа:\n      •  " + a
-        info_2 = "   2-я подгруппа:\n      •  " + d
-        info = info_1 + "\n" + info_2
+        info += "\n   1-я неделя:"
+        info += "\n      •  " + "1-я подгруппа — " + a
+
+        info += "\n   2-я неделя:"
+        info += "\n      •  " + "2-я подгруппа — " + d
 
         return info
 
@@ -320,16 +505,16 @@ class Sector:
 
         info = ""
 
-        info_1 = "   1-я подгруппа:\n      •  " + b
-        info_2 = "   2-я подгруппа:\n      •  " + c
-        info = info_1 + "\n" + info_2
+        info += "\n   1-я неделя:"
+        info += "\n      •  " + "2-я подгруппа — " + b
+
+        info += "\n   2-я неделя:"
+        info += "\n      •  " + "1-я подгруппа — " + c
 
         return info
 
-
     def process_error(self):
         return "Ошибка!"
-
 
     def unisum(self, list):
         unique_list = []
@@ -347,6 +532,9 @@ class Sector:
         return unique_str
 
     def process(self):
+        if self.list is None:
+            return self.process_0()
+
         pattern = self.pattern
 
         if pattern in range(0, 16):
@@ -365,7 +553,9 @@ class Sector:
         d = self.D()
 
         yes = self.bln
-        def no(x): return not yes(x)
+
+        def no(x):
+            return not yes(x)
 
         if no(a) and no(b) and no(c) and no(d):
             pattern = 0
@@ -379,7 +569,7 @@ class Sector:
         elif no(a) and no(b) and yes(c) and yes(d):
             pattern = 3
 
-        elif yes(a) and no(b) and yes(c) and no (d):
+        elif yes(a) and no(b) and yes(c) and no(d):
             pattern = 4
 
         elif no(a) and yes(b) and no(c) and yes(d):
@@ -427,7 +617,7 @@ class Sector:
             return True
 
     def S(self, num):
-        return self.unisum([self.list[num-1]])
+        return self.unisum([self.list[num - 1]])
 
     def L(self, start, end):
         lst = []
@@ -437,17 +627,25 @@ class Sector:
         return self.unisum(lst)
 
     def A(self):
-        return self.unisum(self.a)
+        a = self.unisum(self.a)
+        return self.remove_weeks(a)
 
     def B(self):
-        return self.unisum(self.b)
+        b = self.unisum(self.b)
+        return self.remove_weeks(b)
 
     def C(self):
-        return self.unisum(self.c)
+        c = self.unisum(self.c)
+        return self.remove_weeks(c)
 
     def D(self):
-        return self.unisum(self.d)
+        d = self.unisum(self.d)
+        return self.remove_weeks(d)
 
 
 if __name__ == "__main__":
+    s = Sector([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]])
+    print(s.has_nums("a 1"))
+
+    print()
     pass

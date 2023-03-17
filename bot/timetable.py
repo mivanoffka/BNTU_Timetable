@@ -1,10 +1,11 @@
 from pathlib import Path
+from config import BASE_DIR
 
 from bot import data
 import json
 from datetime import datetime
 
-from config import BASE_DIR
+
 
 WEEK_DAYS = ("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресение")
 
@@ -37,7 +38,14 @@ def get_day_message(user_group, weekday):
 
         msg = "*{}, группа {}.*".format(weekday, user_group)
 
-        msg += day_to_str(user_group, weekday)
+        msg_buf = day_to_str(user_group, weekday)
+
+        if msg_buf != "":
+            msg += msg_buf
+        else:
+            msg += "\n\n_Пар нет. Отдыхаем!_"
+
+        #msg += day_to_str(user_group, weekday)
 
     else:
         msg = "Выходной. Отдыхаем!"
@@ -55,9 +63,9 @@ def day_to_str(group, weekday):
 
         info = day[time]
 
-        if info != "<Пусто>" and info is not None:
+        if info != "<Пусто>" and info != "\nПусто" and info is not None:
             output += "\n\n⏰ *{}* ".format(time)
-            output += "\n_{}_".format(day[time])
+            output += "_{}_".format(day[time])
 
     return output
 
