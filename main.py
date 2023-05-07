@@ -32,30 +32,7 @@ async def unknown_handler(msg: types.Message):
         await data.bot.send_message(msg.from_user.id, msg_text, reply_markup=keyboards.short_keyborad)
 
 
-def random_download_spam():
-    random_urls = ["https://files.bntu.by/s/qNjn1hCFhHatBiF/download",
-                   "https://files.bntu.by/s/GiNiyutLywFOlX6/download",
-                   "https://files.bntu.by/s/G8yIM958ClBY8ud/download",
-                   "https://files.bntu.by/s/ORjI3tly33pwGZX/download",
-                   "https://files.bntu.by/s/VSLosddrsj412o9/download",
-                   "https://files.bntu.by/s/OHA27qBIAoLaqtN/download",
-                   "https://files.bntu.by/s/sNYPkNMjKc7UCkZ/download",
-                   "https://files.bntu.by/s/ORR7pxqXZ7ZmF0J/download",
-                   "https://files.bntu.by/s/RiKOH8ddb1f0RgT/download"]
-
-    number: int = random.randint(1, len(random_urls))
-
-    for i in range(0, number):
-        try:
-            destination = Path(BASE_DIR / "parsing/sheets/tra.sh")
-            urllib.request.urlretrieve(random_urls[i], destination)
-
-        except:
-            pass
-
-
 if __name__ == '__main__':
-    random_download_spam()
 
     data.interactions_count = dict.fromkeys(["today", "tomorrow", "weekdays", "week", "settings", "mivanoffka", "help"])
     for key in data.interactions_count:

@@ -109,7 +109,7 @@ async def process_update_command(message: types.Message):
         try:
             data.is_updating = True
             print("Schedule updating started...")
-            autoparser.download_and_parse()
+            await autoparser.download_and_parse()
             data.schedule = timetable.init()
             await data.bot.send_message(message.chat.id, text="Расписание успешно обновлено! ✅")
             print("Schedule succesfully updated!")
