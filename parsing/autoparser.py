@@ -122,21 +122,24 @@ async def download_and_parse():
         ref_4 = get_url_from_line_fitr(urls[3])
 
         print(ref_1)
-        print(ref_3)
-        print(ref_1)
-        print(ref_4)
-
         destination = Path(BASE_DIR / "parsing/sheets/4kurs_fitr.xls")
         urllib.request.urlretrieve(ref_1, destination)
+        print("0K")
 
+        print(ref_2)
         destination = Path(BASE_DIR / "parsing/sheets/3kurs_fitr.xls")
         urllib.request.urlretrieve(ref_2, destination)
+        print("0K")
 
+        print(ref_3)
         destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_1.xls")
         urllib.request.urlretrieve(ref_3, destination)
+        print("0K")
 
+        print(ref_4)
         destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_2.xls")
         urllib.request.urlretrieve(ref_4, destination)
+        print("0K")
 
         print("Books are downloaded.")
         download_result = True
