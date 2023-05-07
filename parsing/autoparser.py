@@ -109,11 +109,16 @@ async def download_and_parse():
         print(ref_1)
         print(ref_2)
 
+        print(ref_1)
         destination = Path(BASE_DIR / "parsing/sheets/1kurs.xls")
         urllib.request.urlretrieve(ref_1, destination)
+        print("0K")
 
+
+        print(ref_2)
         destination = Path(BASE_DIR / "parsing/sheets/2kurs.xls")
         urllib.request.urlretrieve(ref_2, destination)
+        print("0K")
 
         urls = find_lines_with_urld_fitr()
         ref_1 = get_url_from_line_fitr(urls[0])
