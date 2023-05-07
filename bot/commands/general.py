@@ -28,9 +28,6 @@ async def process_start_command(message: types.Message):
     await data.bot.send_message(chat_id, text=msg, parse_mode="Markdown", reply_markup=keyboards.ReplyKeyboardRemove())
 
 
-
-
-
 async def process_set_command(message: types.Message):
     reply_text = ""
 
@@ -59,6 +56,12 @@ async def advertise(user_id):
         msg = "<b>🔎 Обнаружили ошибку? Сообщите нам! " \
               "</b>\n\nСделать это можно в опциях."
         await data.bot.send_message(user_id, text=msg, parse_mode="HTML", disable_web_page_preview=True)
+
+
+async def update_warning(user_id):
+    msg = "Прямо сейчас бот не может вам ответить, так как обновляет расписание... " \
+          "Пожалуйста, повторите попытку через пару минуточек!"
+    await data.bot.send_message(user_id, text=msg, parse_mode="HTML", disable_web_page_preview=True)
 
 
 async def process_week_command(message: types.Message):

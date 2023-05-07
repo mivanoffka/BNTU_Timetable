@@ -6,6 +6,10 @@ from bot.commands import days, general, weekdays
 
 
 async def handle(msg: types.Message):
+    if data.is_updating:
+        await general.update_warning(msg.from_user.id)
+        return True
+
     if msg.from_user.id in data.waiting_for_group_num:
         await continue_setting(msg)
 

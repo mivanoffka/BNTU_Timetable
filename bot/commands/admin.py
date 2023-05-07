@@ -107,15 +107,18 @@ async def process_update_command(message: types.Message):
     if await is_admin(message.from_user.id):
         await data.bot.send_message(message.chat.id, text="Начинаем обновление... 🔄")
         try:
+            data.is_updating = True
             print("Schedule updating started...")
             autoparser.download_and_parse()
             data.schedule = timetable.init()
             await data.bot.send_message(message.chat.id, text="Расписание успешно обновлено! ✅")
             print("Schedule succesfully updated!")
-
+            data.is_updating = False
         except:
+            data.is_updating = False
             await data.bot.send_message(message.chat.id, text="Не удалось обновить расписание. ❌")
-
+            raise
+    data.is_updating = False
 
 async def process_menu_command(message: types.Message):
     if await is_admin(message.from_user.id):

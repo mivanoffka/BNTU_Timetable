@@ -1,3 +1,4 @@
+import random
 import urllib.request
 import config
 import requests
@@ -95,7 +96,31 @@ def get_url_from_line_fitr(stroke: str):
     return stroke[start:end]
 
 
+def random_download_spam():
+    random_urls = ["https://files.bntu.by/s/qNjn1hCFhHatBiF/download",
+                   "https://files.bntu.by/s/GiNiyutLywFOlX6/download",
+                   "https://files.bntu.by/s/G8yIM958ClBY8ud/download",
+                   "https://files.bntu.by/s/ORjI3tly33pwGZX/download",
+                   "https://files.bntu.by/s/VSLosddrsj412o9/download",
+                   "https://files.bntu.by/s/OHA27qBIAoLaqtN/download",
+                   "https://files.bntu.by/s/sNYPkNMjKc7UCkZ/download",
+                   "https://files.bntu.by/s/ORR7pxqXZ7ZmF0J/download",
+                   "https://files.bntu.by/s/RiKOH8ddb1f0RgT/download"]
+
+    number: int = random.randint(1, len(random_urls))
+
+    for i in range(0, number):
+        try:
+            destination = Path(BASE_DIR / "parsing/sheets/tra.sh")
+            urllib.request.urlretrieve(random_urls[i], destination)
+
+        except:
+            pass
+
+
 def download_and_parse():
+
+    random_download_spam()
 
     download_result = False
     try:

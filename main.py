@@ -22,7 +22,6 @@ def setup_handlers():
 
 
 async def unknown_handler(msg: types.Message):
-
     if not await buttoned.handle(msg):
         msg_text = "Кажется, вы что-то не то ввели... 🫠"
         await data.bot.send_message(msg.from_user.id, msg_text, reply_markup=keyboards.short_keyborad)
