@@ -1,3 +1,4 @@
+import copy
 import random
 import urllib.request
 import config
@@ -5,13 +6,54 @@ import requests
 from config import BASE_DIR
 from pathlib import Path
 from parsing import parser as p
+import _thread
+import time
 
+html_flag = False
+html_buffer = None
+url_buffer = "a"
+
+def get_hmtl_code(url: str):
+    global html_buffer
+    html_buffer = None
+
+    global  url_buffer
+    url_buffer = url
+    _thread.start_new_thread(html_loop, tuple())
+    start_time = time.time()
+    print("Connecting to " + url)
+
+    i = 0
+    while (html_buffer is None) and (i < 4):
+        print("Attempt {}".format(i))
+        while html_buffer is None:
+            current_time = time.time()
+
+            if current_time - start_time > 4:
+                break
+        i += 1
+
+    if html_buffer is None:
+        print("Cannot connect!")
+        raise "Cannot connect!"
+    else:
+        print("Connected succesfully!")
+        url_buffer = None
+        return copy.copy(html_buffer)
+
+def html_loop():
+    html = requests.get(url_buffer)
+
+    global html_buffer
+    html_buffer = html
+
+    pass
 
 def find_lines_with_urld_fitr():
     # Ищем на страничке фитра
 
     ref = 'https://bntu.by/faculties/fitr/pages/raspisanie-zanyatij-i-ekzamenov'
-    html = requests.get(ref)
+    html = get_hmtl_code(ref)
     html = html.text
     html = html.splitlines()
 
@@ -53,7 +95,7 @@ def find_lines_with_urls():
     # Ищем на страничке общего расписания
 
     ref = 'https://bntu.by/raspisanie'
-    html = requests.get(ref)
+    html = get_hmtl_code(ref)
     html = html.text
     html = html.splitlines()
 
@@ -113,7 +155,6 @@ async def download_and_parse():
         destination = Path(BASE_DIR / "parsing/sheets/1kurs.xls")
         urllib.request.urlretrieve(ref_1, destination)
         print("0K")
-
 
         print(ref_2)
         destination = Path(BASE_DIR / "parsing/sheets/2kurs.xls")
