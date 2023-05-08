@@ -17,7 +17,7 @@ def get_hmtl_code(url: str):
     global html_buffer
     html_buffer = None
 
-    global  url_buffer
+    global url_buffer
     url_buffer = url
     start_time = time.time()
     print("Connecting to " + url)
@@ -30,6 +30,7 @@ def get_hmtl_code(url: str):
             current_time = time.time()
 
             if current_time - start_time > 4:
+                _thread.exit()
                 break
         i += 1
 
@@ -42,12 +43,14 @@ def get_hmtl_code(url: str):
         return copy.copy(html_buffer)
 
 def html_loop():
-    html = requests.get(url_buffer)
+    try:
+        html = requests.get(url_buffer)
 
-    global html_buffer
-    html_buffer = html
+        global html_buffer
+        html_buffer = html
+    except:
+        pass
 
-    pass
 
 def find_lines_with_urld_fitr():
     # Ищем на страничке фитра
