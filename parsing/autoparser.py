@@ -13,6 +13,10 @@ html_flag = False
 html_buffer = None
 url_buffer = "a"
 
+dest_buffer = None
+dest_flag = False
+download_buffer = None
+
 def get_hmtl_code(url: str):
     global html_buffer
     html_buffer = None
@@ -42,6 +46,7 @@ def get_hmtl_code(url: str):
         url_buffer = None
         return copy.copy(html_buffer)
 
+
 def html_loop():
     try:
         html = requests.get(url_buffer)
@@ -51,6 +56,62 @@ def html_loop():
     except:
         pass
 
+
+def download(url: str, dest):
+    global html_buffer
+    html_buffer = None
+
+    global url_buffer
+    url_buffer = url
+
+    global dest_buffer
+    dest_buffer = dest
+
+    global  download_buffer
+    download_buffer = None
+
+    start_time = time.time()
+    print("Downloading from " + url)
+    i = 0
+
+    global dest_flag
+    dest_flag = False
+    while (dest_flag is False) and (i < 4):
+        print("Attempt {}".format(i))
+
+        _thread.start_new_thread(download_loop, tuple())
+        while dest_flag is False:
+            current_time = time.time()
+
+            if current_time - start_time > 4:
+                _thread.exit()
+                break
+        i += 1
+
+    if dest_flag is None:
+        print("Cannot download!")
+        raise Exception("Cannot download!")
+
+    else:
+        print("Connected succesfully!")
+        url_buffer = None
+        f = open(dest, "wb")
+        f.write(download_buffer)
+        f.close()
+
+
+def download_loop():
+    try:
+        print(url_buffer)
+        print(dest_buffer)
+        #urllib.request.urlretrieve(url_buffer, dest_buffer)
+        global download_buffer
+        download_buffer = urllib.request.urlopen(url_buffer).read()
+        global dest_flag
+        dest_flag = True
+
+    except:
+        pass
 
 def find_lines_with_urld_fitr():
     # Ищем на страничке фитра
@@ -156,12 +217,14 @@ async def download_and_parse():
 
         print(ref_1)
         destination = Path(BASE_DIR / "parsing/sheets/1kurs.xls")
-        urllib.request.urlretrieve(ref_1, destination)
+        #urllib.request.urlretrieve(ref_1, destination)
+        download(ref_1, destination)
         print("0K")
 
         print(ref_2)
         destination = Path(BASE_DIR / "parsing/sheets/2kurs.xls")
-        urllib.request.urlretrieve(ref_2, destination)
+        #urllib.request.urlretrieve(ref_2, destination)
+        download(ref_2, destination)
         print("0K")
 
         urls = find_lines_with_urld_fitr()
@@ -172,22 +235,26 @@ async def download_and_parse():
 
         print(ref_1)
         destination = Path(BASE_DIR / "parsing/sheets/4kurs_fitr.xls")
-        urllib.request.urlretrieve(ref_1, destination)
+        #urllib.request.urlretrieve(ref_1, destination)
+        download(ref_1, destination)
         print("0K")
 
         print(ref_2)
         destination = Path(BASE_DIR / "parsing/sheets/3kurs_fitr.xls")
-        urllib.request.urlretrieve(ref_2, destination)
+        #urllib.request.urlretrieve(ref_2, destination)
+        download(ref_2, destination)
         print("0K")
 
         print(ref_3)
         destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_1.xls")
-        urllib.request.urlretrieve(ref_3, destination)
+        #urllib.request.urlretrieve(ref_3, destination)
+        download(ref_3, destination)
         print("0K")
 
         print(ref_4)
         destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_2.xls")
-        urllib.request.urlretrieve(ref_4, destination)
+        #urllib.request.urlretrieve(ref_4, destination)
+        download(ref_4, destination)
         print("0K")
 
         print("Books are downloaded.")
