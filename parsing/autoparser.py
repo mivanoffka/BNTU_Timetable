@@ -19,13 +19,13 @@ def get_hmtl_code(url: str):
 
     global  url_buffer
     url_buffer = url
-    _thread.start_new_thread(html_loop, tuple())
     start_time = time.time()
     print("Connecting to " + url)
-
     i = 0
     while (html_buffer is None) and (i < 4):
         print("Attempt {}".format(i))
+
+        _thread.start_new_thread(html_loop, tuple())
         while html_buffer is None:
             current_time = time.time()
 
