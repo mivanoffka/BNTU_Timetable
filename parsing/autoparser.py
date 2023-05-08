@@ -13,6 +13,7 @@ html_flag = False
 html_buffer = None
 url_buffer = "a"
 
+
 def get_hmtl_code(url: str):
     global html_buffer
     html_buffer = None
@@ -42,6 +43,7 @@ def get_hmtl_code(url: str):
         url_buffer = None
         return copy.copy(html_buffer)
 
+
 def html_loop():
     try:
         html = requests.get(url_buffer)
@@ -50,7 +52,6 @@ def html_loop():
         html_buffer = html
     except:
         pass
-
 
 
 def find_lines_with_urld_fitr():
