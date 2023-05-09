@@ -16,46 +16,6 @@ html_buffer = None
 url_buffer = "a"
 
 
-def get_hmtl_code(url: str):
-    global html_buffer
-    html_buffer = None
-
-    global url_buffer
-    url_buffer = url
-    start_time = time.time()
-    print("Connecting to " + url)
-    i = 0
-    while (html_buffer is None) and (i < 4):
-        print("Attempt {}".format(i))
-
-        _thread.start_new_thread(html_loop, tuple())
-        while html_buffer is None:
-            current_time = time.time()
-
-            if current_time - start_time > 4:
-                _thread.exit()
-                break
-        i += 1
-
-    if html_buffer is None:
-        print("Cannot connect!")
-        raise "Cannot connect!"
-    else:
-        print("Connected succesfully!")
-        url_buffer = None
-        return copy.copy(html_buffer)
-
-
-def html_loop():
-    try:
-        html = requests.get(url_buffer)
-
-        global html_buffer
-        html_buffer = html
-    except:
-        pass
-
-
 def download(url, dest):
     counter = 0
     f = None
