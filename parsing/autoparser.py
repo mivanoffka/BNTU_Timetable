@@ -11,20 +11,16 @@ import _thread
 import time
 
 
-html_flag = False
-html_buffer = None
-url_buffer = "a"
-
-
 def download(url, dest):
     counter = 0
     f = None
+    max_attemps = 16
 
-    while counter < 5 and f is None:
+    while counter < max_attemps and f is None:
         print("Attempt {}...".format(counter))
         try:
             f = urllib.request.urlopen(url, timeout=2).read()
-            counter = 6
+            counter = max_attemps + 1
         except:
             f = None
             counter += 1
@@ -136,11 +132,9 @@ async def download_and_parse():
         ref_2 = get_url_from_line(urls[1])
 
         destination = Path(BASE_DIR / "parsing/sheets/1kurs.xls")
-        #urllib.request.urlretrieve(ref_1, destination)
         download(ref_1, destination)
 
         destination = Path(BASE_DIR / "parsing/sheets/2kurs.xls")
-        #urllib.request.urlretrieve(ref_2, destination)
         download(ref_2, destination)
 
         urls = find_lines_with_urld_fitr()
@@ -150,19 +144,15 @@ async def download_and_parse():
         ref_4 = get_url_from_line_fitr(urls[3])
 
         destination = Path(BASE_DIR / "parsing/sheets/4kurs_fitr.xls")
-        #urllib.request.urlretrieve(ref_1, destination)
         download(ref_1, destination)
 
         destination = Path(BASE_DIR / "parsing/sheets/3kurs_fitr.xls")
-        #urllib.request.urlretrieve(ref_2, destination)
         download(ref_2, destination)
 
         destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_1.xls")
-        #urllib.request.urlretrieve(ref_3, destination)
         download(ref_3, destination)
 
         destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_2.xls")
-        #urllib.request.urlretrieve(ref_4, destination)
         download(ref_4, destination)
 
         print("Books are downloaded.")
