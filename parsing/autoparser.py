@@ -1,6 +1,7 @@
 import copy
 import random
 import urllib.request
+from urllib.request import urlopen
 import config
 import requests
 from config import BASE_DIR
@@ -8,6 +9,7 @@ from pathlib import Path
 from parsing import parser as p
 import _thread
 import time
+
 
 html_flag = False
 html_buffer = None
@@ -54,11 +56,26 @@ def html_loop():
         pass
 
 
+def download(url, dest):
+    counter = 0
+    f = None
+
+    while counter < 5 and f is None:
+        f = urllib.request.urlopen(url, timeout=2).read()
+
+    if f is not None:
+        file = open(dest, "wb")
+        file.write(f)
+        print("Succesfully downloaded!")
+    else:
+        print("Cannot download!")
+
+
 def find_lines_with_urld_fitr():
     # Ищем на страничке фитра
 
     ref = 'https://bntu.by/faculties/fitr/pages/raspisanie-zanyatij-i-ekzamenov'
-    html = get_hmtl_code(ref)
+    html = requests.get(ref)
     html = html.text
     html = html.splitlines()
 
@@ -100,7 +117,7 @@ def find_lines_with_urls():
     # Ищем на страничке общего расписания
 
     ref = 'https://bntu.by/raspisanie'
-    html = get_hmtl_code(ref)
+    html = requests.get(ref)
     html = html.text
     html = html.splitlines()
 
@@ -143,7 +160,6 @@ def get_url_from_line_fitr(stroke: str):
     return stroke[start:end]
 
 
-
 async def download_and_parse():
 
     download_result = False
@@ -153,18 +169,13 @@ async def download_and_parse():
         ref_1 = get_url_from_line(urls[0])
         ref_2 = get_url_from_line(urls[1])
 
-        print(ref_1)
-        print(ref_2)
-
-        print(ref_1)
         destination = Path(BASE_DIR / "parsing/sheets/1kurs.xls")
-        urllib.request.urlretrieve(ref_1, destination)
-        print("0K")
+        #urllib.request.urlretrieve(ref_1, destination)
+        download(ref_1, destination)
 
-        print(ref_2)
         destination = Path(BASE_DIR / "parsing/sheets/2kurs.xls")
-        urllib.request.urlretrieve(ref_2, destination)
-        print("0K")
+        #urllib.request.urlretrieve(ref_2, destination)
+        download(ref_2, destination)
 
         urls = find_lines_with_urld_fitr()
         ref_1 = get_url_from_line_fitr(urls[0])
@@ -172,25 +183,21 @@ async def download_and_parse():
         ref_3 = get_url_from_line_fitr(urls[2])
         ref_4 = get_url_from_line_fitr(urls[3])
 
-        print(ref_1)
         destination = Path(BASE_DIR / "parsing/sheets/4kurs_fitr.xls")
-        urllib.request.urlretrieve(ref_1, destination)
-        print("0K")
+        #urllib.request.urlretrieve(ref_1, destination)
+        download(ref_1, destination)
 
-        print(ref_2)
         destination = Path(BASE_DIR / "parsing/sheets/3kurs_fitr.xls")
-        urllib.request.urlretrieve(ref_2, destination)
-        print("0K")
+        #urllib.request.urlretrieve(ref_2, destination)
+        download(ref_2, destination)
 
-        print(ref_3)
         destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_1.xls")
-        urllib.request.urlretrieve(ref_3, destination)
-        print("0K")
+        #urllib.request.urlretrieve(ref_3, destination)
+        download(ref_3, destination)
 
-        print(ref_4)
         destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_2.xls")
-        urllib.request.urlretrieve(ref_4, destination)
-        print("0K")
+        #urllib.request.urlretrieve(ref_4, destination)
+        download(ref_4, destination)
 
         print("Books are downloaded.")
         download_result = True
