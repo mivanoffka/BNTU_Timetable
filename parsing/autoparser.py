@@ -21,7 +21,12 @@ def download(url, dest):
     f = None
 
     while counter < 5 and f is None:
-        f = urllib.request.urlopen(url, timeout=2).read()
+        try:
+            f = urllib.request.urlopen(url, timeout=2).read()
+            counter = 5
+        except:
+            f = None
+            counter += 1
 
     if f is not None:
         file = open(dest, "wb")
