@@ -11,6 +11,30 @@ import _thread
 import time
 
 
+def get_html(url):
+    counter = 0
+    f = None
+    max_attemps = 16
+
+    print("Connecting to {}".format(url))
+    while counter < max_attemps and f is None:
+        print("Attempt {}...".format(counter))
+        try:
+            f = urllib.request.urlopen(url, timeout=2).read()
+            counter = max_attemps + 1
+        except:
+            f = None
+            counter += 1
+
+    if f is not None:
+        print("Connected succesfully!")
+        return f
+    else:
+        print("Cannot connect!")
+        return None
+
+
+
 def download(url, dest):
     counter = 0
     f = None
@@ -37,8 +61,10 @@ def find_lines_with_urld_fitr():
     # Ищем на страничке фитра
 
     ref = 'https://bntu.by/faculties/fitr/pages/raspisanie-zanyatij-i-ekzamenov'
-    html = requests.get(ref)
-    html = html.text
+    #html = requests.get(ref)
+    html = get_html(ref).decode("utf-8")
+    #html = html.text
+
     html = html.splitlines()
 
     ref_1 = ""
@@ -79,8 +105,9 @@ def find_lines_with_urls():
     # Ищем на страничке общего расписания
 
     ref = 'https://bntu.by/raspisanie'
-    html = requests.get(ref)
-    html = html.text
+    #html = requests.get(ref)
+    html = get_html(ref).decode("utf-8")
+    #html = html.text
     html = html.splitlines()
 
     ref_1 = ""
