@@ -22,8 +22,9 @@ def download(url, dest):
 
     while counter < 5 and f is None:
         try:
+            print("Attempt {}".format(counter))
             f = urllib.request.urlopen(url, timeout=2).read()
-            counter = 5
+            counter = 6
         except:
             f = None
             counter += 1
