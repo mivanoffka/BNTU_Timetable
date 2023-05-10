@@ -149,7 +149,7 @@ def get_url_from_line_fitr(stroke: str):
     return stroke[start:end]
 
 
-async def download_and_parse():
+def download_and_parse():
 
     download_result = False
     try:
