@@ -9,7 +9,6 @@ from bot.commands import general, exceptions
 schedule = data.schedule
 users_and_groups = data.users_and_groups
 
-
 async def process_today_command(message: types.Message, delta=0):
     msg = "-"
 

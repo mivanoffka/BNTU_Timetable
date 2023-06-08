@@ -6,6 +6,10 @@ from bot.commands import days, general, weekdays
 
 
 async def handle(msg: types.Message):
+    forbidden = (keyboards.today_button.text, keyboards.tomorrow_button.text, keyboards.mon_button.text,
+                 keyboards.tue_button.text, keyboards.wed_button.text, keyboards.thu_button.text,
+                 keyboards.fri_button.text, keyboards.sat_button.text)
+
     if msg.from_user.id in data.waiting_for_group_num:
         await continue_setting(msg)
 
@@ -21,15 +25,25 @@ async def handle(msg: types.Message):
     if msg.from_user.id not in data.recent_users:
         data.recent_users.append(msg.from_user.id)
 
-    if msg.text == keyboards.today_button.text:
-        if data.interactions_count["today"] < 9999999:
-            data.interactions_count["today"] += 1
-        await days.process_today_command(msg)
 
-    elif msg.text == keyboards.tomorrow_button.text:
-        if data.interactions_count["tomorrow"] < 9999999:
-            data.interactions_count["tomorrow"] += 1
-        await days.process_tomorrow_command(msg)
+    #if msg.text == keyboards.today_button.text:
+    #    if data.interactions_count["today"] < 9999999:
+    #        data.interactions_count["today"] += 1
+    #    await days.process_today_command(msg)
+
+    #elif msg.text == keyboards.tomorrow_button.text:
+    #    if data.interactions_count["tomorrow"] < 9999999:
+    #        data.interactions_count["tomorrow"] += 1
+    #    await days.process_tomorrow_command(msg)'''
+
+    elif msg.text in forbidden:
+        m = "_Занятий не предвидится аж до самого сентября... 🥳_"
+        await data.bot.send_message(msg.from_user.id, text=m, parse_mode="Markdown",
+                                    reply_markup=keyboards.short_keyborad)
+
+        m = "\n\n*А расписание экзаменов можно посмотреть на сайте БНТУ.*\n\nУдачи! 💯"
+        await data.bot.send_message(msg.from_user.id, text=m, parse_mode="Markdown",
+                                    reply_markup=keyboards.exams_keyboard)
 
     elif msg.text == keyboards.set_button.text or msg.text == keyboards.new_group_button.text:
         await start_setting(msg.from_user.id)
@@ -37,26 +51,26 @@ async def handle(msg: types.Message):
     elif msg.text == keyboards.another_day_button.text:
         await another_days(msg)
 
-    elif msg.text == keyboards.week_button.text:
-        await general.process_week_command(msg)
+    #elif msg.text == keyboards.week_button.text:
+    #    await general.process_week_command(msg)
 
-    elif msg.text == keyboards.mon_button.text:
-        await weekdays.process_mon_command(msg)
+    #elif msg.text == keyboards.mon_button.text:
+    #    await weekdays.process_mon_command(msg)
 
-    elif msg.text == keyboards.tue_button.text:
-        await weekdays.process_tue_command(msg)
+    #elif msg.text == keyboards.tue_button.text:
+    #    await weekdays.process_tue_command(msg)
 
-    elif msg.text == keyboards.wed_button.text:
-        await weekdays.process_wed_command(msg)
+    #elif msg.text == keyboards.wed_button.text:
+    #    await weekdays.process_wed_command(msg)
 
-    elif msg.text == keyboards.thu_button.text:
-        await weekdays.process_thu_command(msg)
+    # msg.text == keyboards.thu_button.text:
+    #    await weekdays.process_thu_command(msg)
 
-    elif msg.text == keyboards.fri_button.text:
-        await weekdays.process_fri_command(msg)
+    # msg.text == keyboards.fri_button.text:
+    #    await weekdays.process_fri_command(msg)
 
-    elif msg.text == keyboards.sat_button.text:
-        await weekdays.process_sat_command(msg)
+    #elif msg.text == keyboards.sat_button.text:
+    #    await weekdays.process_sat_command(msg)
 
     elif msg.text == keyboards.report_button.text:
         if msg.from_user.id not in data.recently_sended_report:

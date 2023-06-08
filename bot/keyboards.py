@@ -71,7 +71,6 @@ options_keyboard.insert(report_button)
 options_keyboard.insert(help_button)
 
 
-
 links_keyboard = InlineKeyboardMarkup()
 vk_button = InlineKeyboardButton("VK", url='https://vk.com/maksimka_ivanoffka')
 inst_button = InlineKeyboardButton("Instagram", url="https://www.instagram.com/maksimka_ivanoffka")
@@ -85,3 +84,9 @@ bntu_keyboard.add(bntu_button)
 bntu_keyboard_2 = InlineKeyboardMarkup()
 bntu_button_2 = InlineKeyboardButton("Сайт БНТУ 🏛️", url="https://bntu.by/")
 bntu_keyboard_2.add(bntu_button_2)
+
+exams_keyboard = InlineKeyboardMarkup()
+button_12 = InlineKeyboardButton("1-2 курсы 🍼", url='https://bntu.by/raspisanie')
+button_34 = InlineKeyboardButton("3-4 курсы 👴🏻", url="https://bntu.by/faculties")
+exams_keyboard.insert(button_12)
+exams_keyboard.insert(button_34)
