@@ -138,8 +138,10 @@ def main():
 
     f1 = Path(BASE_DIR/"parsing/sheets/3kurs_fitr.xls")
     f2 = Path(BASE_DIR/"parsing/sheets/4kurs_fitr.xls")
-    f3 = Path(BASE_DIR/"parsing/sheets/34kurs_fitr_1.xls")
-    f4 = Path(BASE_DIR/"parsing/sheets/34kurs_fitr_2.xls")
+    f3 = Path(BASE_DIR/"parsing/sheets/34kurs_fitr.xls")
+
+    #f3 = Path(BASE_DIR/"parsing/sheets/34kurs_fitr_1.xls")
+    #f4 = Path(BASE_DIR/"parsing/sheets/34kurs_fitr_2.xls")
 
     parce_workbook(schedule, f1)
 
@@ -147,7 +149,7 @@ def main():
 
     parce_workbook(schedule, f3)
 
-    parce_workbook(schedule, f4)
+    #parce_workbook(schedule, f4)
 
     save_json(schedule)
 
