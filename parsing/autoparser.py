@@ -36,7 +36,7 @@ def get_html(url):
 
 def download_unsafe(url, dest):
     response = requests.get(url, verify=False)
-    open("dest", "wb").write(response.content)
+    open(dest, "wb").write(response.content)
 
 
 
@@ -125,6 +125,12 @@ def find_lines_with_urld_fitr():
         if key_3 in line:
             ref_3 = line
             break
+
+    arr = [ref_1, ref_2, ref_3]
+
+    print("\n\n\n")
+    print(arr)
+    print("\n\n\n")
 
     return [ref_1, ref_2, ref_3]
 
