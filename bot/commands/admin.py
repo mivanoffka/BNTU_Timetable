@@ -1,4 +1,6 @@
 import asyncio
+import copy
+
 import aiogram.utils.exceptions
 import config
 from bot import data, keyboards, timetable
@@ -29,9 +31,12 @@ async def process_notify_command(message: types.Message):
         else:
             mx = len(data.users_and_groups)
             mn = 0
-            for user_id in data.users_and_groups:
+
+            lst = copy.copy(data.users_and_groups)
+
+            for user_id in lst:
                 try:
-                    if not data.users_and_groups[user_id] == "BLOCKED":
+                    if not lst[user_id] == "BLOCKED":
                         await data.bot.send_message(user_id, text=inf_mes, parse_mode="HTML",
                                             reply_markup=keyboards.short_keyborad)
                         print("Message #{} sent.".format(mn))
@@ -39,7 +44,10 @@ async def process_notify_command(message: types.Message):
 
                     await asyncio.sleep(1)
                 except aiogram.utils.exceptions.BotBlocked:
-                    data.users_and_groups[user_id] = "BLOCKED"
+                    try:
+                        data.users_and_groups[user_id] = "BLOCKED"
+                    except:
+                        pass
                 except:
                     pass
 
