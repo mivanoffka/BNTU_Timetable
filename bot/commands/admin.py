@@ -82,6 +82,8 @@ async def process_stats_command(message: types.Message):
 
 
 async def process_users_command(message: types.Message):
+
+
     if str(message.from_user.id) != config.ADMIN_ID:
         await data.bot.send_message(message.chat.id, text="У вас нет прав для выполнения данной команды.", parse_mode="Markdown",
                                     reply_markup=keyboards.short_keyborad)
@@ -101,14 +103,25 @@ async def process_users_command(message: types.Message):
                     stats_dict[group] += 1
 
         sum = 0
-        for group in stats_dict:
-            text += "\n    Гр. {} ({} чел.)".format(group, stats_dict[group])
-            sum += stats_dict[group]
+
+        message.text += " -"
+        if message.text.split()[1] == "full":
+            for group in stats_dict:
+                text += "\n    Гр. {} ({} чел.)".format(group, stats_dict[group])
+                sum += stats_dict[group]
+        else:
+            for group in stats_dict:
+                sum += stats_dict[group]
 
         text += "\n\nИтого {} чел.".format(sum)
 
-        await data.bot.send_message(message.chat.id, text=text, parse_mode="Markdown",
-                                    reply_markup=keyboards.short_keyborad)
+        try:
+            await data.bot.send_message(message.chat.id, text=text, parse_mode="Markdown",
+                                        reply_markup=keyboards.short_keyborad)
+        except:
+            text += "\n\nИтого {} чел.".format(sum)
+            await data.bot.send_message(message.chat.id, text=text, parse_mode="Markdown",
+                                        reply_markup=keyboards.short_keyborad)
 
 
 async def process_update_command(message: types.Message):
