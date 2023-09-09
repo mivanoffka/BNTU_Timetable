@@ -1,4 +1,4 @@
-from bot import *
+from bot import keyboards, data, timetable
 from bot.commands import general, exceptions
 from datetime import datetime
 
@@ -7,10 +7,14 @@ import random
 
 from aiogram import types
 
+from bot.data import dp
+from aiogram.dispatcher import filters
+
 schedule = data.schedule
 users_and_groups = data.users_and_groups
 
 
+@dp.message_handler(filters.Text(equals=keyboards.weekdays_keyboard))
 async def for_day_of_week(message: types.Message, weekday):
     msg = "-"
 
@@ -37,6 +41,8 @@ async def for_day_of_week(message: types.Message, weekday):
         await exceptions.handle_schedule_sending_exception(message)
 
 
+@dp.message_handler(commands=["monday", "mon"])
+@dp.message_handler(filters.Text(equals=keyboards.mon_button))
 async def process_mon_command(message: types.Message):
     await for_day_of_week(message, 0)
 
@@ -83,11 +89,11 @@ async def is_group_in_schedule(user_group):
     return result
 
 
-def setup():
-    data.dp.register_message_handler(process_mon_command, commands="mon", content_types=['text'], state='*')
-    data.dp.register_message_handler(process_tue_command, commands="tue", content_types=['text'], state='*')
-    data.dp.register_message_handler(process_wed_command, commands="wed", content_types=['text'], state='*')
-    data.dp.register_message_handler(process_thu_command, commands="thu", content_types=['text'], state='*')
-    data.dp.register_message_handler(process_fri_command, commands="fri", content_types=['text'], state='*')
-    data.dp.register_message_handler(process_sat_command, commands="sat", content_types=['text'], state='*')
+# def setup():
+#     data.dp.register_message_handler(process_mon_command, commands="mon", content_types=['text'], state='*')
+#     data.dp.register_message_handler(process_tue_command, commands="tue", content_types=['text'], state='*')
+#     data.dp.register_message_handler(process_wed_command, commands="wed", content_types=['text'], state='*')
+#     data.dp.register_message_handler(process_thu_command, commands="thu", content_types=['text'], state='*')
+#     data.dp.register_message_handler(process_fri_command, commands="fri", content_types=['text'], state='*')
+#     data.dp.register_message_handler(process_sat_command, commands="sat", content_types=['text'], state='*')
 

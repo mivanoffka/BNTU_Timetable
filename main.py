@@ -1,65 +1,35 @@
 import threading
 
 from datetime import datetime
-from bot import data, timetable, in_out, keyboards
-import bot.commands
-from bot.commands import general, days, weekdays, admin, buttoned
+from bot import timetable, in_out, data
+from bot.data import interactions_count, users_and_groups, dp
 
-from aiogram import Bot, types
-from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
-
-from config import TOKEN
-
-import random
-from config import BASE_DIR
-from pathlib import Path
-import urllib.request
+from bot import commands
 
 
-def setup_handlers():
-    general.setup()
-    days.setup()
-    weekdays.setup()
-    admin.setup()
-
-    data.dp.register_message_handler(unknown_handler, content_types=['text'], state='*')
-
-
-async def unknown_handler(msg: types.Message):
-    if not await buttoned.handle(msg):
-        msg_text = "Кажется, вы что-то не то ввели... 🫠"
-        await data.bot.send_message(msg.from_user.id, msg_text, reply_markup=keyboards.short_keyborad)
-
-
-if __name__ == '__main__':
-
-    data.interactions_count = dict.fromkeys(["today", "tomorrow", "weekdays", "week", "settings", "mivanoffka", "help"])
-    for key in data.interactions_count:
-        data.interactions_count[key] = 0
-
+async def start(dp):
     now = datetime.now()
-    data.interactions_count["time"] = now.strftime("%d/%m/%Y %H:%M:%S")
-
-
-    data.schedule = timetable.init()
-    data.bot = Bot(token=TOKEN)
-    data.dp = Dispatcher(data.bot)
-
-    data.users_and_groups = in_out.read_userlist()
+    interactions_count["time"] = now.strftime("%d/%m/%Y %H:%M:%S")
 
     auto_saving_thread = threading.Thread(target=in_out.launch_autosaving)
     auto_saving_thread.daemon = True
     auto_saving_thread.start()
 
-
-    setup_handlers()
-
     print("Launching bot...")
-    print("Version 1.1.X")
+    print(data.users_and_groups)
 
-    executor.start_polling(data.dp, skip_updates=True)
 
+async def finish(dp):
+    print(data.users_and_groups)
     in_out.save_userlist(data.users_and_groups)
     print("Data saved.")
+
+
+if __name__ == '__main__':
+    data.schedule = timetable.init()
+    data.users_and_groups = in_out.read_userlist()
+
+    executor.start_polling(dp, skip_updates=True, on_startup=start, on_shutdown=finish)
+
 

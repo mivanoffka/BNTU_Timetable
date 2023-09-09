@@ -6,11 +6,15 @@ from config import BASE_DIR
 import random
 from datetime import datetime
 
-from bot import *
+from bot import data, timetable, keyboards
 
 from aiogram import types
+from bot.commands import buttoned
+from bot.data import dp
+from aiogram.dispatcher import filters
 
 
+@dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):
     chat_id = str(message.chat.id)
     if message.from_user.id not in data.waiting_for_group_num:
@@ -28,6 +32,7 @@ async def process_start_command(message: types.Message):
     await data.bot.send_message(chat_id, text=msg, parse_mode="Markdown", reply_markup=keyboards.ReplyKeyboardRemove())
 
 
+@dp.message_handler(commands=['set'])
 async def process_set_command(message: types.Message):
     reply_text = ""
 
@@ -64,6 +69,8 @@ async def update_warning(user_id):
     await data.bot.send_message(user_id, text=msg, parse_mode="HTML", disable_web_page_preview=True)
 
 
+@dp.message_handler(commands=['week'])
+@dp.message_handler(filters.Text(equals=keyboards.week_button))
 async def process_week_command(message: types.Message):
     if data.interactions_count["week"] < 9999999:
         data.interactions_count["week"] += 1

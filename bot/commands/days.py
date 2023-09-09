@@ -1,16 +1,24 @@
 import dataclasses
 
-from bot import *
+#from bot import *
+from bot import data, timetable, keyboards
 from datetime import datetime
 from aiogram import types
 
 from bot.commands import general, exceptions
+from bot.data import dp, users_and_groups
+from aiogram.dispatcher import filters
+
 
 schedule = data.schedule
-users_and_groups = data.users_and_groups
 
+
+@dp.message_handler(commands=['today'])
+@dp.message_handler(filters.Text(equals=keyboards.today_button.text))
 async def process_today_command(message: types.Message, delta=0):
     msg = "-"
+
+    print(users_and_groups)
 
     user_id = str(message.from_user.id)
     chat_id = str(message.chat.id)
@@ -34,14 +42,18 @@ async def process_today_command(message: types.Message, delta=0):
         await exceptions.handle_schedule_sending_exception(message)
 
 
+@dp.message_handler(commands=['tomorrow'])
+@dp.message_handler(filters.Text(equals=keyboards.tomorrow_button.text))
 async def process_tomorrow_command(message: types.Message):
     await process_today_command(message, 1)
 
 
+@dp.message_handler(commands=['yesterday'])
 async def process_yesterday_command(message: types.Message):
     await process_today_command(message, -1)
 
 
+@dp.message_handler(commands=['schedule'])
 async def process_schedule_command(message: types.Message):
     reply_text = "-"
 
@@ -76,10 +88,10 @@ async def process_schedule_command(message: types.Message):
     await data.bot.send_message(chat_id, text=reply_text, parse_mode="Markdown")
 
 
-def setup():
-    data.dp.register_message_handler(process_today_command, commands="today", content_types=['text'], state='*')
-    data.dp.register_message_handler(process_tomorrow_command, commands="tomorrow", content_types=['text'], state='*')
-    data.dp.register_message_handler(process_yesterday_command, commands="yesterday", content_types=['text'], state='*')
-    data.dp.register_message_handler(process_schedule_command, commands="schedule", content_types=['text'], state='*')
+# def setup():
+#     data.dp.register_message_handler(process_today_command, commands="today", content_types=['text'], state='*')
+#     data.dp.register_message_handler(process_tomorrow_command, commands="tomorrow", content_types=['text'], state='*')
+#     data.dp.register_message_handler(process_yesterday_command, commands="yesterday", content_types=['text'], state='*')
+#     data.dp.register_message_handler(process_schedule_command, commands="schedule", content_types=['text'], state='*')
 
 

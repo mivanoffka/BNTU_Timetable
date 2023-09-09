@@ -3,6 +3,24 @@ from aiogram import types
 import copy
 
 from bot.commands import days, general, weekdays
+from bot.data import dp
+
+from aiogram.dispatcher import filters
+
+
+
+async def show_todays_schedule(msg: types.Message):
+    if data.interactions_count["today"] < 9999999:
+        data.interactions_count["today"] += 1
+    await days.process_today_command(msg)
+
+
+@dp.message_handler(commands=["get_menu"])
+@dp.message_handler(filters.Text(equals=keyboards.open_menu_button.text))
+async def open_main_menu(msg: types.Message):
+    await data.bot.send_message(msg.from_user.id, text="_Открываем меню..._",
+                                reply_markup=keyboards.menu_keyboard, parse_mode="Markdown")
+    await general.advertise(msg.from_user.id)
 
 
 async def handle(msg: types.Message):
@@ -26,7 +44,6 @@ async def handle(msg: types.Message):
 
     if msg.from_user.id not in data.recent_users:
         data.recent_users.append(msg.from_user.id)
-
 
     if msg.text == keyboards.today_button.text:
         if data.interactions_count["today"] < 9999999:
@@ -154,6 +171,36 @@ async def handle(msg: types.Message):
     return True
 
 
+@dp.message_handler(commands=['main_menu'])
+@dp.message_handler(filters.Text(equals=keyboards.open_menu_button.text))
+@dp.message_handler(filters.Text(equals=keyboards.ret_button.text))
+async def process_main_menu_comand(msg: types.Message):
+    await data.bot.send_message(msg.from_user.id, text="_Открываем меню..._",
+                                reply_markup=keyboards.menu_keyboard, parse_mode="Markdown")
+    await general.advertise(msg.from_user.id)
+
+
+@dp.message_handler(commands=['week_menu'])
+@dp.message_handler(filters.Text(equals=keyboards.another_day_button.text))
+async def process_week_menu_comand(msg: types.Message):
+    await data.bot.send_message(msg.from_user.id, text="_Открываем меню..._",
+                                reply_markup=keyboards.weekdays_keyboard, parse_mode="Markdown")
+    await general.advertise(msg.from_user.id)
+
+
+@dp.message_handler(commands=['options', 'settings'])
+@dp.message_handler(filters.Text(equals=keyboards.settings_button.text))
+async def process_options_command(msg: types.Message):
+    if data.interactions_count["settings"] < 9999999:
+        data.interactions_count["settings"] += 1
+
+    await data.bot.send_message(msg.from_user.id, text="_Открываем опции..._",
+                                reply_markup=keyboards.options_keyboard, parse_mode="Markdown")
+    await general.advertise(msg.from_user.id)
+
+
+@dp.message_handler(commands=['dev'])
+@dp.message_handler(filters.Text(equals=keyboards.mivanoffka_button.text))
 async def mivanoffka(message: types.Message):
     if data.interactions_count["mivanoffka"] < 9999999:
         data.interactions_count["mivanoffka"] += 1

@@ -163,12 +163,6 @@ class Sector:
 
         a1 = a.lower()
 
-        '''l1 = self.unisum(self.list[0])
-        l2 = self.unisum(self.list[1])
-        l3 = self.unisum(self.list[2])
-        l4 = self.unisum(self.list[3])'''
-
-
         l1 = self.list[0][0]
         l2 = self.list[1][0]
         l3 = self.list[2][0]
