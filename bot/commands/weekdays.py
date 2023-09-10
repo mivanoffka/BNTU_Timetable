@@ -7,19 +7,18 @@ import random
 
 from aiogram import types
 
-from bot.data import dp
+from bot.data import dispatcher
 from aiogram.dispatcher import filters
 
 schedule = data.schedule
 users_and_groups = data.users_and_groups
 
 
-@dp.message_handler(filters.Text(equals=keyboards.weekdays_keyboard))
+@dispatcher.message_handler(filters.Text(equals=keyboards.weekdays_keyboard))
 async def for_day_of_week(message: types.Message, weekday):
     msg = "-"
 
-    if data.interactions_count["weekdays"] < 9999999:
-        data.interactions_count["weekdays"] += 1
+    data.increment("weekdays", message.from_user.id)
 
     user_id = str(message.from_user.id)
     chat_id = str(message.chat.id)
@@ -40,29 +39,41 @@ async def for_day_of_week(message: types.Message, weekday):
     except:
         await exceptions.handle_schedule_sending_exception(message)
 
+    await general.advertise(message.from_user.id)
 
-@dp.message_handler(commands=["monday", "mon"])
-@dp.message_handler(filters.Text(equals=keyboards.mon_button))
+
+@dispatcher.message_handler(commands=["monday", "mon"])
+@dispatcher.message_handler(filters.Text(equals=keyboards.mon_button.text))
 async def process_mon_command(message: types.Message):
     await for_day_of_week(message, 0)
 
 
+@dispatcher.message_handler(commands=["tuesday", "tue"])
+@dispatcher.message_handler(filters.Text(equals=keyboards.tue_button.text))
 async def process_tue_command(message: types.Message):
     await for_day_of_week(message, 1)
 
 
+@dispatcher.message_handler(commands=["wednesday", "wed"])
+@dispatcher.message_handler(filters.Text(equals=keyboards.wed_button.text))
 async def process_wed_command(message: types.Message):
     await for_day_of_week(message, 2)
 
 
+@dispatcher.message_handler(commands=["thursday", "thu"])
+@dispatcher.message_handler(filters.Text(equals=keyboards.thu_button.text))
 async def process_thu_command(message: types.Message):
     await for_day_of_week(message, 3)
 
 
+@dispatcher.message_handler(commands=["friday", "fri"])
+@dispatcher.message_handler(filters.Text(equals=keyboards.fri_button.text))
 async def process_fri_command(message: types.Message):
     await for_day_of_week(message, 4)
 
 
+@dispatcher.message_handler(commands=["saturday", "sat"])
+@dispatcher.message_handler(filters.Text(equals=keyboards.sat_button.text))
 async def process_sat_command(message: types.Message):
     await for_day_of_week(message, 5)
 

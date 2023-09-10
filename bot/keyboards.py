@@ -9,6 +9,10 @@ start_keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
 set_button = KeyboardButton("Указать номер группы ✏️")
 start_keyboard.add(set_button)
 
+cancel_button = InlineKeyboardButton("❌ Отменить", callback_data="cancel")
+cancel_keyboard = InlineKeyboardMarkup()
+cancel_keyboard.insert(cancel_button)
+
 # Главное меню
 menu_keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
 today_button = KeyboardButton("Сегодня 📓")

@@ -9,7 +9,7 @@ from pathlib import Path
 from config import BASE_DIR
 
 bot = data.bot
-dr = data.dp
+dr = data.dispatcher
 
 
 def read_userlist(filename="datasource/users.json"):
