@@ -217,7 +217,8 @@ async def process_rep_command(message: types.Message):
                                     reply_markup=keyboards.short_keyborad)
 
 
-@dispatcher.callback_query_handler(state="*", text="cancel")
+@dispatcher.callback_query_handler(state=GroupSettingState.awaiting, text="cancel")
+@dispatcher.callback_query_handler(state=ReportingState.awaiting, text="cancel")
 async def process_cancel_command(call: types.CallbackQuery, state: FSMContext):
     await call.answer(text="done")
     await state.finish()
