@@ -187,14 +187,29 @@ def get_url_from_line_fitr(stroke: str):
     return stroke[start:end]
 
 
+def get_link_for_cource(course_number):
+    res = requests.get(f'https://schedule.bntu.by:9443/api/schedule_files/?course={course_number}&format=json', verify=False)
+
+    if not res.text:
+        return
+
+    res_json = res.json()
+    excel_links = [item['excel_files'] for item in res_json]
+
+    return excel_links[0][0]
+
+
 def download_and_parse():
 
     download_result = False
     try:
         urls = find_lines_with_urls()
 
-        ref_1 = get_url_from_line(urls[0])
-        ref_2 = get_url_from_line(urls[1])
+        #ref_1 = get_url_from_line(urls[0])
+        #ref_2 = get_url_from_line(urls[1])
+
+        ref_1 = get_link_for_cource(1)
+        ref_2 = get_link_for_cource(2)
 
         print(ref_1)
         print(ref_2)

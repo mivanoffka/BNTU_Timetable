@@ -99,11 +99,6 @@ async def is_group_in_schedule(user_group):
 
     return result
 
-# def setup():
-#     data.dp.register_message_handler(process_mon_command, commands="mon", content_types=['text'], state='*')
-#     data.dp.register_message_handler(process_tue_command, commands="tue", content_types=['text'], state='*')
-#     data.dp.register_message_handler(process_wed_command, commands="wed", content_types=['text'], state='*')
-#     data.dp.register_message_handler(process_thu_command, commands="thu", content_types=['text'], state='*')
-#     data.dp.register_message_handler(process_fri_command, commands="fri", content_types=['text'], state='*')
-#     data.dp.register_message_handler(process_sat_command, commands="sat", content_types=['text'], state='*')
+
+
 
