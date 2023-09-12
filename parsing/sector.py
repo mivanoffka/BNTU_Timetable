@@ -579,8 +579,8 @@ class Sector:
         pattern = self.pattern
 
         if pattern in range(0, 16):
-            return self.__processors[pattern]() + " (#{})".format(pattern)
-            #return self.__processors[pattern]()
+            #return self.__processors[pattern]() + " (#{})".format(pattern)
+            return self.__processors[pattern]()
         else:
             return self.process_error()
 
