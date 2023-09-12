@@ -106,6 +106,13 @@ class Sector:
         txt = txt.replace("2 нед.", "2 нед")
         txt = txt.replace("2 нед", "")
 
+        for i in range(0, 4):
+            try:
+                txt = txt.replace(".", ". ")
+            except:
+                pass
+
+
         words = txt.split()
         # print(words)
 
@@ -177,13 +184,36 @@ class Sector:
 
         # 1.2
         elif a != b and c != d and not eq_ac and not eq_bd:
-            info += "\n   1-я неделя:"
-            info += "\n      •  " + "1-я подгруппа — " + a
-            info += "\n      •  " + "2-я подгруппа — " + b
+            r21 = self.list[1][0]
+            r22 = self.list[1][2]
+            r41 = self.list[3][0]
+            r42 = self.list[3][2]
 
-            info += "\n   2-я неделя:"
-            info += "\n      •  " + "1-я подгруппа — " + c
-            info += "\n      •  " + "2-я подгруппа — " + d
+            if (self.has_nums(r21) and not self.has_nums(r22)) or (self.has_nums(r22) and not self.has_nums(r21)):
+                r1 = ""
+                r2 = ""
+
+                if r21 == r22:
+                    r1 = r21
+                else:
+                    r1 = r21 + r22
+
+                if r41 == r42:
+                    r2 = r41
+                else:
+                    r2 = r41 + r42
+
+                info += "\n      •  " + "1-я неделя — " + a + r1
+                info += "\n      •  " + "2-я неделя — " + c + r2
+            else:
+                info += "\n   1-я неделя:"
+                info += "\n      •  " + "1-я подгруппа — " + a
+                info += "\n      •  " + "2-я подгруппа — " + b
+
+                info += "\n   2-я неделя:"
+                info += "\n      •  " + "1-я подгруппа — " + c
+                info += "\n      •  " + "2-я подгруппа — " + d
+
 
         # 1.3
         elif a == b and c == d and not eq_ac and not eq_bd:
@@ -247,14 +277,31 @@ class Sector:
 
         info = ""
 
-        if a != b:
-            info += "\n   1-я неделя:"
-            info += "\n      •  " + "1-я подгруппа — " + a
-            info += "\n      •  " + "2-я подгруппа — " + b
-        else:
-            info += "\n   1-я неделя:"
-            info += "\n      •  " + a
+        if "физическая" in a.lower() + b.lower() or "курсовое" in a.lower() + b.lower():
+            info += "\n      • "
 
+            c = self.C()
+            d = self.D()
+
+            if a != b:
+                info += a + b
+            else:
+                info += a
+
+            if a != c:
+                if c != d:
+                    info += c + d
+                else:
+                    info += c
+
+        else:
+            if a != b:
+                info += "\n   1-я неделя:"
+                info += "\n      •  " + "1-я подгруппа — " + a
+                info += "\n      •  " + "2-я подгруппа — " + b
+            else:
+                info += "\n   1-я неделя:"
+                info += "\n      •  " + a
         return info
 
     def process_3(self):
@@ -532,8 +579,8 @@ class Sector:
         pattern = self.pattern
 
         if pattern in range(0, 16):
-            #return self.__processors[pattern]() + " (#{})".format(pattern)
-            return self.__processors[pattern]()
+            return self.__processors[pattern]() + " (#{})".format(pattern)
+            #return self.__processors[pattern]()
         else:
             return self.process_error()
 
