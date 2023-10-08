@@ -6,7 +6,7 @@ from config import TOKEN
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 storage = MemoryStorage()
-bot = Bot(token=TOKEN)
+bot = Bot(token=TOKEN, parse_mode = "HTML")
 dispatcher = Dispatcher(bot, storage=storage)
 
 schedule = {}
@@ -30,3 +30,13 @@ def increment(action, id):
 
     if id not in recent_users:
         recent_users.append(id)
+
+
+def is_authorized(id):
+    id = str(id)
+
+    if id in users_and_groups.keys():
+        return users_and_groups[id] != "undefined"
+    else:
+        users_and_groups[id] = "undefined"
+        return False

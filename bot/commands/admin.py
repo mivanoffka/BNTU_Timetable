@@ -3,6 +3,8 @@ import copy
 import os
 
 import aiogram.utils.exceptions
+
+import bot.ui.keyboards
 import config
 from bot import data, keyboards, timetable
 from datetime import datetime
@@ -35,7 +37,7 @@ async def process_notify_command(message: types.Message):
                 try:
                     if not lst[user_id] == "BLOCKED":
                         await data.bot.send_message(user_id, text=inf_mes, parse_mode="HTML",
-                                            reply_markup=keyboards.short_keyborad)
+                                            reply_markup=bot.ui.keyboards.delete_keyboard)
                         print("Message #{} sent.".format(mn))
                         mn += 1
 
@@ -116,8 +118,6 @@ async def process_userstat_command(message: types.Message):
         for user in data.users_and_groups:
             if str(data.users_and_groups[user]) == group:
                 stats_dict[group].append(user)
-
-    print(stats_dict)
 
     text_report = "Полный список пользователей.\n"
 
@@ -203,10 +203,6 @@ async def process_update_command(message: types.Message):
         raise
     data.is_updating = False
 
-
-@dispatcher.message_handler(commands=["menu"])
-async def process_menu_command(message: types.Message):
-    await data.bot.send_message(message.chat.id, text="Возвращаю меню...", reply_markup=keyboards)
 
 
 @dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["danya"])

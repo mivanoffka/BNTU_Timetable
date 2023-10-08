@@ -3,7 +3,7 @@ from aiogram.types import ReplyKeyboardRemove, \
     InlineKeyboardMarkup, InlineKeyboardButton
 
 
-
+'''
 # Начальная клавиатура
 start_keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
 set_button = KeyboardButton("Указать номер группы ✏️")
@@ -94,3 +94,4 @@ button_12 = InlineKeyboardButton("1-2 курсы 🍼", url='https://bntu.by/ras
 button_34 = InlineKeyboardButton("3-4 курсы 👴🏻", url="https://bntu.by/faculties")
 exams_keyboard.insert(button_12)
 exams_keyboard.insert(button_34)
+'''

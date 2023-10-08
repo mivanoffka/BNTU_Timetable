@@ -31,7 +31,13 @@ def get_current_week():
     return week_number
 
 
-def get_day_message(user_group, weekday):
+def get_day_message(id, weekday):
+    id = str(id)
+
+    data.increment("weekdays", id)
+
+    user_group = data.users_and_groups[id]
+
     msg = ""
     if weekday != 6:
         weekday = WEEK_DAYS[weekday]
@@ -48,7 +54,7 @@ def get_day_message(user_group, weekday):
         #msg += day_to_str(user_group, weekday)
 
     else:
-        msg = "Выходной. Отдыхаем!"
+        msg = "*Воскресенье – выходной.*_ Отдыхаем! 🥳_"
 
     return msg
 
