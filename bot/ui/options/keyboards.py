@@ -10,7 +10,7 @@ bntu_button_3 = InlineKeyboardButton("Сайт БНТУ 🏛️", callback_data=
 report_button = InlineKeyboardButton("Отзыв 📬️", callback_data="input_report")
 back_home_button = InlineKeyboardButton("Назад ↩️", callback_data="goto_home")
 back_to_options_button = InlineKeyboardButton("Назад ↩️", callback_data="goto_options")
-donate_button = InlineKeyboardButton("Поддержать нас денюжкой 🏦", callback_data="goto_donations")
+donate_button = InlineKeyboardButton("Поддержать нас денюжкой 🏦💞", callback_data="goto_donations")
 
 options_keyboard = InlineKeyboardMarkup()
 options_keyboard.row(bntu_button_3)

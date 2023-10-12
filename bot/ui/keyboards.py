@@ -12,7 +12,6 @@ donations_button = InlineKeyboardButton("Пожертвовать 💸", url="ht
 donations_and_delete_keyboard.insert(delete_button)
 donations_and_delete_keyboard.insert(donations_button)
 
-
 cancel_button = InlineKeyboardButton("Отмена ✖️", callback_data="input_cancel")
 cancel_keyboard = InlineKeyboardMarkup()
 cancel_keyboard.insert(cancel_button)

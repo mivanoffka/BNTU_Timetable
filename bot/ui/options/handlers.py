@@ -1,30 +1,8 @@
-from pathlib import Path
-
-import bot.commands.days
-import config
-from config import BASE_DIR
-
-from bot import data, timetable
-
 from aiogram import types
-from bot.commands import buttoned
 from bot.data import dispatcher
-from aiogram.dispatcher import filters
-
-from bot.states import GroupSettingState, ReportingState
-from aiogram.dispatcher import FSMContext
-from bot.ui.keyboards import cancel_keyboard
-from bot.ui.home.keyboards import home_keyboard
-from bot.ui.weekdays.keyboards import weekdays_keyboard
 from bot.ui.options.keyboards import options_keyboard
-from bot.ui.options.website.keyboards import website_keyboard
-from bot.ui.options.devinfo.keyboards import links_keyboard
 from bot.ui.advertisement import advertise
-
-import time
-
-from bot.states import GroupSettingState, ReportingState
-from aiogram.dispatcher import FSMContext
+from bot import data
 
 
 @dispatcher.callback_query_handler(text="goto_donations")
@@ -33,6 +11,7 @@ async def process_devinfo_command(call: types.CallbackQuery):
     #       "\n\n<a href='vk.com/maksimka_ivanoffka'>ВКонтакте</a> | " \
     #       "<a href='instagram.com/maksimka_ivanoffka/'>Instagram</a>"\
     #       "<i>\n\nМой бесподобный создатель, заботливый администратор да и просто замечательный человек!</i>"
+    data.increment("mivanoffka", call.from_user.id)
 
     txt = "<b>🤗 Вот он — Максимка Иваноффка!</b>" \
           "\n\n<i>Этот замечательный человек — мой единоличный создатель," \
@@ -52,14 +31,13 @@ async def process_devinfo_command(call: types.CallbackQuery):
 
 @dispatcher.callback_query_handler(text="show_bntu")
 async def process_bntu_command(call: types.CallbackQuery):
-    txt = "✖️ Этот бот не имеет непосредственного отношения " \
-        "к руководству Белорусского Национального Технического"\
-        " Университета и создан на общественных началах."\
+    txt = "🙅‍♂️ Этот бот не имеет отношения " \
+        "к руководству БНТУ, не финансируется им и существует на общественных началах."\
         "\n\n<b>❗ За всей официальной информацией стоит"\
         " обращаться к сайту Университета.</b>" \
         "\n\n<i>🌐 Рекомендуем вам регулярно сверять представленное здесь расписание с его оригиналом на сайте.</i>"\
-        "\n\n<a href='https://bntu.by/raspisanie'>1-2 курс</a> | " \
-        "<a href='https://bntu.by/faculties'>3-4 курс</a>"
+        "\n\n<a href='https://bntu.by/raspisanie'><b>1-2 курс</b></a> | " \
+        "<a href='https://bntu.by/faculties'><b>3-4 курс</b></a>"
 
     try:
         await call.message.edit_text(txt, reply_markup=options_keyboard, disable_web_page_preview=True)
@@ -72,6 +50,8 @@ async def process_bntu_command(call: types.CallbackQuery):
 
 @dispatcher.callback_query_handler(text="show_help")
 async def process_help_command(call: types.CallbackQuery):
+    data.increment("help", call.from_user.id)
+
     txt = "<u>Ответы на вопросы, которые могли у вас возникнуть.</u>" \
           "<b>\n\n❓ Почему расписание 3-го курса и старше доступно только студентам ФИТР?</b>" \
           "<i>\n\nК сожалению, расписания занятий сведены в одну таблицу Excel только для младших курсов." \

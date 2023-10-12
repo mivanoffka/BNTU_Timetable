@@ -4,10 +4,9 @@ import bot.ui.options.keyboards
 import config
 from config import BASE_DIR
 
-from bot import data, timetable
+from bot import data
 
 from aiogram import types
-from bot.commands import buttoned
 from bot.data import dispatcher
 from aiogram.dispatcher import filters
 
@@ -18,11 +17,13 @@ from bot.ui.keyboards import cancel_keyboard, menu_keyboard, delete_keyboard
 from bot.ui.home.keyboards import home_keyboard
 from bot.ui.options.keyboards import options_keyboard
 from bot.ui.advertisement import advertise
+from bot.ui.start.keyboards import continue_reply_button
 
 import random
 
+default_mes = "<b>Выберите желаемое действие...</b>\n\n<i>🎲 Или просто тыкайте на кнопочки!</i>"
 
-async def send_ui(id, mes="Выберите желаемое действие..."):
+async def send_ui(id, mes=default_mes):
     await data.bot.send_message(id, mes, reply_markup=home_keyboard)
 
 
@@ -34,6 +35,8 @@ async def process_ui_command(message: types.Message):
 
 @dispatcher.callback_query_handler(text="goto_options")
 async def process_options_command(call: types.CallbackQuery):
+    bot.data.increment("settings", call.from_user.id)
+
     try:
         await call.message.edit_reply_markup(reply_markup=options_keyboard)
     except:
@@ -47,19 +50,6 @@ async def process_home_command(call: types.CallbackQuery):
     await call.message.edit_reply_markup(reply_markup=home_keyboard)
     await call.answer()
     await advertise(call.from_user.id)
-
-
-@dispatcher.callback_query_handler(text="goto_home_clr")
-async def process_home_clr_command(call: types.CallbackQuery):
-    txt = ""
-
-    if str(call.from_user.id) in data.users_and_groups.keys():
-        txt = "Приветствую!"
-    else:
-        txt = "Вам лучше указать группу..."
-
-    await call.message.edit_text(text=txt, reply_markup=home_keyboard)
-    await call.answer()
 
 
 @dispatcher.callback_query_handler(text="delete_message")
@@ -77,11 +67,16 @@ async def process_devinfo_command(call: types.CallbackQuery, state: FSMContext):
                                  parse_mode="Markdown", reply_markup=cancel_keyboard)
 
 
-@dispatcher.callback_query_handler(text="goto_next")
+@dispatcher.callback_query_handler(text="input_group")
 async def process_devinfo_command(call: types.CallbackQuery, state: FSMContext):
         await GroupSettingState.awaiting.set()
-        await call.message.edit_text("📲 Просто введите номер группы и отправьте как сообщение.",
-                                     parse_mode="Markdown", reply_markup=cancel_keyboard)
+
+        msg = "*❓ Какие группы обслуживаются?*"
+        msg += "\n  •  ФИТР - группы всех 4-х курсов"
+        msg += "\n  •  Остальные факультеты - только 1 и 2 курсы"
+        msg += "\n\n☎️ *Просто введите номер группы и отправьте как сообщение.*"
+
+        await call.message.edit_text(msg, parse_mode="Markdown", reply_markup=cancel_keyboard)
 
 
 @dispatcher.callback_query_handler(state=GroupSettingState.awaiting, text="input_cancel")
@@ -101,9 +96,8 @@ async def process_send_report_command(message: types.message, state: FSMContext)
         report = message.text
         report_mes = ""
         id = str(message.chat.id)
-        group = ""
-        if id in data.users_and_groups:
-            group = data.users_and_groups[id]
+
+        group = data.users_db.get_info(id).group
 
         report_mes += "\n\nПользователь "
         if str(message.from_user.username) != "None":
@@ -134,5 +128,4 @@ async def process_send_report_command(message: types.message, state: FSMContext)
         await data.bot.send_message(message.chat.id, text=m, parse_mode="Markdown", reply_markup=options_keyboard)
     await state.finish()
     await advertise(message.from_user.id)
-
 

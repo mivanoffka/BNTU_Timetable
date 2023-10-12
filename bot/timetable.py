@@ -36,15 +36,17 @@ def get_day_message(id, weekday):
 
     data.increment("weekdays", id)
 
-    user_group = data.users_and_groups[id]
+    #user_group = data.users_and_groups[id]
+    #user_group = data.users_db.get_group(id)
+    uinfo = data.users_db.get_info(id)
 
     msg = ""
     if weekday != 6:
         weekday = WEEK_DAYS[weekday]
 
-        msg = "*{}, группа {}.*".format(weekday, user_group)
+        msg = "*{}, группа {}.*".format(weekday, uinfo.group)
 
-        msg_buf = day_to_str(user_group, weekday)
+        msg_buf = day_to_str(uinfo.group, weekday)
 
         if msg_buf != "":
             msg += msg_buf

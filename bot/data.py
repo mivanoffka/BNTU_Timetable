@@ -3,6 +3,7 @@ from queue import Queue
 from aiogram import Bot, types
 from config import TOKEN
 
+from bot.users import UsersDB
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 storage = MemoryStorage()
@@ -22,6 +23,7 @@ interactions_count = {"today": 0, "tomorrow": 0, "weekdays": 0, "week": 0, "sett
 is_updating = False
 exit_event = False
 
+users_db = None
 
 def increment(action, id):
     if action in interactions_count.keys():
@@ -30,13 +32,3 @@ def increment(action, id):
 
     if id not in recent_users:
         recent_users.append(id)
-
-
-def is_authorized(id):
-    id = str(id)
-
-    if id in users_and_groups.keys():
-        return users_and_groups[id] != "undefined"
-    else:
-        users_and_groups[id] = "undefined"
-        return False

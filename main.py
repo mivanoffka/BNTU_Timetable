@@ -2,7 +2,7 @@ import threading
 
 from datetime import datetime
 from bot import timetable, in_out, data
-from bot.data import interactions_count, users_and_groups, dispatcher
+from bot.data import interactions_count, dispatcher
 
 from aiogram.utils import executor
 from bot import commands
@@ -10,13 +10,14 @@ from bot.ui import handlers, advertisement
 from bot.ui.home import handlers as home_handlers
 from bot.ui.weekdays import handlers as weekdays_handlers
 from bot.ui.options import handlers as options_handlers
-from bot.ui.options.website import handlers as website_handlers
-from bot.ui.options.devinfo import handlers as devinfo_handlers
 from bot.ui.start import handlers as start_handlers
+from bot.users import UsersDB
+
 
 async def start(dp):
     data.schedule = timetable.init()
     data.users_and_groups = in_out.read_userlist()
+    data.users_db = UsersDB()
 
     now = datetime.now()
     interactions_count["time"] = now.strftime("%d/%m/%Y %H:%M:%S")
