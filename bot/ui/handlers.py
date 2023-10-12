@@ -23,6 +23,7 @@ import random
 
 default_mes = "<b>Выберите желаемое действие...</b>\n\n<i>🎲 Или просто тыкайте на кнопочки!</i>"
 
+
 async def send_ui(id, mes=default_mes):
     await data.bot.send_message(id, mes, reply_markup=home_keyboard)
 
