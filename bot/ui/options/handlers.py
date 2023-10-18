@@ -1,4 +1,6 @@
 from aiogram import types
+
+import bot.display
 from bot.data import dispatcher
 from bot.ui.options.keyboards import options_keyboard
 from bot.ui.advertisement import advertise
@@ -21,7 +23,8 @@ async def process_devinfo_command(call: types.CallbackQuery):
     "\n\n<a href='vk.com/maksimka_ivanoffka'><b>ВКонтакте</b></a> | " \
     "<a href='instagram.com/maksimka_ivanoffka/'><b>Instagram</b></a>"
     try:
-        await call.message.edit_text(txt, reply_markup=options_keyboard, disable_web_page_preview=True)
+        #await call.message.edit_text(txt, reply_markup=options_keyboard, disable_web_page_preview=True)
+        await bot.display.update_display(call.from_user.id, txt, options_keyboard)
     except:
         pass
 
@@ -40,7 +43,8 @@ async def process_bntu_command(call: types.CallbackQuery):
         "<a href='https://bntu.by/faculties'><b>3-4 курс</b></a>"
 
     try:
-        await call.message.edit_text(txt, reply_markup=options_keyboard, disable_web_page_preview=True)
+        #await call.message.edit_text(txt, reply_markup=options_keyboard, disable_web_page_preview=True)
+        await bot.display.update_display(call.from_user.id, txt, options_keyboard)
     except:
         pass
 
@@ -71,7 +75,8 @@ async def process_help_command(call: types.CallbackQuery):
           "\n\n<b>Если есть ещё вопросы - пишите мне!</b>"
 
     try:
-        await call.message.edit_text(txt, reply_markup=options_keyboard, disable_web_page_preview=True)
+        #await call.message.edit_text(txt, reply_markup=options_keyboard, disable_web_page_preview=True)
+        await bot.display.update_display(call.from_user.id, txt, options_keyboard)
     except:
         pass
 

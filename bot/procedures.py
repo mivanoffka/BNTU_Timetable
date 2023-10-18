@@ -1,7 +1,9 @@
+import bot.ui.start.keyboards
 from bot import data, timetable
 from datetime import datetime
-
+import time
 schedule = data.schedule
+import aiogram
 
 
 async def process_day(id, delta=0):
@@ -31,8 +33,11 @@ async def get_week(id):
             weekday = 2
         else:
             weekday = 1
-        msg_text = "_С понедельника начнётся {}-я неделя!_ 👌".format(weekday)
+        msg_text = "<i>С понедельника начнётся {}-я неделя!</i> 👌".format(weekday)
     else:
-        msg_text = "_Сейчас {}-я неделя!_ 👌".format(week_num)
+        msg_text = "<i>Сейчас {}-я неделя!</i> 👌".format(week_num)
 
     return msg_text
+
+
+

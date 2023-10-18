@@ -24,6 +24,8 @@ is_updating = False
 exit_event = False
 
 users_db = None
+global_animations = False
+
 
 def increment(action, id):
     if action in interactions_count.keys():

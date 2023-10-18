@@ -44,19 +44,19 @@ def get_day_message(id, weekday):
     if weekday != 6:
         weekday = WEEK_DAYS[weekday]
 
-        msg = "*{}, группа {}.*".format(weekday, uinfo.group)
+        msg = "<b>{}, группа {}.</b>".format(weekday, uinfo.group)
 
         msg_buf = day_to_str(uinfo.group, weekday)
 
         if msg_buf != "":
             msg += msg_buf
         else:
-            msg += "\n\n_Пар нет. Отдыхаем!_"
+            msg += "\n\n<i>Пар нет. Отдыхаем!</i>"
 
         #msg += day_to_str(user_group, weekday)
 
     else:
-        msg = "*Воскресенье – выходной.*_ Отдыхаем! 🥳_"
+        msg = "<b>Воскресенье – выходной.</b><i> Отдыхаем! 🥳</i>"
 
     return msg
 
@@ -72,8 +72,8 @@ def day_to_str(group, weekday):
         info = day[time]
 
         if info != "<Пусто>" and info != "\nПусто" and info is not None:
-            output += "\n\n⏰ *{}* ".format(time)
-            output += "_{}_".format(day[time])
+            output += "\n\n⏰ <b>{}</b> ".format(time)
+            output += "<i>{}</i>".format(day[time])
 
     return output
 

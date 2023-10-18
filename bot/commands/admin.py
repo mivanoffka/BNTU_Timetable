@@ -3,6 +3,7 @@ import copy
 import os
 
 import aiogram.utils.exceptions
+from aiogram.types import ReplyKeyboardRemove
 
 import bot.ui.keyboards
 from bot.ui.start.keyboards import continue_inline, continue_keyboard
@@ -12,10 +13,12 @@ from bot import data, timetable
 from datetime import datetime
 from parsing import autoparser
 from aiogram import types
+from bot.ui.keyboards import cancel_keyboard
 
 from bot.data import dispatcher
 
 from aiogram.dispatcher import filters
+from bot.display import update_display
 
 
 @dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["notify"])
@@ -67,10 +70,13 @@ async def process_inform_command(message: types.Message):
     for user_id in lst:
         try:
             if not lst[user_id] == "BLOCKED":
-                await data.bot.send_message(user_id, mes_1, parse_mode="HTML", reply_markup=continue_keyboard,
-                                            disable_web_page_preview=True)
-                await asyncio.sleep(0.5)
-                await data.bot.send_message(user_id, mes_2, parse_mode="HTML")
+                # await data.bot.send_message(user_id, mes_1, parse_mode="HTML", reply_markup=continue_keyboard,
+                #                             disable_web_page_preview=True)
+                # await asyncio.sleep(0.5)
+                # await data.bot.send_message(user_id, mes_2, parse_mode="HTML")
+
+                await bot.display.try_delete(
+                    await data.bot.send_message(user_id, text=".", reply_markup=ReplyKeyboardRemove()))
 
                 mn += 1
                 print("Message #{} sent.".format(mn))
@@ -112,39 +118,52 @@ def get_stats_text(message: types.Message):
 
 @dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["stats"])
 async def process_stats_command(message: types.Message):
+    await bot.display.try_delete(message)
+
     txt = get_stats_text(message)
-    await data.bot.send_message(config.ADMIN_ID, text=txt, reply_markup=delete_keyboard)
+    #await data.bot.send_message(config.ADMIN_ID, text=txt, reply_markup=o)
+    await bot.display.update_display(config.ADMIN_ID, txt, bot.ui.keyboards.open_menu_keyboard)
 
 
 @dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["update"])
 async def process_update_command(message: types.Message):
-    await data.bot.send_message(message.chat.id, text="Начинаем обновление... 🔄",
-                                reply_markup=bot.ui.keyboards.delete_keyboard)
+    await bot.display.try_delete(message)
+
+    steps = ("Начинаем обновление... 🔄", "Расписание успешно обновлено! ✅", "Не удалось обновить расписание. ❌")
+
+    # await data.bot.send_message(message.chat.id, text="Начинаем обновление... 🔄",
+    #                             reply_markup=bot.ui.keyboards.delete_keyboard)
+    await bot.display.update_display(config.ADMIN_ID, steps[0], None)
+
     try:
         data.is_updating = True
         print("Schedule updating started...")
         autoparser.download_and_parse()
         data.schedule = timetable.init()
-        await data.bot.send_message(message.chat.id, text="Расписание успешно обновлено! ✅",
-                                    reply_markup=bot.ui.keyboards.delete_keyboard)
+        await bot.display.update_display(config.ADMIN_ID, steps[1], bot.ui.keyboards.open_menu_keyboard)
+        # await data.bot.send_message(message.chat.id, text="Расписание успешно обновлено! ✅",
+        #                             reply_markup=bot.ui.keyboards.delete_keyboard)
         print("Schedule succesfully updated!")
         data.is_updating = False
     except:
         data.is_updating = False
-        await data.bot.send_message(message.chat.id, text="Не удалось обновить расписание. ❌",
-                                    reply_markup=bot.ui.keyboards.delete_keyboard)
+        await bot.display.update_display(config.ADMIN_ID, steps[2], bot.ui.keyboards.open_menu_keyboard)
+        # await data.bot.send_message(message.chat.id, text="Не удалось обновить расписание. ❌",
+        #                             reply_markup=bot.ui.keyboards.delete_keyboard)
         raise
     data.is_updating = False
 
 
 @dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["danya"])
 async def process_danya_command(message: types.Message):
+    await bot.display.try_delete(message)
     msg = "Сердечная благодарность вам, любимый Данила Сергеевич! Мы без вас как без рук! ❤️"
     await message.bot.send_message("154246218", text=msg, reply_markup=bot.ui.keyboards.delete_keyboard)
 
 
 @dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["danik"])
 async def process_danik_command(message: types.Message):
+    await bot.display.try_delete(message)
     msg = "Даниил Дмитриевич, не соизволите ли вы отправиться в пешее эротическое путешествие? 💩"
     await message.bot.send_message("1344775275", text=msg, reply_markup=bot.ui.keyboards.delete_keyboard)
 
@@ -165,5 +184,23 @@ async def process_reply_command(message: types.Message):
         await data.bot.send_message(config.ADMIN_ID, text="Не удалось отправить сообщение...",
                                     parse_mode="Markdown")
 
+
+@dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["animations"])
+async def process_animations_command(message: types.Message):
+    await bot.display.try_delete(message)
+
+    data.global_animations = not data.global_animations
+
+    txt = "Анимации ВЫКЛ 🔴"
+    if data.global_animations:
+        txt = "Анимации ВКЛ 🟢"
+
+    await bot.display.update_display(config.ADMIN_ID, txt, bot.ui.keyboards.open_menu_keyboard)
+
+
+
+@dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["message"])
+async def process_message_command(message: types.Message):
+    await update_display(message.from_user.id, "ы", bot.ui.keyboards.delete_keyboard, no_menu=True)
 
 

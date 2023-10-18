@@ -1,3 +1,4 @@
+import time
 from pathlib import Path
 
 from bot import data, timetable
@@ -6,7 +7,7 @@ from aiogram import types
 from bot.data import dispatcher
 
 
-from bot.ui.keyboards import cancel_keyboard, menu_keyboard, delete_keyboard, donations_and_delete_keyboard
+from bot.ui.keyboards import cancel_keyboard, open_menu_keyboard, delete_keyboard, donations_and_delete_keyboard
 import random
 
 
@@ -17,7 +18,7 @@ async def process_cancel_command(call: types.CallbackQuery):
 
 
 async def advertise(user_id):
-    value = random.randint(1, 6)
+    value = random.randint(1, 8)
     if value == 3:
         value = random.randint(1, 3)
         if value == 1:

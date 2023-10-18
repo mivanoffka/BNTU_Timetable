@@ -8,14 +8,16 @@ class UserInfo:
     id: str
     group: str
     name: str
+    message: str
 
-    def __init__(self, id, group, name="NULL"):
+    def __init__(self, id, group, name, message):
         self.id = id
         self.group = group
         self.name = name
+        self.message = message
 
     def __str__(self):
-        return "{}-{}-{}".format(self.id, self.group, self.name)
+        return "{}-{}-{}-{}".format(self.id, self.group, self.name, self.message)
 
 
 class UsersDB:
@@ -26,7 +28,7 @@ class UsersDB:
         self.connection = sqlite3.connect(BASE_DIR / "bot/databases/users.db")
         self.cursor = self.connection.cursor()
 
-    def insert(self, uid, group, name="NULL"):
+    def insert(self, uid, group, name):
         if name is None:
             name = "NULL"
 
@@ -37,6 +39,15 @@ class UsersDB:
                          .format(TABLE_NAME, uid, group, name))
         else:
             self.execute("UPDATE {} SET ugroup = '{}' WHERE id = '{}'".format(TABLE_NAME, group, uid))
+            pass
+
+    def update_message(self, uid, message):
+        exists = self.execute("SELECT EXISTS(SELECT * FROM {} where id = {})".format(TABLE_NAME, uid))[0][0]
+
+        if not exists:
+            raise "mda"
+        else:
+            self.execute("UPDATE {} SET display_id = '{}' WHERE id = '{}'".format(TABLE_NAME, message, uid))
             pass
 
     def delete(self, uid):
@@ -72,12 +83,11 @@ class UsersDB:
         try:
             query = "SELECT * FROM {} WHERE id = {}".format(TABLE_NAME, uid)
             query_result = self.execute(query)[0]
-            info = UserInfo(query_result[0], query_result[1], query_result[2])
+            info = UserInfo(query_result[0], query_result[1], query_result[2], query_result[3])
         except:
             pass
 
         return info
-
 
     def get_list(self):
         result = None
@@ -90,7 +100,7 @@ class UsersDB:
             pass
 
         for obj in result:
-            uinfo = UserInfo(obj[0], obj[1], obj[2])
+            uinfo = UserInfo(obj[0], obj[1], obj[2], obj[3])
             lst.append(uinfo)
 
         return lst
