@@ -194,9 +194,10 @@ def get_link_for_cource(course_number):
         return
 
     res_json = res.json()
+
     excel_links = [item['excel_files'] for item in res_json]
 
-    return excel_links[0][0]
+    return excel_links[1][0]
 
 
 def download_and_parse():
