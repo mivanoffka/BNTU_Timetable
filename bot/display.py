@@ -1,5 +1,5 @@
 import bot.ui.start.keyboards
-from bot import data, timetable
+from bot import data, procedures
 from datetime import datetime
 import time
 schedule = data.schedule
@@ -16,7 +16,7 @@ async def try_delete(message):
 async def send_emoji_delay(id):
     delay = 0.15
 
-    await data.bot.send_message(id, "✨")
+    await data.bot.send_message(id, "✨", reply_markup=aiogram.types.ReplyKeyboardRemove())
     time.sleep(delay)
     await data.bot.send_message(id, "✨")
     time.sleep(delay)
@@ -24,7 +24,7 @@ async def send_emoji_delay(id):
     time.sleep(delay)
     await data.bot.send_message(id, "✨")
     time.sleep(delay)
-    await data.bot.send_message(id, "✨", reply_markup=bot.ui.start.keyboards.continue_reply_button)
+    await data.bot.send_message(id, "✨")
     time.sleep(delay)
 
 
@@ -48,6 +48,7 @@ async def send_symbol_delay(chat_id, message_id, keyboard):
         except:
             pass
         time.sleep(delay)
+
 
 async def update_display(id, text, keyboard, animation=True, no_menu=False):
     user_info = data.users_db.get_info(id)
@@ -81,3 +82,15 @@ async def send_display(id, text, keyboard, animation=True):
         await send_emoji_delay(id)
     message = await data.bot.send_message(id, text, parse_mode="HTML", reply_markup=keyboard, disable_web_page_preview=True)
     data.users_db.update_message(id, message.message_id)
+
+
+async def renew_display(id, text, keyboard):
+    uinfo = data.users_db.get_info(id)
+
+    try:
+        await data.bot.delete_message(id, uinfo.message)
+    except:
+        pass
+
+    data.users_db.update_message(id, "NULL")
+    await update_display(id, text, keyboard, animation=False)

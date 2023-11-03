@@ -1,5 +1,5 @@
-import bot.procedures
-from bot import data, timetable
+
+from bot import data, procedures
 from aiogram import types
 from bot.data import dispatcher
 
@@ -50,7 +50,7 @@ async def process_group_input(message: types.Message, state: FSMContext):
     user_id = str(message.from_user.id)
 
 
-    if timetable.is_there_such_a_group(group):
+    if procedures.is_there_such_a_group(group):
         reply_text += "<b>🥳 Вы указали группу {}!</b>".format(group)
         reply_text += "\n\n<i>Теперь вам доступен полный функционал бота.</i>"
 

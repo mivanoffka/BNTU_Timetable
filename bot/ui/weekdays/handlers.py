@@ -1,6 +1,6 @@
-import bot.procedures
 
-from bot import timetable
+
+from bot import procedures
 
 from aiogram import types
 from bot.data import dispatcher
@@ -15,7 +15,7 @@ import bot.display
 async def process_today_command(call: types.CallbackQuery):
     bot.data.increment("weekdays", call.from_user.id)
 
-    txt = bot.timetable.get_day_message(call.from_user.id, 0)
+    txt = bot.procedures.get_day_message(call.from_user.id, 0)
     try:
         #await call.message.edit_text(txt, parse_mode="Markdown", reply_markup=weekdays_keyboard)
         await bot.display.update_display(call.from_user.id, txt, weekdays_keyboard)
@@ -30,7 +30,7 @@ async def process_today_command(call: types.CallbackQuery):
 async def process_today_command(call: types.CallbackQuery):
     bot.data.increment("weekdays", call.from_user.id)
 
-    txt = bot.timetable.get_day_message(call.from_user.id, 1)
+    txt = bot.procedures.get_day_message(call.from_user.id, 1)
     try:
         #await call.message.edit_text(txt, parse_mode="Markdown", reply_markup=weekdays_keyboard)
         await bot.display.update_display(call.from_user.id, txt, weekdays_keyboard)
@@ -45,7 +45,7 @@ async def process_today_command(call: types.CallbackQuery):
 async def process_today_command(call: types.CallbackQuery):
     bot.data.increment("weekdays", call.from_user.id)
 
-    txt = bot.timetable.get_day_message(call.from_user.id, 2)
+    txt = bot.procedures.get_day_message(call.from_user.id, 2)
     try:
         #await call.message.edit_text(txt, parse_mode="Markdown", reply_markup=weekdays_keyboard)
         await bot.display.update_display(call.from_user.id, txt, weekdays_keyboard)
@@ -60,7 +60,7 @@ async def process_today_command(call: types.CallbackQuery):
 async def process_today_command(call: types.CallbackQuery):
     bot.data.increment("weekdays", call.from_user.id)
 
-    txt = bot.timetable.get_day_message(call.from_user.id, 3)
+    txt = bot.procedures.get_day_message(call.from_user.id, 3)
     try:
         #await call.message.edit_text(txt, parse_mode="Markdown", reply_markup=weekdays_keyboard)
         await bot.display.update_display(call.from_user.id, txt, weekdays_keyboard)
@@ -75,7 +75,7 @@ async def process_today_command(call: types.CallbackQuery):
 async def process_today_command(call: types.CallbackQuery):
     bot.data.increment("weekdays", call.from_user.id)
 
-    txt = bot.timetable.get_day_message(call.from_user.id, 4)
+    txt = bot.procedures.get_day_message(call.from_user.id, 4)
     try:
         #await call.message.edit_text(txt, parse_mode="Markdown", reply_markup=weekdays_keyboard)
         await bot.display.update_display(call.from_user.id, txt, weekdays_keyboard)
@@ -90,7 +90,7 @@ async def process_today_command(call: types.CallbackQuery):
 async def process_today_command(call: types.CallbackQuery):
     bot.data.increment("weekdays", call.from_user.id)
 
-    txt = bot.timetable.get_day_message(call.from_user.id, 5)
+    txt = bot.procedures.get_day_message(call.from_user.id, 5)
     try:
         #await call.message.edit_text(txt, parse_mode="Markdown", reply_markup=weekdays_keyboard)
         await bot.display.update_display(call.from_user.id, txt, weekdays_keyboard)

@@ -1,7 +1,8 @@
 import time
 from pathlib import Path
 
-from bot import data, timetable
+import asyncio
+from bot import data, procedures
 
 from aiogram import types
 from bot.data import dispatcher
@@ -18,6 +19,7 @@ async def process_cancel_command(call: types.CallbackQuery):
 
 
 async def advertise(user_id):
+    await asyncio.sleep(2)
     value = random.randint(1, 8)
     if value == 3:
         value = random.randint(1, 3)

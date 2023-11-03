@@ -9,7 +9,7 @@ import bot.ui.keyboards
 from bot.ui.start.keyboards import continue_inline, continue_keyboard
 from bot.ui.keyboards import delete_keyboard
 import config
-from bot import data, timetable
+from bot import data, procedures
 from datetime import datetime
 from parsing import autoparser
 from aiogram import types
@@ -19,23 +19,49 @@ from bot.data import dispatcher
 
 from aiogram.dispatcher import filters
 from bot.display import update_display
+from bot.ui.home.keyboards import home_keyboard
+from bot.ui.dailymail.handlers import mail
+
+
+@dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["test"])
+async def process_notify_command(message: types.Message):
+    await bot.display.try_delete(message)
+
+    args = message.get_args()
+    arg = args[0]
+    if arg == "m":
+        await mail()
+    elif arg == "e":
+        await mail('18:00')
+    else:
+        await mail('06:00')
+        await mail('18:00')
 
 
 @dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["notify"])
 async def process_notify_command(message: types.Message):
+    await bot.display.try_delete(message)
     inf_mes = message.html_text[8:]
+    lst = data.users_db.get_list()
+
+    await notify(lst, inf_mes)
+
+
+
+async def notify(lst, inf_mes):
     if len(inf_mes) > 4000:
         return
 
     else:
-        lst = data.users_db.get_list()
+
         lst_len = len(lst)
         sent_count = 0
 
         for uinfo in lst:
             try:
-                await data.bot.send_message(uinfo.id, text=inf_mes, parse_mode="HTML",
-                                            reply_markup=bot.ui.keyboards.delete_keyboard)
+                await bot.display.renew_display(uinfo.id, inf_mes, home_keyboard)
+                # await data.bot.send_message(uinfo.id, text=inf_mes, parse_mode="HTML",
+                #                             reply_markup=bot.ui.keyboards.delete_keyboard)
                 sent_count += 1
                 print("Message #{} sent.".format(sent_count))
             except aiogram.utils.exceptions.BotBlocked:
@@ -45,53 +71,14 @@ async def process_notify_command(message: types.Message):
                     pass
 
                 pass
-
-        data.bot.send_message(config.ADMIN_ID, txt="Рассылка завершена ({}/{})".format(sent_count, lst_len),
-                              reply_markup=bot.ui.keyboards.delete_keyboard)
-
-
-@dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["inform"])
-async def process_inform_command(message: types.Message):
-    mx = len(data.users_and_groups)
-    mn = 0
-
-    lst = copy.copy(data.users_and_groups)
-
-    mes_1 = "🚩 <b>Свистать всех наверх!</b>"
-    mes_1 += "\n\n🤖 <i>Бот обновился! Теперь весь его интерфейс устроен несколько иначе...</i>"
-    mes_1 += "\n\n🙈 Это может показаться непривычным, но поверьте – так гораздо удобнее! (а главное, нагрузка на сервер куда меньше...)"
-    mes_1 +=  "<a href='https://pay.netmonet.alfabank.by/42308250'>\n\n<b><i>💖 Кроме того, теперь вы можете финансово поддержать вашего любимого бота и его не менее любимого разработчика!</i></b></a>"
-
-    mes_2 = "❗ <b>Обратите внимание!</b>"
-    mes_2 += "\n\n📝 <i>Всем пользователям необходимо пройти перерегистрацию и заново указать свою учебную группу</i>"
-    mes_2 += "\n\n📲 <b>Для этого воспользуйтесь кнопкой «Продолжить ➡️», или же введите команду</b> /start <b>из меню</b>"
-
-
-    for user_id in lst:
-        try:
-            if not lst[user_id] == "BLOCKED":
-                # await data.bot.send_message(user_id, mes_1, parse_mode="HTML", reply_markup=continue_keyboard,
-                #                             disable_web_page_preview=True)
-                # await asyncio.sleep(0.5)
-                # await data.bot.send_message(user_id, mes_2, parse_mode="HTML")
-
-                await bot.display.try_delete(
-                    await data.bot.send_message(user_id, text=".", reply_markup=ReplyKeyboardRemove()))
-
-                mn += 1
-                print("Message #{} sent.".format(mn))
-
-            await asyncio.sleep(0.5)
-        except aiogram.utils.exceptions.BotBlocked:
-            try:
-                data.users_and_groups[user_id] = "BLOCKED"
             except:
                 pass
-        except:
-            pass
 
-    await data.bot.send_message(config.ADMIN_ID, text="Рассылка завершена!\n{}/{}".format(mn, mx),
-                                parse_mode="HTML")
+        await bot.display.renew_display(config.ADMIN_ID, "Рассылка завершена ({}/{})".format(sent_count, lst_len), home_keyboard)
+
+        # data.bot.send_message(config.ADMIN_ID, txt="Рассылка завершена ({}/{})".format(sent_count, lst_len),
+        #                       reply_markup=bot.ui.keyboards.delete_keyboard)
+
 
 
 def get_stats_text(message: types.Message):
@@ -128,31 +115,22 @@ async def process_stats_command(message: types.Message):
 @dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["update"])
 async def process_update_command(message: types.Message):
     await bot.display.try_delete(message)
-
-    steps = ("Начинаем обновление... 🔄", "Расписание успешно обновлено! ✅", "Не удалось обновить расписание. ❌")
-
-    # await data.bot.send_message(message.chat.id, text="Начинаем обновление... 🔄",
-    #                             reply_markup=bot.ui.keyboards.delete_keyboard)
-    await bot.display.update_display(config.ADMIN_ID, steps[0], None)
+    await bot.display.renew_display(config.ADMIN_ID, "Начинаем обновление... 🔄", None)
 
     try:
-        data.is_updating = True
-        print("Schedule updating started...")
-        autoparser.download_and_parse()
-        data.schedule = timetable.init()
-        await bot.display.update_display(config.ADMIN_ID, steps[1], bot.ui.keyboards.open_menu_keyboard)
-        # await data.bot.send_message(message.chat.id, text="Расписание успешно обновлено! ✅",
-        #                             reply_markup=bot.ui.keyboards.delete_keyboard)
-        print("Schedule succesfully updated!")
-        data.is_updating = False
+        loop = asyncio.get_event_loop()
+        loop.create_task(update())
     except:
-        data.is_updating = False
-        await bot.display.update_display(config.ADMIN_ID, steps[2], bot.ui.keyboards.open_menu_keyboard)
-        # await data.bot.send_message(message.chat.id, text="Не удалось обновить расписание. ❌",
-        #                             reply_markup=bot.ui.keyboards.delete_keyboard)
+        await bot.display.renew_display(config.ADMIN_ID, "Не удалось обновить расписание. ❌", bot.ui.keyboards.open_menu_keyboard)
         raise
-    data.is_updating = False
 
+
+async def update():
+    print("Schedule updating started...")
+    autoparser.download_and_parse()
+    data.schedule = procedures.load_schedule()
+    await bot.display.renew_display(config.ADMIN_ID, "Расписание успешно обновлено! ✅", bot.ui.keyboards.open_menu_keyboard)
+    print("Schedule succesfully updated!")
 
 @dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["danya"])
 async def process_danya_command(message: types.Message):

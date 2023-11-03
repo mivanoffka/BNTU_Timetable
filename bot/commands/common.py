@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from bot import data, timetable
+from bot import data, procedures
 
 from aiogram import types
 from bot.data import dispatcher

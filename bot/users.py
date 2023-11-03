@@ -9,24 +9,30 @@ class UserInfo:
     group: str
     name: str
     message: str
+    time: str
 
-    def __init__(self, id, group, name, message):
+    def __init__(self, id, group, name, message, time):
         self.id = id
         self.group = group
         self.name = name
         self.message = message
 
+        self.time = time
+
     def __str__(self):
-        return "{}-{}-{}-{}".format(self.id, self.group, self.name, self.message)
+        return "{}-{}-{}-{}-{}".format(self.id, self.group, self.name, self.message, self.time)
 
 
 class UsersDB:
     connection: sqlite3.Connection
     cursor: sqlite3.Cursor
+    times: tuple
 
     def __init__(self):
         self.connection = sqlite3.connect(BASE_DIR / "bot/databases/users.db")
         self.cursor = self.connection.cursor()
+
+        self.times = self.execute("SELECT time FROM times")
 
     def insert(self, uid, group, name):
         if name is None:
@@ -45,9 +51,26 @@ class UsersDB:
         exists = self.execute("SELECT EXISTS(SELECT * FROM {} where id = {})".format(TABLE_NAME, uid))[0][0]
 
         if not exists:
-            raise "mda"
+            raise "DB ERROR"
         else:
             self.execute("UPDATE {} SET display_id = '{}' WHERE id = '{}'".format(TABLE_NAME, message, uid))
+            pass
+
+    def update_time(self, uid, time):
+        exists = self.execute("SELECT EXISTS(SELECT * FROM {} where id = {})".format(TABLE_NAME, uid))[0][0]
+
+        if not exists:
+            raise "DB ERROR"
+
+        else:
+            if time == "morning":
+                time = 1
+                pass
+            elif time == "evening":
+                time = 2
+            else:
+                time = "NULL"
+            self.execute("UPDATE {} SET mailing_time = {} WHERE id = '{}'".format(TABLE_NAME, time, uid))
             pass
 
     def delete(self, uid):
@@ -83,8 +106,17 @@ class UsersDB:
         try:
             query = "SELECT * FROM {} WHERE id = {}".format(TABLE_NAME, uid)
             query_result = self.execute(query)[0]
-            info = UserInfo(query_result[0], query_result[1], query_result[2], query_result[3])
+            time_index = query_result[4]
+            query = "SELECT time FROM times WHERE id = {}".format(time_index)
+            t = None
+            try:
+                t = self.execute(query)[0][0]
+            except:
+                pass
+
+            info = UserInfo(query_result[0], query_result[1], query_result[2], query_result[3], t)
         except:
+            raise
             pass
 
         return info
@@ -100,7 +132,7 @@ class UsersDB:
             pass
 
         for obj in result:
-            uinfo = UserInfo(obj[0], obj[1], obj[2], obj[3])
+            uinfo = UserInfo(obj[0], obj[1], obj[2], obj[3], obj[4])
             lst.append(uinfo)
 
         return lst
@@ -128,7 +160,6 @@ class UsersDB:
     def __del__(self):
         self.cursor.close()
         self.connection.close()
-
 
 
 

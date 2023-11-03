@@ -20,6 +20,7 @@ from bot.ui.home.keyboards import home_keyboard
 from bot.ui.options.keyboards import options_keyboard
 from bot.ui.advertisement import advertise
 from bot.ui.start.keyboards import continue_reply_button
+from bot.ui.dailymail.keyboards import dailymail_keyboard
 import bot.display
 
 import random
@@ -59,6 +60,9 @@ async def process_home_command(call: types.CallbackQuery):
     await call.message.edit_reply_markup(reply_markup=home_keyboard)
     await call.answer()
     await advertise(call.from_user.id)
+
+
+
 
 
 @dispatcher.callback_query_handler(text="goto_home_clr")
