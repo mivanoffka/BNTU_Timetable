@@ -71,6 +71,7 @@ async def mailing_loop():
     times_iteration = []
 
     while True:
+        print("Checking time...")
         if len(times_iteration) == 0:
             times_iteration = copy.copy(times)
 
