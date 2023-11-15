@@ -69,11 +69,10 @@ async def mailing_loop():
     times.append(zero_time)
 
     times_iteration = []
+    last_time = ""
 
     while True:
         print("Checking time...")
-        if len(times_iteration) == 0:
-            times_iteration = copy.copy(times)
 
         current_time = datetime.now()
         current_time = datetime(1900, 1, 1, datetime.now().hour, datetime.now().minute)
@@ -81,13 +80,9 @@ async def mailing_loop():
         for t in times_iteration:
             if current_time >= t:
                 dt = abs(current_time.hour * 60 + current_time.minute - t.hour * 60 + t.minute)
-                if dt < 60:
-                    times_iteration.remove(t)
-                    # await data.bot.send_message(ADMIN_ID, "Рассылка для {} ч. {} м.".format(t.hour, t.minute))
-                    # await display.renew_display(ADMIN_ID, "Рассылка для {} ч. {} м.".format(t.hour, t.minute),
-                    #
-                    #
-                    #                            home_keyboard)
+                if dt < 60 and last_time is not t:
+                    last_time = t
+
                     if t != zero_time:
                         await mail(t)
                     else:
