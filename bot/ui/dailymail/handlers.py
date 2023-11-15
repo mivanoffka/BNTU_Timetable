@@ -72,6 +72,9 @@ async def mailing_loop():
     last_time = ""
 
     while True:
+        if len(times_iteration) == 0:
+            times_iteration = copy.copy(times)
+
         print("Checking time...")
 
         current_time = datetime.now()
