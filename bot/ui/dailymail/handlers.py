@@ -72,6 +72,8 @@ async def mailing_loop():
     last_time = ""
 
     while True:
+        data.recently_sended_report.clear()
+
         if len(times_iteration) == 0:
             times_iteration = copy.copy(times)
 
@@ -92,7 +94,7 @@ async def mailing_loop():
                         await display.renew_display(ADMIN_ID, str(times_iteration),
                                                     home_keyboard)
 
-        await asyncio.sleep(20)
+        await asyncio.sleep(60)
 
 
 async def mail(t):

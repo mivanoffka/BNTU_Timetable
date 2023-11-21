@@ -80,14 +80,15 @@ async def process_delete_command(call: types.CallbackQuery):
 
 @dispatcher.callback_query_handler(text="input_report")
 async def process_devinfo_command(call: types.CallbackQuery, state: FSMContext):
+    if call.from_user.id not in data.recently_sended_report:
+        await ReportingState.awaiting.set()
+        txt = "<i>🧐 Хотите указать на ошибку, предложить идею по улучшению бота или просто написать" \
+              " гадостей?</i>\n\n<b>Тогда отправьте своё послание как обычное сообщение!</b>"
 
-    await ReportingState.awaiting.set()
-    txt = "<i>🧐 Хотите указать на ошибку, предложить идею по улучшению бота или просто написать"\
-                                 " гадостей?</i>\n\n<b>Тогда отправьте своё послание как обычное сообщение!</b>"
-    # await call.message.edit_text("_🧐 Хотите указать на ошибку, предложить идею по улучшению бота или просто написать"
-    #                              " гадостей?_\n\n*Тогда отправьте своё послание как обычное сообщение!*",
-    #                              parse_mode="Markdown", reply_markup=cancel_keyboard)
-    await bot.display.update_display(call.from_user.id, txt, cancel_keyboard, no_menu=True)
+        await bot.display.update_display(call.from_user.id, txt, cancel_keyboard, no_menu=True)
+    else:
+        m = "⏳ <i>Вы совсем недавно отправляли нам сообщение... Подождите пару минуточек, прежде чем делать это снова!</i>"
+        await bot.display.update_display(call.from_user.id, m, options_keyboard, no_menu=True)
 
 
 @dispatcher.callback_query_handler(text="input_group")
@@ -118,47 +119,45 @@ async def process_cancel_command(call: types.CallbackQuery, state: FSMContext):
 @dispatcher.message_handler(state=ReportingState.awaiting)
 async def process_send_report_command(message: types.message, state: FSMContext):
     await bot.display.try_delete(message)
-    if "Продолжить ➡️" in message.text:
+    if "/menu" in message.text:
         await state.finish()
         await send_ui(message.from_user.id)
         return
 
-    if message.from_user.id not in data.recently_sended_report:
-        report = message.text
-        report_mes = ""
-        id = str(message.chat.id)
+    report = message.text
+    report_mes = ""
+    id = str(message.chat.id)
 
-        group = data.users_db.get_info(id).group
+    group = data.users_db.get_info(id).group
 
-        report_mes += "\n\nПользователь "
-        if str(message.from_user.username) != "None":
-            report_mes += "{} ({})".format(message.from_user.username, message.from_user.id)
-        else:
-            report_mes += "{}".format(message.from_user.id)
-        if group:
-            report_mes += " из группы {}".format(group)
-        report_mes = "«" + report + "»" + "*" + report_mes + "*"
+    report_mes += "\n\nПользователь "
+    if str(message.from_user.username) != "None":
+        report_mes += "{} ({})".format(message.from_user.username, message.from_user.id)
+    else:
+        report_mes += "{}".format(message.from_user.id)
+    if group:
+        report_mes += " из группы {}".format(group)
+    report_mes = "«" + report + "»" + "*" + report_mes + "*"
 
-        msg = "<b>Сообщение успешно отправлено!</b> 📨"
-        msg += '\n\n<i>«{}»</i>'.format(report)
+    msg = "<b>Сообщение успешно отправлено!</b> 📨"
+    msg += '\n\n<i>«{}»</i>'.format(report)
 
-        if len(report) > 1024:
-            msg = "<b>Ваше сообщение слишком длинное...</b>\n<i>Может, сможете выразиться лаконичнее?</i>👉🏻👈🏻"
-        else:
-            filename = "datasource/reports.txt"
-            with open(Path(BASE_DIR / filename), 'a', encoding='UTF-8') as f:
-                f.write(report_mes)
-
-            data.recently_sended_report.append(message.from_user.id)
-
-            await data.bot.send_message(config.ADMIN_ID, text=report_mes, parse_mode="Markdown")
-
-        #await send_ui(message.from_user.id, msg)
+    if len(report) > 1024:
+        msg = "<b>Ваше сообщение слишком длинное...</b>\n<i>Может, сможете выразиться лаконичнее?</i>👉🏻👈🏻"
         await bot.display.update_display(message.from_user.id, msg, options_keyboard, no_menu=True)
     else:
-        m = "⏳ <i>Вы совсем недавно отправляли нам сообщение... Подождите пару минуточек, прежде чем делать это снова!</i>"
-        #await data.bot.send_message(message.chat.id, text=m, parse_mode="Markdown", reply_markup=options_keyboard)
-        await bot.display.update_display(message.from_user.id, m, options_keyboard, no_menu=True)
+        filename = "datasource/reports.txt"
+        with open(Path(BASE_DIR / filename), 'a', encoding='UTF-8') as f:
+            f.write(report_mes)
+
+        data.recently_sended_report.append(message.from_user.id)
+
+        await data.bot.send_message(config.ADMIN_ID, text=report_mes, parse_mode="Markdown")
+        await bot.display.update_display(message.from_user.id, msg, options_keyboard, no_menu=True)
+        await bot.display.send_display(config.ADMIN_ID, text=msg, keyboard=home_keyboard)
+
+
+
     await state.finish()
     await advertise(message.from_user.id)
 
