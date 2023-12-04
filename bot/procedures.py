@@ -49,9 +49,10 @@ def get_day_message(id, weekday):
     num_of_week = get_num_of_week(weekday)
     week_appendix = ""
 
-    if weekday <= 6:
+    if weekday < 6:
         week_appendix = "\n\nТекущая неделя — {}-я по счёту.".format(num_of_week)
     else:
+        num_of_week = 1 if num_of_week == 2 else 2
         week_appendix = "\n\nСледующая неделя — {}-я по счёту.".format(num_of_week)
 
     msg = ""

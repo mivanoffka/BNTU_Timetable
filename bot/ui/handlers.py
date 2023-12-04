@@ -154,7 +154,7 @@ async def process_send_report_command(message: types.message, state: FSMContext)
 
         await data.bot.send_message(config.ADMIN_ID, text=report_mes, parse_mode="Markdown")
         await bot.display.update_display(message.from_user.id, msg, options_keyboard, no_menu=True)
-        await bot.display.send_display(config.ADMIN_ID, text=msg, keyboard=home_keyboard)
+        await bot.display.send_display(config.ADMIN_ID, text="📨 Сообщение!", keyboard=home_keyboard, no_menu=True)
 
 
 
