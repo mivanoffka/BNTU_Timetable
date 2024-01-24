@@ -4,6 +4,8 @@ import json
 from pathlib import Path
 from config import BASE_DIR
 from parsing.sheetmap import SheetMap
+import openpyxl
+
 
 
 parsing_mode = "default"
@@ -15,7 +17,7 @@ parsing_mode = "default"
 
 
 def parce_workbook(out_schedule, filename, param="no"):
-    workbook = xlrd.open_workbook(filename, formatting_info=True)
+    workbook = xlrd.open_workbook(filename)
     print("\n----------------------------------\nBook {}".format(filename))
 
     schedule = {}
@@ -30,6 +32,7 @@ def parce_workbook(out_schedule, filename, param="no"):
             parce_worksheet(workbook, s, schedule)
         except:
             print("An error occured while parsing sheet #{}".format(s + 1))
+            raise
             continue
 
     for key in schedule:
@@ -37,14 +40,17 @@ def parce_workbook(out_schedule, filename, param="no"):
 
 
 def parce_worksheet(workbook, index, out_schedule):
-    worksheet = workbook.sheet_by_index(index)
+    try:
+        worksheet = workbook.sheet_by_index(index)
 
-    mp = SheetMap(worksheet)
-    local_schedule = mp.parse()
-    for key in local_schedule:
-        out_schedule[key] = local_schedule[key]
+        mp = SheetMap(worksheet)
+        local_schedule = mp.parse()
+        for key in local_schedule:
+            out_schedule[key] = local_schedule[key]
 
-    print("Sheet #{} was successfully parsed".format(index + 1))
+        print("Sheet #{} was successfully parsed".format(index + 1))
+    except:
+        print("An error occured while parsing sheet #{}".format(index + 1))
 
 
 def binary_sector(sector):
@@ -127,29 +133,37 @@ def save_json(schedule):
 
 
 def main():
+    # schedule = {}
+    #
+    # f1 = Path(BASE_DIR/"parsing/sheets/1kurs.xls")
+    #
+    # f2 = Path(BASE_DIR/"parsing/sheets/2kurs.xls")
+    #
+    # parce_workbook(schedule, f1)
+    # parce_workbook(schedule, f2)
+    #
+    # f1 = Path(BASE_DIR/"parsing/sheets/3kurs_fitr.xls")
+    # f2 = Path(BASE_DIR/"parsing/sheets/4kurs_fitr.xls")
+    # f3 = Path(BASE_DIR/"parsing/sheets/34kurs_fitr.xls")
+    #
+    # #f3 = Path(BASE_DIR/"parsing/sheets/34kurs_fitr_1.xls")
+    # #f4 = Path(BASE_DIR/"parsing/sheets/34kurs_fitr_2.xls")
+    #
+    # parce_workbook(schedule, f1)
+    #
+    # parce_workbook(schedule, f2)
+    #
+    # parce_workbook(schedule, f3)
+    #
+    # #parce_workbook(schedule, f4)
+
     schedule = {}
 
-    f1 = Path(BASE_DIR/"parsing/sheets/1kurs.xls")
-
-    f2 = Path(BASE_DIR/"parsing/sheets/2kurs.xls")
-
-    parce_workbook(schedule, f1)
-    parce_workbook(schedule, f2)
-
-    f1 = Path(BASE_DIR/"parsing/sheets/3kurs_fitr.xls")
-    f2 = Path(BASE_DIR/"parsing/sheets/4kurs_fitr.xls")
-    f3 = Path(BASE_DIR/"parsing/sheets/34kurs_fitr.xls")
-
-    #f3 = Path(BASE_DIR/"parsing/sheets/34kurs_fitr_1.xls")
-    #f4 = Path(BASE_DIR/"parsing/sheets/34kurs_fitr_2.xls")
-
+    f1 = Path(BASE_DIR/"parsing/sheets/3kurs_fitr.xlsx")
     parce_workbook(schedule, f1)
 
+    f2 = Path(BASE_DIR/"parsing/sheets/4kurs_fitr.xlsx")
     parce_workbook(schedule, f2)
-
-    parce_workbook(schedule, f3)
-
-    #parce_workbook(schedule, f4)
 
     save_json(schedule)
 

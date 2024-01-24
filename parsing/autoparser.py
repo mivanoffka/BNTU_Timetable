@@ -105,9 +105,8 @@ def find_lines_with_urld_fitr():
             break
             '''
 
-    key_1 = "Расписание занятий&nbsp; студентов 3 и 4-го курсов специальности"
-    key_2 = "Расписание занятий&nbsp; студентов 3-го курсов специальности"
-    key_3 = "Расписание занятий&nbsp; студентов 4-го курсов специальности"
+    key_1 = "Расписание занятий студентов 3-го курса специальности <strong>1-40 01 01</strong>"
+    key_2 = "Расписание занятий&nbsp; студентов 4-го курса специальности"
 
     prev = ""
 
@@ -121,18 +120,18 @@ def find_lines_with_urld_fitr():
             ref_2 = line
             break
 
-    for line in html:
-        if key_3 in line:
-            ref_3 = line
-            break
+    # for line in html:
+    #     if key_3 in line:
+    #         ref_3 = line
+    #         break
 
-    arr = [ref_1, ref_2, ref_3]
+    arr = [ref_1, ref_2]
 
     print("\n\n\n")
     print(arr)
     print("\n\n\n")
 
-    return [ref_1, ref_2, ref_3]
+    return arr
 
 
 def find_lines_with_urls():
@@ -181,9 +180,10 @@ def get_url_from_line(stroke: str):
 
 def get_url_from_line_fitr(stroke: str):
     start = stroke.find("https")
-    end = stroke.find(".xls")
-    end = end + len(".xls")
+    end = stroke.find(".xlsx")
+    end = end + len(".xlsx")
 
+    print(stroke[start:end])
     return stroke[start:end]
 
 
@@ -201,39 +201,38 @@ def get_link_for_cource(course_number):
 
 
 def download_and_parse():
-
     download_result = False
     try:
-        urls = find_lines_with_urls()
+        #urls = find_lines_with_urls()
 
         #ref_1 = get_url_from_line(urls[0])
         #ref_2 = get_url_from_line(urls[1])
 
-        ref_1 = get_link_for_cource(1)
-        ref_2 = get_link_for_cource(2)
+        #ref_1 = get_link_for_cource(1)
+        #ref_2 = get_link_for_cource(2)
 
-        print(ref_1)
-        print(ref_2)
+        #print(ref_1)
+        #print(ref_2)
 
         destination = Path(BASE_DIR / "parsing/sheets/1kurs.xls")
-        download_unsafe(ref_1, destination)
+        #download_unsafe(ref_1, destination)
 
         destination = Path(BASE_DIR / "parsing/sheets/2kurs.xls")
-        download_unsafe(ref_2, destination)
+        #download_unsafe(ref_2, destination)
 
         urls = find_lines_with_urld_fitr()
         ref_1 = get_url_from_line_fitr(urls[0])
         ref_2 = get_url_from_line_fitr(urls[1])
-        ref_3 = get_url_from_line_fitr(urls[2])
+        #ref_3 = get_url_from_line_fitr(urls[2])
 
-        destination = Path(BASE_DIR / "parsing/sheets/3kurs_fitr.xls")
+        destination = Path(BASE_DIR / "parsing/sheets/3kurs_fitr.xlsx")
         download_unsafe(ref_1, destination)
 
-        destination = Path(BASE_DIR / "parsing/sheets/4kurs_fitr.xls")
+        destination = Path(BASE_DIR / "parsing/sheets/4kurs_fitr.xlsx")
         download_unsafe(ref_2, destination)
 
-        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr.xls")
-        download_unsafe(ref_3, destination)
+        #destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr.xls")
+        #download_unsafe(ref_3, destination)
 
 #        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_2.xls")
 #        download(ref_4, destination)
@@ -243,6 +242,7 @@ def download_and_parse():
 
     except:
         print("Cannot download the books.")
+        download_result = False
         raise
 
     if download_result:
@@ -251,6 +251,5 @@ def download_and_parse():
         except:
             print("An exception occured while parsing the sheets.")
             raise
-
 
         

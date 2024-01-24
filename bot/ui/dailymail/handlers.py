@@ -129,11 +129,15 @@ async def mail(t):
                 msg = "<b>Вот ваше расписание на сегодня!</b>\n" + msg
             if delta == 1:
                 msg = "<b>Вот ваше расписание на завтра!</b>\n" + msg
-            await bot.display.renew_display(uinfo.id, msg, home_keyboard)
-            # await data.bot.send_message(uinfo.id, text=inf_mes, parse_mode="HTML",
-            #                             reply_markup=bot.ui.keyboards.delete_keyboard)
-            sent_count += 1
-            print("Message #{} sent.".format(sent_count))
+            if "В данный момент у нас нет расписания для группы" not in msg:
+                await bot.display.renew_display(uinfo.id, msg, home_keyboard)
+                # await data.bot.send_message(uinfo.id, text=inf_mes, parse_mode="HTML",
+                #                             reply_markup=bot.ui.keyboards.delete_keyboard)
+                sent_count += 1
+                print("Message #{} sent.".format(sent_count))
+            else:
+                print("Empty...")
+
         except aiogram.utils.exceptions.BotBlocked:
             try:
                 data.users_db.delete(str(uinfo.id))

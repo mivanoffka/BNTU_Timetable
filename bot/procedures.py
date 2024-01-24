@@ -61,7 +61,11 @@ def get_day_message(id, weekday):
 
         msg = "<b>{}, группа {}.</b>".format(weekday, uinfo.group)
 
-        msg_buf = day_to_str(uinfo.group, weekday)
+        try:
+            msg_buf = day_to_str(uinfo.group, weekday)
+        except:
+            return "В данный момент у нас нет расписания для группы {}".format(uinfo.group)
+
 
         if msg_buf != "":
             msg += msg_buf
