@@ -17,7 +17,11 @@ parsing_mode = "default"
 
 
 def parce_workbook(out_schedule, filename, param="no"):
-    workbook = xlrd.open_workbook(filename)
+    workbook = None
+    if ".xlsx" in str(filename):
+        workbook = xlrd.open_workbook(filename)
+    else:
+        workbook = xlrd.open_workbook(filename, formatting_info=True)
     print("\n----------------------------------\nBook {}".format(filename))
 
     schedule = {}
@@ -164,6 +168,9 @@ def main():
 
     f2 = Path(BASE_DIR/"parsing/sheets/4kurs_fitr.xlsx")
     parce_workbook(schedule, f2)
+
+    f3 = Path(BASE_DIR/"parsing/sheets/34kurs_fitr.xls")
+    parce_workbook(schedule, f3)
 
     save_json(schedule)
 

@@ -107,6 +107,7 @@ def find_lines_with_urld_fitr():
 
     key_1 = "Расписание занятий студентов 3-го курса специальности <strong>1-40 01 01</strong>"
     key_2 = "Расписание занятий&nbsp; студентов 4-го курса специальности"
+    key_3 = "Расписание занятий студентов 3-го курса <strong>(с 26 января по 17 мая)</strong> и 4-го курса"
 
     prev = ""
 
@@ -120,12 +121,12 @@ def find_lines_with_urld_fitr():
             ref_2 = line
             break
 
-    # for line in html:
-    #     if key_3 in line:
-    #         ref_3 = line
-    #         break
+    for line in html:
+        if key_3 in line:
+            ref_3 = line
+            break
 
-    arr = [ref_1, ref_2]
+    arr = [ref_1, ref_2, ref_3]
 
     print("\n\n\n")
     print(arr)
@@ -179,12 +180,20 @@ def get_url_from_line(stroke: str):
 
 
 def get_url_from_line_fitr(stroke: str):
-    start = stroke.find("https")
-    end = stroke.find(".xlsx")
-    end = end + len(".xlsx")
+    is_x = False
+    if ".xlsx" in stroke:
+        is_x = True
+        stroke = stroke.replace(".xlsx", ".xls")
 
-    print(stroke[start:end])
-    return stroke[start:end]
+    start = stroke.find("https")
+    end = stroke.find(".xls")
+    end = end + len(".xls")
+
+    result = stroke[start:end]
+    if is_x:
+        result = result + "x"
+
+    return result
 
 
 def get_link_for_cource(course_number):
@@ -223,7 +232,7 @@ def download_and_parse():
         urls = find_lines_with_urld_fitr()
         ref_1 = get_url_from_line_fitr(urls[0])
         ref_2 = get_url_from_line_fitr(urls[1])
-        #ref_3 = get_url_from_line_fitr(urls[2])
+        ref_3 = get_url_from_line_fitr(urls[2])
 
         destination = Path(BASE_DIR / "parsing/sheets/3kurs_fitr.xlsx")
         download_unsafe(ref_1, destination)
@@ -231,8 +240,8 @@ def download_and_parse():
         destination = Path(BASE_DIR / "parsing/sheets/4kurs_fitr.xlsx")
         download_unsafe(ref_2, destination)
 
-        #destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr.xls")
-        #download_unsafe(ref_3, destination)
+        destination = Path(BASE_DIR/"parsing/sheets/34kurs_fitr.xls")
+        download_unsafe(ref_3, destination)
 
 #        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_2.xls")
 #        download(ref_4, destination)
