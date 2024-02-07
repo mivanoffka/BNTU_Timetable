@@ -122,7 +122,6 @@ async def process_send_report_command(message: types.message, state: FSMContext)
     if "/menu" in message.text:
         await state.finish()
         await send_ui(message.from_user.id)
-
         return
 
     report = message.text
@@ -140,7 +139,8 @@ async def process_send_report_command(message: types.message, state: FSMContext)
         report_mes += " из группы {}".format(group)
     report_mes = "«" + report + "»" + "*" + report_mes + "*"
 
-    msg = "📨 <b>Ваше сообщение успешно отправлено!</b>"
+    msg = "<b>Сообщение успешно отправлено!</b> 📨"
+    msg += '\n\n<i>«{}»</i>'.format(report)
 
     if len(report) > 1024:
         msg = "<b>Ваше сообщение слишком длинное...</b>\n<i>Может, сможете выразиться лаконичнее?</i>👉🏻👈🏻"
@@ -154,7 +154,9 @@ async def process_send_report_command(message: types.message, state: FSMContext)
 
         await data.bot.send_message(config.ADMIN_ID, text=report_mes, parse_mode="Markdown")
         await bot.display.update_display(message.from_user.id, msg, options_keyboard, no_menu=True)
-        await bot.display.renew_display(config.ADMIN_ID, text="<b>📮 Пришёл отзыв.</b> \n\nПролистайте вверх, чтобы его посмотреть.", keyboard=bot.ui.home.keyboards.home_keyboard)
+        await bot.display.send_display(config.ADMIN_ID, text="📨 Сообщение!", keyboard=home_keyboard, no_menu=True)
+
+
 
     await state.finish()
     await advertise(message.from_user.id)
