@@ -206,28 +206,28 @@ def get_link_for_cource(course_number):
 
     excel_links = [item['excel_files'] for item in res_json]
 
-    return excel_links[1][0]
+    return excel_links[0][0]
 
 
 def download_and_parse():
     download_result = False
     try:
-        #urls = find_lines_with_urls()
+        # urls = find_lines_with_urls()
+        #
+        # ref_1 = get_url_from_line(urls[0])
+        # ref_2 = get_url_from_line(urls[1])
 
-        #ref_1 = get_url_from_line(urls[0])
-        #ref_2 = get_url_from_line(urls[1])
+        ref_1 = get_link_for_cource(1)
+        ref_2 = get_link_for_cource(2)
 
-        #ref_1 = get_link_for_cource(1)
-        #ref_2 = get_link_for_cource(2)
-
-        #print(ref_1)
-        #print(ref_2)
+        print(ref_1)
+        print(ref_2)
 
         destination = Path(BASE_DIR / "parsing/sheets/1kurs.xls")
-        #download_unsafe(ref_1, destination)
+        download_unsafe(ref_1, destination)
 
         destination = Path(BASE_DIR / "parsing/sheets/2kurs.xls")
-        #download_unsafe(ref_2, destination)
+        download_unsafe(ref_2, destination)
 
         urls = find_lines_with_urld_fitr()
         ref_1 = get_url_from_line_fitr(urls[0])

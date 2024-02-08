@@ -139,12 +139,7 @@ def save_json(schedule):
 def main():
     # schedule = {}
     #
-    # f1 = Path(BASE_DIR/"parsing/sheets/1kurs.xls")
-    #
-    # f2 = Path(BASE_DIR/"parsing/sheets/2kurs.xls")
-    #
-    # parce_workbook(schedule, f1)
-    # parce_workbook(schedule, f2)
+
     #
     # f1 = Path(BASE_DIR/"parsing/sheets/3kurs_fitr.xls")
     # f2 = Path(BASE_DIR/"parsing/sheets/4kurs_fitr.xls")
@@ -162,6 +157,13 @@ def main():
     # #parce_workbook(schedule, f4)
 
     schedule = {}
+
+    f1 = Path(BASE_DIR/"parsing/sheets/1kurs.xls")
+
+    f2 = Path(BASE_DIR/"parsing/sheets/2kurs.xls")
+
+    parce_workbook(schedule, f1)
+    parce_workbook(schedule, f2)
 
     f1 = Path(BASE_DIR/"parsing/sheets/3kurs_fitr.xlsx")
     parce_workbook(schedule, f1)
