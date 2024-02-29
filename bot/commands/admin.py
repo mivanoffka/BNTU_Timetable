@@ -1,7 +1,7 @@
 import asyncio
 import copy
 import os
-
+import logging
 import aiogram.utils.exceptions
 from aiogram.types import ReplyKeyboardRemove
 
@@ -63,7 +63,7 @@ async def notify(lst, inf_mes):
                 # await data.bot.send_message(uinfo.id, text=inf_mes, parse_mode="HTML",
                 #                             reply_markup=bot.ui.keyboards.delete_keyboard)
                 sent_count += 1
-                print("Message #{} sent.".format(sent_count))
+                logging.info("Message #{} sent.".format(sent_count))
             except aiogram.utils.exceptions.BotBlocked:
                 try:
                     data.users_db.delete(str(uinfo.id))
@@ -126,11 +126,11 @@ async def process_update_command(message: types.Message):
 
 
 async def update():
-    print("Schedule updating started...")
+    logging.info("Schedule updating started...")
     autoparser.download_and_parse()
     data.schedule = procedures.load_schedule()
     await bot.display.renew_display(config.ADMIN_ID, "Расписание успешно обновлено! ✅", bot.ui.keyboards.open_menu_keyboard)
-    print("Schedule succesfully updated!")
+    logging.info("Schedule succesfully updated!")
 
 @dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["danya"])
 async def process_danya_command(message: types.Message):

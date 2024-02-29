@@ -1,7 +1,7 @@
 import asyncio
 import copy
 import time
-
+import logging
 
 from config import ADMIN_ID
 import aiogram.utils.exceptions
@@ -61,7 +61,7 @@ async def mailing_loop():
     if data.users_db is not None:
         times_raw = data.users_db.times
 
-    print("Mailing set to {} and {}".format(times_raw[0][0], times_raw[1][0]))
+    logging.info("Mailing set to {} and {}".format(times_raw[0][0], times_raw[1][0]))
     for item in times_raw:
         times.append(datetime.strptime(item[0], '%H:%M'))
 
@@ -77,7 +77,7 @@ async def mailing_loop():
         if len(times_iteration) == 0:
             times_iteration = copy.copy(times)
 
-        print("Checking time...")
+        logging.info("Checking time...")
 
         current_time = datetime.now()
         current_time = datetime(1900, 1, 1, datetime.now().hour, datetime.now().minute)
@@ -132,9 +132,9 @@ async def mail(t):
             if "В данный момент у нас нет расписания для группы" not in msg and "Воскресенье" not in msg:
                 await bot.display.renew_display(uinfo.id, msg, home_keyboard)
                 sent_count += 1
-                print("Message #{} sent.".format(sent_count))
+                logging.info("Message #{} sent.".format(sent_count))
             else:
-                print("Empty...")
+                logging.info("Empty...")
 
         except aiogram.utils.exceptions.BotBlocked:
             try:

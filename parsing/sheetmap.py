@@ -66,9 +66,9 @@ class SheetMap:
         self.explore_times()
         self.get_group_names()
 
-        #print("\nY: from {}-{} to {}".format(self.start_y, self.begin_y, self.end_y))
-        #print(self.group_nums)
-        #print(self.times)
+        #logging.info("\nY: from {}-{} to {}".format(self.start_y, self.begin_y, self.end_y))
+        #logging.info(self.group_nums)
+        #logging.info(self.times)
 
     def explore_horizontal(self):
         raw_sheet = self.raw_sheet
@@ -198,7 +198,7 @@ class SheetMap:
             group_num = txt[0:8]
 
             dx = self.groups_distance(x, group_y)
-            # print(group_num, ": ", dx)
+            # logging.info(group_num, ": ", dx)
 
             groups[group_num] = dx
             x += dx
@@ -254,7 +254,7 @@ class SheetMap:
                 else:
                     line.append('_')
             matrix.append(line)
-            #print(line)
+            #logging.info(line)
         table = []
 
         index = -1

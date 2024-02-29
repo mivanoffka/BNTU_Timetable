@@ -5,7 +5,7 @@ from pathlib import Path
 from config import BASE_DIR
 from parsing.sheetmap import SheetMap
 import openpyxl
-
+import logging
 
 
 parsing_mode = "default"
@@ -22,7 +22,7 @@ def parce_workbook(out_schedule, filename, param="no"):
         workbook = xlrd.open_workbook(filename)
     else:
         workbook = xlrd.open_workbook(filename, formatting_info=True)
-    print("\n----------------------------------\nBook {}".format(filename))
+    logging.info("\n----------------------------------\nBook {}".format(filename))
 
     schedule = {}
 
@@ -35,7 +35,7 @@ def parce_workbook(out_schedule, filename, param="no"):
         try:
             parce_worksheet(workbook, s, schedule)
         except:
-            print("An error occured while parsing sheet #{}".format(s + 1))
+            logging.info("An error occured while parsing sheet #{}".format(s + 1))
             raise
             continue
 
@@ -52,9 +52,9 @@ def parce_worksheet(workbook, index, out_schedule):
         for key in local_schedule:
             out_schedule[key] = local_schedule[key]
 
-        print("Sheet #{} was successfully parsed".format(index + 1))
+        logging.info("Sheet #{} was successfully parsed".format(index + 1))
     except:
-        print("An error occured while parsing sheet #{}".format(index + 1))
+        logging.info("An error occured while parsing sheet #{}".format(index + 1))
 
 
 def binary_sector(sector):

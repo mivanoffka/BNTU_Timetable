@@ -4,7 +4,7 @@ from datetime import datetime
 import time
 schedule = data.schedule
 import aiogram
-
+import logging
 
 async def try_delete(message):
     try:
@@ -71,7 +71,7 @@ async def update_display(id, text, keyboard, animation=True, no_menu=False):
                                              disable_web_page_preview=True)
 
         except aiogram.exceptions.MessageNotModified:
-            print("same")
+            logging.info("same")
             pass
         except:
             await send_display(id, text, keyboard, animation)

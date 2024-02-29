@@ -1,3 +1,4 @@
+import logging
 class Sector:
     list = None
 
@@ -114,7 +115,7 @@ class Sector:
 
 
         words = txt.split()
-        # print(words)
+        # logging.info(words)
 
         for word in words:
             if word.isdigit() or (word[-1] in ('а', 'б', 'в', 'a') and word[:-1].isdigit()):
@@ -686,7 +687,7 @@ class Sector:
 
 if __name__ == "__main__":
     s = Sector([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]])
-    print(s.has_nums("a 1"))
+    logging.info(s.has_nums("a 1"))
 
-    print()
+    logging.info()
     pass

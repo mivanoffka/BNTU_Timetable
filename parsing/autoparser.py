@@ -9,16 +9,16 @@ from pathlib import Path
 from parsing import parser as p
 import _thread
 import time
-
+import logging
 
 def get_html(url):
     counter = 0
     f = None
     max_attemps = 16
 
-    print("Connecting to {}".format(url))
+    logging.info("Connecting to {}".format(url))
     while counter < max_attemps and f is None:
-        print("Attempt {}...".format(counter))
+        logging.info("Attempt {}...".format(counter))
         try:
             f = urllib.request.urlopen(url, timeout=2).read()
             counter = max_attemps + 1
@@ -27,10 +27,10 @@ def get_html(url):
             counter += 1
 
     if f is not None:
-        print("Connected succesfully!")
+        logging.info("Connected succesfully!")
         return f
     else:
-        print("Cannot connect!")
+        logging.info("Cannot connect!")
         return None
 
 
@@ -46,7 +46,7 @@ def download(url, dest):
     max_attemps = 16
 
     while counter < max_attemps and f is None:
-        print("Attempt {}...".format(counter))
+        logging.info("Attempt {}...".format(counter))
         try:
             f = urllib.request.urlopen(url, timeout=2).read()
             counter = max_attemps + 1
@@ -57,9 +57,9 @@ def download(url, dest):
     if f is not None:
         file = open(dest, "wb")
         file.write(f)
-        print("Succesfully downloaded!")
+        logging.info("Succesfully downloaded!")
     else:
-        print("Cannot download!")
+        logging.info("Cannot download!")
 
 
 def find_lines_with_urld_fitr():
@@ -128,9 +128,9 @@ def find_lines_with_urld_fitr():
 
     arr = [ref_1, ref_2, ref_3]
 
-    print("\n\n\n")
-    print(arr)
-    print("\n\n\n")
+    logging.info("\n\n\n")
+    logging.info(arr)
+    logging.info("\n\n\n")
 
     return arr
 
@@ -220,8 +220,8 @@ def download_and_parse():
         ref_1 = get_link_for_cource(1)
         ref_2 = get_link_for_cource(2)
 
-        print(ref_1)
-        print(ref_2)
+        logging.info(ref_1)
+        logging.info(ref_2)
 
         destination = Path(BASE_DIR / "parsing/sheets/1kurs.xls")
         download_unsafe(ref_1, destination)
@@ -246,11 +246,11 @@ def download_and_parse():
 #        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_2.xls")
 #        download(ref_4, destination)
 
-        print("Books are downloaded.")
+        logging.info("Books are downloaded.")
         download_result = True
 
     except:
-        print("Cannot download the books.")
+        logging.info("Cannot download the books.")
         download_result = False
         raise
 
@@ -258,7 +258,7 @@ def download_and_parse():
         try:
             p.main()
         except:
-            print("An exception occured while parsing the sheets.")
+            logging.info("An exception occured while parsing the sheets.")
             raise
 
         

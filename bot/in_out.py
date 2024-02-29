@@ -1,6 +1,6 @@
 import copy
 import time
-
+import logging
 from bot import data
 import json
 import schedule
@@ -35,9 +35,9 @@ def autosave():
     try:
         uag = copy.copy(data.users_and_groups)
         save_userlist(uag)
-        print("Autosaving completed.")
+        logging.info("Autosaving completed.")
     except:
-        print("An error occured during autosaving...")
+        logging.info("An error occured during autosaving...")
 
 
 def clear_recent_reports():

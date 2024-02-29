@@ -3,9 +3,12 @@ import threading
 
 from datetime import datetime
 
+import logging
 import bot.ui.dailymail.handlers
 from bot import procedures, in_out, data
 from bot.data import interactions_count, dispatcher
+from logger import log_rotation_and_archiving
+
 
 from aiogram.utils import executor
 from bot import commands
@@ -31,6 +34,7 @@ async def start(dp):
     # auto_saving_thread.start()
 
     loop = asyncio.get_event_loop()
+    loop.create_task(log_rotation_and_archiving())
 
     #loop.create_task()
     loop.create_task(bot.ui.dailymail.handlers.mailing_loop())
@@ -40,7 +44,7 @@ async def start(dp):
 
 async def finish(dp):
     # in_out.save_userlist(data.users_and_groups)
-    # print("Data saved.")
+    # logging.info("Data saved.")
     pass
 
 
