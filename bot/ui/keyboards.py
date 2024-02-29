@@ -7,6 +7,10 @@ delete_keyboard = InlineKeyboardMarkup()
 delete_button = InlineKeyboardButton("Закрыть ✖️", callback_data="delete_message")
 delete_keyboard.insert(delete_button)
 
+reply_keyboard = InlineKeyboardMarkup()
+reply_button = InlineKeyboardButton("Ответить 💬", callback_data="reply_message")
+reply_keyboard.insert(reply_button)
+
 donations_and_delete_keyboard = InlineKeyboardMarkup()
 donations_button = InlineKeyboardButton("Пожертвовать 💸", url="https://pay.netmonet.alfabank.by/42308250")
 donations_and_delete_keyboard.insert(delete_button)

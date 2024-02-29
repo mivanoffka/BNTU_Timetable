@@ -15,7 +15,7 @@ from aiogram.dispatcher import filters
 from bot.states import GroupSettingState, ReportingState
 from aiogram.dispatcher import FSMContext
 
-from bot.ui.keyboards import cancel_keyboard, open_menu_keyboard, delete_keyboard
+from bot.ui.keyboards import cancel_keyboard, open_menu_keyboard, delete_keyboard, reply_keyboard
 from bot.ui.home.keyboards import home_keyboard
 from bot.ui.options.keyboards import options_keyboard
 from bot.ui.advertisement import advertise
@@ -111,8 +111,6 @@ async def process_cancel_command(call: types.CallbackQuery, state: FSMContext):
     await state.finish()
     data.increment("cancel", call.from_user.id)
 
-    #await call.message.delete()
-    #await send_ui(call.from_user.id)
     await bot.display.update_display(call.from_user.id, default_mes, home_keyboard, no_menu=True)
 
 
@@ -130,17 +128,16 @@ async def process_send_report_command(message: types.message, state: FSMContext)
 
     group = data.users_db.get_info(id).group
 
-    report_mes += "\n\nПользователь "
+    report_mes += "\n\n – со всей ответственностью заявляет пользователь "
     if str(message.from_user.username) != "None":
-        report_mes += "{} ({})".format(message.from_user.username, message.from_user.id)
+        report_mes += "<code>{}</code> (<code>{}</code>)".format(message.from_user.username, message.from_user.id)
     else:
-        report_mes += "{}".format(message.from_user.id)
+        report_mes += "<code>{}</code>".format(message.from_user.id)
     if group:
-        report_mes += " из группы {}".format(group)
-    report_mes = "«" + report + "»" + "*" + report_mes + "*"
+        report_mes += " из группы <code>{}</code>".format(group)
+    report_mes = "«" + report + "»" + "<b>" + report_mes + "</b>"
 
-    msg = "<b>Сообщение успешно отправлено!</b> 📨"
-    msg += '\n\n<i>«{}»</i>'.format(report)
+    msg = "📨 <b>Ваше сообщение успешно отправлено!</b>"
 
     if len(report) > 1024:
         msg = "<b>Ваше сообщение слишком длинное...</b>\n<i>Может, сможете выразиться лаконичнее?</i>👉🏻👈🏻"
@@ -152,11 +149,11 @@ async def process_send_report_command(message: types.message, state: FSMContext)
 
         data.recently_sended_report.append(message.from_user.id)
 
-        await data.bot.send_message(config.ADMIN_ID, text=report_mes, parse_mode="Markdown")
+        await data.bot.send_message(config.ADMIN_ID, text=report_mes)
         await bot.display.update_display(message.from_user.id, msg, options_keyboard, no_menu=True)
-        await bot.display.send_display(config.ADMIN_ID, text="📨 Сообщение!", keyboard=home_keyboard, no_menu=True)
-
-
+        await bot.display.renew_display(config.ADMIN_ID,
+                                        text="<b>📮 Пришёл отзыв.</b> \n\nПролистайте вверх, чтобы его посмотреть.",
+                                        keyboard=bot.ui.home.keyboards.home_keyboard)
 
     await state.finish()
     await advertise(message.from_user.id)
