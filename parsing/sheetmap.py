@@ -15,6 +15,7 @@ def unmerged_value(rowx, colx, thesheet):
 
 
 def is_group_num(txt):
+    txt = txt.replace("гр. ", "")
     group_num = txt[0:8]
     if str.isdigit(group_num):
         return True
@@ -52,23 +53,34 @@ class SheetMap:
     begin_y: int
     end_y: int
 
+    start_x: int
+
     group_nums = {}
     times = {}
 
     raw_sheet = None
 
-    def __init__(self, raw_sheet):
+    def __init__(self, raw_sheet, format='excel'):
+        if format == 'excel':
+            self.get = self.get_excel_value
+
         self.raw_sheet = raw_sheet
         self.reformat()
+
+    def get_excel_value(self, y, x, appendix):
+        return unmerged_value(y, x, self.raw_sheet)
+
+    def get(self, y, x, appendix=None):
+        pass
 
     def reformat(self):
         self.explore_horizontal()
         self.explore_times()
         self.get_group_names()
 
-        #logging.info("\nY: from {}-{} to {}".format(self.start_y, self.begin_y, self.end_y))
-        #logging.info(self.group_nums)
-        #logging.info(self.times)
+        # print("\nY: from {}-{} to {}".format(self.start_y, self.begin_y, self.end_y))
+        # print(self.group_nums)
+        # print(self.times)
 
     def explore_horizontal(self):
         raw_sheet = self.raw_sheet
@@ -85,10 +97,10 @@ class SheetMap:
         txt = "undefined"
         while start < 40:
             txt: str
-            txt = unmerged_value(start, 1, raw_sheet)
+            txt = self.get(start, 1, raw_sheet)
             txt = txt.upper()
 
-            if txt == "ЧАСЫ":
+            if txt in ("ЧАСЫ", "ВРЕМЯ"):
                 break
 
             start += 1
@@ -96,11 +108,11 @@ class SheetMap:
         begin = start + 1
         while begin < 30:
             txt: str
-            txt = unmerged_value(begin, 1, raw_sheet)
+            txt = self.get(begin, 1, raw_sheet)
 
             txt = txt.upper()
 
-            if txt != "ЧАСЫ":
+            if txt not in ("ЧАСЫ", "ВРЕМЯ"):
                 break
 
 
@@ -109,8 +121,8 @@ class SheetMap:
         end = start
         while end < 200:
             txt: str
-            txt1 = unmerged_value(end, 0, raw_sheet).upper()
-            txt2 = unmerged_value(end, 1, raw_sheet).upper()
+            txt1 = self.get(end, 0, raw_sheet).upper()
+            txt2 = self.get(end, 1, raw_sheet).upper()
 
             if (txt1 == "" and txt2 == "") or ("НАЧАЛЬНИК УМУ" in txt1 and "НАЧАЛЬНИК УМУ" in txt2) or (txt1 == "" and "НАЧАЛЬНИК УМУ" in txt2):
                 break
@@ -128,17 +140,17 @@ class SheetMap:
         x = 1
 
         txt: str
-        txt = unmerged_value(y, x, raw_sheet)
+        txt = self.get(y, x, raw_sheet)
 
         dy = 0
-        if unmerged_value(y, x, raw_sheet) != unmerged_value(y+2, x, raw_sheet):
+        if self.get(y, x, raw_sheet) != self.get(y + 2, x, raw_sheet):
             dy = 2
-        elif unmerged_value(y, x, raw_sheet) != unmerged_value(y+4, x, raw_sheet):
+        elif self.get(y, x, raw_sheet) != self.get(y + 4, x, raw_sheet):
             dy = 4
 
         y = self.begin_y
         dy = 0
-        while unmerged_value(y, x, raw_sheet) == unmerged_value(y+dy, x, raw_sheet):
+        while self.get(y, x, raw_sheet) == self.get(y + dy, x, raw_sheet):
             dy += 1
 
             if dy > 20:
@@ -152,7 +164,7 @@ class SheetMap:
         index = -1
         while y < self.end_y:
             dy = 0
-            while unmerged_value(y, x, raw_sheet) == unmerged_value(y + dy, x, raw_sheet):
+            while self.get(y, x, raw_sheet) == self.get(y + dy, x, raw_sheet):
                 dy += 1
 
                 if dy > 20:
@@ -160,9 +172,9 @@ class SheetMap:
 
             time: str
             day: str
-            time = unmerged_value(y, x, raw_sheet)
+            time = self.get(y, x, raw_sheet)
 
-            day = unmerged_value(y, x-1, raw_sheet)
+            day = self.get(y, x - 1, raw_sheet)
 
             if previous_day != day:
                 index += 1
@@ -181,24 +193,38 @@ class SheetMap:
         worksheet = self.raw_sheet
 
         group_y = 0
+        group_x = 0
+
+
+
+        for x in range(2, 10):
+            txt = str(self.get(self.start_y, x, None))
+            if txt != "":
+                group_x = x
+                break
+
+        self.start_x = group_x
 
         for y in range(self.start_y, self.begin_y):
-            txt = str(unmerged_value(y, 2, worksheet))
+            txt = str(self.get(y, group_x, worksheet))
+            txt = txt.replace("гр. ", "")
             if is_group_num(txt):
                 group_y = y
                 break
 
         groups = {}
-        x = 2
+        x = copy.copy(group_x)
         y = copy.copy(group_y)
 
         dx = 0
-        while is_group_num(str(unmerged_value(group_y, x, worksheet))):
-            txt = str(unmerged_value(group_y, x, worksheet))
+        while is_group_num(str(self.get(group_y, x, worksheet))):
+            txt = str(self.get(group_y, x, worksheet))
+            txt = txt.replace("гр. ", "")
             group_num = txt[0:8]
 
             dx = self.groups_distance(x, group_y)
-            # logging.info(group_num, ": ", dx)
+            # print(dx)
+            # print(group_num, ": ", dx)
 
             groups[group_num] = dx
             x += dx
@@ -206,10 +232,10 @@ class SheetMap:
         self.group_nums = groups
 
     def groups_distance(self, x, y):
-        group = str(unmerged_value(y, x, self.raw_sheet))
+        group = str(self.get(y, x, self.raw_sheet))
         distance = 1
 
-        while str(unmerged_value(y, x + distance, self.raw_sheet)) == group:
+        while str(self.get(y, x + distance, self.raw_sheet)) == group:
             distance += 1
 
         return distance
@@ -217,8 +243,8 @@ class SheetMap:
     def parse(self):
         timetables = dict.fromkeys(self.group_nums, [])
 
-        pos_x = 2
         dx = 0
+        pos_x = self.start_x
         for group_name in self.group_nums:
             dx = self.group_nums[group_name]
 
@@ -242,7 +268,8 @@ class SheetMap:
 
             line = []
             for j in range(pos_x, pos_x + dx):
-                value = fix_str(fix_sheet_value(unmerged_value(i, j, self.raw_sheet)))
+
+                value = fix_str(fix_sheet_value(self.get(i, j, self.raw_sheet)))
                 if value != '':
                     if "Начальник УМУ" not in value:
                         value = value.replace('\n', ' ')
@@ -254,7 +281,7 @@ class SheetMap:
                 else:
                     line.append('_')
             matrix.append(line)
-            #logging.info(line)
+            #print(line)
         table = []
 
         index = -1

@@ -16,7 +16,12 @@ parsing_mode = "default"
 #       Schedule - совокупность всех timetable'ов
 
 
-def parce_workbook(out_schedule, filename, param="no"):
+def parce_workbook_google(out_schedule, filename):
+    pass
+
+
+
+def parce_workbook_excel(out_schedule, filename, param="no"):
     workbook = None
     if ".xlsx" in str(filename):
         workbook = xlrd.open_workbook(filename)
@@ -33,7 +38,7 @@ def parce_workbook(out_schedule, filename, param="no"):
         #parce_worksheet(workbook, s, schedule)
 
         try:
-            parce_worksheet(workbook, s, schedule)
+            parce_worksheet_excel(workbook, s, schedule)
         except:
             logging.info("An error occured while parsing sheet #{}".format(s + 1))
             raise
@@ -43,7 +48,7 @@ def parce_workbook(out_schedule, filename, param="no"):
         out_schedule[key] = schedule[key]
 
 
-def parce_worksheet(workbook, index, out_schedule):
+def parce_worksheet_excel(workbook, index, out_schedule):
     try:
         worksheet = workbook.sheet_by_index(index)
 
@@ -136,43 +141,57 @@ def save_json(schedule):
         json.dump(schedule, f, ensure_ascii=False, indent=3)
 
 
-def main():
-    # schedule = {}
-    #
-
-    #
-    # f1 = Path(BASE_DIR/"parsing/sheets/3kurs_fitr.xls")
-    # f2 = Path(BASE_DIR/"parsing/sheets/4kurs_fitr.xls")
-    # f3 = Path(BASE_DIR/"parsing/sheets/34kurs_fitr.xls")
-    #
-    # #f3 = Path(BASE_DIR/"parsing/sheets/34kurs_fitr_1.xls")
-    # #f4 = Path(BASE_DIR/"parsing/sheets/34kurs_fitr_2.xls")
-    #
-    # parce_workbook(schedule, f1)
-    #
-    # parce_workbook(schedule, f2)
-    #
-    # parce_workbook(schedule, f3)
-    #
-    # #parce_workbook(schedule, f4)
+def convert_to_matrix(filename):
+    matrixes = []
+    workbook = None
+    if ".xlsx" in str(filename):
+        workbook = xlrd.open_workbook(filename)
+    else:
+        workbook = xlrd.open_workbook(filename, formatting_info=True)
+    logging.info("\n----------------------------------\nBook {}".format(filename))
 
     schedule = {}
 
-    f1 = Path(BASE_DIR/"parsing/sheets/1kurs.xls")
+    sheet_num = workbook.sheets()
+    sheet_num = len(sheet_num)
 
-    f2 = Path(BASE_DIR/"parsing/sheets/2kurs.xls")
+    for i in range(0, sheet_num):
+        #parce_worksheet(workbook, s, schedule)
 
-    parce_workbook(schedule, f1)
-    parce_workbook(schedule, f2)
+        try:
+            worksheet = workbook.sheet_by_index(i)
+            matrix = []
+            for r in range(0, worksheet.nrows):
+                line = []
+                for c in range(0, worksheet.ncols):
+                    line.append(str(unmerged_value(r, c, worksheet)))
+                matrix.append(line)
+            matrixes.append(matrix)
 
-    f1 = Path(BASE_DIR/"parsing/sheets/3kurs_fitr.xlsx")
-    parce_workbook(schedule, f1)
 
-    f2 = Path(BASE_DIR/"parsing/sheets/4kurs_fitr.xlsx")
-    parce_workbook(schedule, f2)
+        except:
+            logging.info("An error occured while parsing sheet #{}".format(i + 1))
+            raise
+            continue
 
-    f3 = Path(BASE_DIR/"parsing/sheets/34kurs_fitr.xls")
-    parce_workbook(schedule, f3)
+        return matrixes
+
+
+
+def main():
+    schedule = {}
+    paths = ["parsing/sheets/1kurs.xls",
+             "parsing/sheets/2kurs.xls",
+             "parsing/sheets/3kurs_fitr.xlsx",
+             "parsing/sheets/4kurs_fitr.xlsx",
+             "parsing/sheets/34kurs_fitr.xls",
+             "parsing/sheets/3kurs_fmmp_1.xls",
+             "parsing/sheets/3kurs_fmmp_2.xls",
+             "parsing/sheets/3kurs_fmmp_3.xls",
+             "parsing/sheets/3kurs_fmmp_4.xls",]
+
+    for path in paths:
+        parce_workbook_excel(schedule, Path(BASE_DIR / path))
 
     save_json(schedule)
 

@@ -28,6 +28,8 @@ class Sector:
             sector_list = self.reformat_2x4(sector_list)
         elif w == 1 and h == 4:
             sector_list = self.reformat_1x4(sector_list)
+        elif w==6 and h == 4:
+            sector_list = self.reformat_6x4(sector_list)
         else:
             self.list = None
             return
@@ -52,6 +54,15 @@ class Sector:
                     [s[1][0], s[1][0], s[1][1], s[1][1]],
                     [s[2][0], s[2][0], s[2][1], s[2][1]],
                     [s[3][0], s[3][0], s[3][1], s[3][1]]]
+        return new_list
+
+    @staticmethod
+    def reformat_6x4(sector_list):
+        s = sector_list
+        new_list = [[s[0][0], s[0][0], s[0][3], s[0][3]],
+                    [s[1][0], s[1][0], s[1][3], s[1][3]],
+                    [s[2][0], s[2][0], s[2][3], s[2][3]],
+                    [s[3][0], s[3][0], s[3][3], s[3][3]]]
         return new_list
 
     @staticmethod

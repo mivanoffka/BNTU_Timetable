@@ -19,7 +19,7 @@ async def process_cancel_command(call: types.CallbackQuery):
 
 
 async def advertise(user_id):
-    await asyncio.sleep(2)
+    await asyncio.sleep(1)
     value = random.randint(1, 8)
     if value == 3:
         value = random.randint(1, 3)

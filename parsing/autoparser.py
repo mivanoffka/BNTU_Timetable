@@ -246,6 +246,23 @@ def download_and_parse():
 #        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_2.xls")
 #        download(ref_4, destination)
 
+        ref_1 = "https://drive.google.com/uc?export=download&confirm=no_antivirus&id=1lnQTsDw2jFxx3087HYJtI_SLMwxnGOtX"
+        destination = Path(BASE_DIR/"parsing/sheets/3kurs_fmmp_1.xls")
+        download_unsafe(ref_1, destination)
+
+        ref_2 = "https://drive.google.com/uc?export=download&confirm=no_antivirus&id=1FXrGeWdNaprjw59yDL8QkyCkQOiGHx6V"
+        destination = Path(BASE_DIR/"parsing/sheets/3kurs_fmmp_2.xls")
+        download_unsafe(ref_2, destination)
+
+        ref_3 = "https://drive.google.com/uc?export=download&confirm=no_antivirus&id=1fWv8LFGiPmZROF0xin77xOnypHOIMsqP"
+        destination = Path(BASE_DIR/"parsing/sheets/3kurs_fmmp_3.xls")
+        download_unsafe(ref_3, destination)
+
+        ref_4 = "https://drive.google.com/uc?export=download&confirm=no_antivirus&id=14cLoLJAv5R8fF04yFGqfdqnzbKwE-prJ"
+        destination = Path(BASE_DIR/"parsing/sheets/3kurs_fmmp_4.xls")
+        download_unsafe(ref_4, destination)
+
+
         logging.info("Books are downloaded.")
         download_result = True
 
