@@ -63,76 +63,36 @@ def download(url, dest):
 
 
 def find_lines_with_urld_fitr():
-    # Ищем на страничке фитра
-
     ref = 'https://bntu.by/faculties/fitr/pages/raspisanie-zanyatij-i-ekzamenov'
-    #html = requests.get(ref)
-    #html = get_html(ref).decode("utf-8")
-    #html = html.text
 
     html = requests.get(ref, verify=False)
     html = html.text
     html = html.splitlines()
 
-    ref_1 = ""
-    ref_2 = ""
-    ref_3 = ""
 
-    '''
-    key_1 = 'Расписание занятий студентов 4-го курса специальности <strong>1-40 01 01, 1-40 05 01</strong> дневной формы получения образования с <strong>26.01.2023 по 15.03.2023</strong>&nbsp;года</a></p>'
-    key_2 = '<span style="font-weight: 400;">Расписание занятий&nbsp; студентов 3-го курсов специальности </span><b>1-40 01 01, 1-40 05 01</b> дневной формы получения образования с 09.02.2023 по 31.05.2023&nbsp;&nbsp;</a></p>'
-    key_3 = '<span style="font-weight: 400;">Расписание занятий&nbsp; студентов 3 и 4-го курсов специальности </span><b>1-53 01 05</b>&nbsp;дневной формы получения образования с 09.02.2023 по 31.05.2023&nbsp;&nbsp;</a></p>'
-    key_4 = '<span style="font-weight: 400;">Расписание занятий&nbsp; студентов 3 и 4-го курсов специальности </span><b>1-53 01 01, 1-53 01 06</b> дневной формы получения образования с 09.02.2023 по 31.05.2023&nbsp;&nbsp;</a></p>'
+    keys = ("Расписание занятий студентов 3-го курса специальности <strong>1-40 01 01</strong>",
+            "Расписание занятий&nbsp; студентов 4-го курса специальности",
+            "Расписание занятий студентов 3-го курса <strong>(с 26 января по 17 мая)</strong> и 4-го курса",
+            "Расписание занятий студентов 3-го курса <strong>(с 9 февраля по 7 июня)</strong> и 4-го курса <strong>"
+            "(с 9&nbsp; февраля по 15 марта)</strong> специальности <strong>1-53 01 05</strong> дневной формы"
+            " получения образования 2023-2024 учебного года",
+            "Расписание занятий студентов 3-го курса (<strong>с 9 февраля по 7 июня</strong>)"
+             " и 4-го курса (<strong>с 9 февраля по 22 марта</strong>)&nbsp; "
+            )
 
-    for line in html:
-        if key_1 in line:
-            ref_1 = line
-            break
+    urls = []
 
-    for line in html:
-        if key_2 in line:
-            ref_2 = line
-            break
-
-    for line in html:
-        if key_3 in line:
-            ref_3 = line
-            break
-
-    for line in html:
-        if key_4 in line:
-            ref_4 = line
-            break
-            '''
-
-    key_1 = "Расписание занятий студентов 3-го курса специальности <strong>1-40 01 01</strong>"
-    key_2 = "Расписание занятий&nbsp; студентов 4-го курса специальности"
-    key_3 = "Расписание занятий студентов 3-го курса <strong>(с 26 января по 17 мая)</strong> и 4-го курса"
-
-    prev = ""
-
-    for line in html:
-        if key_1 in line:
-            ref_1 = line
-            break
-
-    for line in html:
-        if key_2 in line:
-            ref_2 = line
-            break
-
-    for line in html:
-        if key_3 in line:
-            ref_3 = line
-            break
-
-    arr = [ref_1, ref_2, ref_3]
+    for key in keys:
+        for line in html:
+            if key in line:
+                urls.append(line)
+                break
 
     logging.info("\n\n\n")
-    logging.info(arr)
+    logging.info(urls)
     logging.info("\n\n\n")
 
-    return arr
+    return urls
 
 
 def find_lines_with_urls():
@@ -233,6 +193,8 @@ def download_and_parse():
         ref_1 = get_url_from_line_fitr(urls[0])
         ref_2 = get_url_from_line_fitr(urls[1])
         ref_3 = get_url_from_line_fitr(urls[2])
+        ref_4 = get_url_from_line_fitr(urls[3])
+        ref_5 = get_url_from_line_fitr(urls[4])
 
         destination = Path(BASE_DIR / "parsing/sheets/3kurs_fitr.xlsx")
         download_unsafe(ref_1, destination)
@@ -240,8 +202,14 @@ def download_and_parse():
         destination = Path(BASE_DIR / "parsing/sheets/4kurs_fitr.xlsx")
         download_unsafe(ref_2, destination)
 
-        destination = Path(BASE_DIR/"parsing/sheets/34kurs_fitr.xls")
+        destination = Path(BASE_DIR/"parsing/sheets/34kurs_fitr_1.xls")
         download_unsafe(ref_3, destination)
+
+        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_2.xls")
+        download_unsafe(ref_4, destination)
+
+        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_3.xls")
+        download_unsafe(ref_5, destination)
 
 #        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_2.xls")
 #        download(ref_4, destination)
