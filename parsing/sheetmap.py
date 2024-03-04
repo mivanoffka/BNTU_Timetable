@@ -78,9 +78,9 @@ class SheetMap:
         self.explore_times()
         self.get_group_names()
 
-        # print("\nY: from {}-{} to {}".format(self.start_y, self.begin_y, self.end_y))
-        # print(self.group_nums)
-        # print(self.times)
+        print("\nY: from {}-{} to {}; {}".format(self.start_y, self.begin_y, self.end_y, self.start_x))
+        print(self.group_nums)
+        print(self.times)
 
     def explore_horizontal(self):
         raw_sheet = self.raw_sheet
@@ -195,13 +195,21 @@ class SheetMap:
         group_y = 0
         group_x = 0
 
-
+        xs = []
 
         for x in range(2, 10):
-            txt = str(self.get(self.start_y, x, None))
-            if txt != "":
+            for y in range(self.start_y, self.begin_y):
+                txt = str(self.get(y, x, None))
+                txt = txt.replace("гр. ", "")
+                if txt != "":
+                    xs.append(x)
+                    break
+
+        for x in xs:
+            if x != 0:
                 group_x = x
                 break
+
 
         self.start_x = group_x
 
