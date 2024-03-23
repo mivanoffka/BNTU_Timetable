@@ -9,7 +9,7 @@ from bot import procedures, in_out, data
 from bot.data import interactions_count, dispatcher
 from logger import log_rotation_and_archiving
 
-
+import aiogram
 from aiogram.utils import executor
 from bot import commands
 from bot.ui import handlers, advertisement

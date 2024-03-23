@@ -4,7 +4,6 @@ import json
 from pathlib import Path
 from config import BASE_DIR
 from parsing.sheetmap import SheetMap
-import openpyxl
 import logging
 
 
@@ -186,7 +185,6 @@ def main():
              "parsing/sheets/4kurs_fitr.xlsx",
              "parsing/sheets/34kurs_fitr_1.xls",
              "parsing/sheets/34kurs_fitr_2.xls",
-             "parsing/sheets/34kurs_fitr_3.xls",
              "parsing/sheets/3kurs_fmmp_1.xls",
              "parsing/sheets/3kurs_fmmp_2.xls",
              "parsing/sheets/3kurs_fmmp_3.xls",

@@ -67,18 +67,15 @@ def find_lines_with_urld_fitr():
 
     html = requests.get(ref, verify=False)
     html = html.text
+
     html = html.splitlines()
 
 
-    keys = ("Расписание занятий студентов 3-го курса специальности <strong>1-40 01 01</strong>",
-            "Расписание занятий&nbsp; студентов 4-го курса специальности",
-            "Расписание занятий студентов 3-го курса <strong>(с 26 января по 17 мая)</strong> и 4-го курса",
-            "Расписание занятий студентов 3-го курса <strong>(с 9 февраля по 7 июня)</strong> и 4-го курса <strong>"
-            "(с 9&nbsp; февраля по 15 марта)</strong> специальности <strong>1-53 01 05</strong> дневной формы"
-            " получения образования 2023-2024 учебного года",
-            "Расписание занятий студентов 3-го курса (<strong>с 9 февраля по 7 июня</strong>)"
-             " и 4-го курса (<strong>с 9 февраля по 22 марта</strong>)&nbsp; "
-            )
+
+    keys = ("Расписание занятий студентов 3-го курса специальности <strong>1-40 01 01</strong> дневной формы получения образования с <strong>26 января по 17 мая</strong> 2023-2024 учебного года",
+            "Расписание занятий студентов 3-го курса <strong>(с 26 января по 17 мая)</strong> и 4-го курса<strong> (с 26 января по 15 марта)</strong> специальностей <strong>1-40 05 01-01</strong> и <strong>1-40 05 01-04</strong> дневной формы получения образования 2023-2024 учебного года",
+            "Расписание занятий студентов 3-го курса <strong>(с 9 февраля по 7 июня)</strong> и 4-го курса <strong>(с 9&nbsp; февраля по 15 марта)</strong> специальности <strong>1-53 01 05</strong> дневной формы получения образования 2023-2024 учебного года",
+            "Расписание занятий студентов 3-го курса (<strong>с 9 февраля по 7 июня</strong>) и 4-го курса (<strong>с 9 февраля по 22 марта</strong>)&nbsp; специальностей <strong>1-53 01 01</strong> и <strong>1-53 01 06</strong> дневной формы получения образования 2023-2024 учебного года")
 
     urls = []
 
@@ -194,7 +191,7 @@ def download_and_parse():
         ref_2 = get_url_from_line_fitr(urls[1])
         ref_3 = get_url_from_line_fitr(urls[2])
         ref_4 = get_url_from_line_fitr(urls[3])
-        ref_5 = get_url_from_line_fitr(urls[4])
+        #ref_5 = get_url_from_line_fitr(urls[4])
 
         destination = Path(BASE_DIR / "parsing/sheets/3kurs_fitr.xlsx")
         download_unsafe(ref_1, destination)
@@ -207,9 +204,6 @@ def download_and_parse():
 
         destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_2.xls")
         download_unsafe(ref_4, destination)
-
-        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_3.xls")
-        download_unsafe(ref_5, destination)
 
 #        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_2.xls")
 #        download(ref_4, destination)
