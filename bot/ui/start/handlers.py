@@ -26,8 +26,6 @@ async def process_restart_command(call: types.CallbackQuery):
 async def do_start(id):
     id = str(id)
 
-    data.increment("start", id)
-
     #data.users_and_groups[id] = "NULL"
     data.users_db.insert(id, "NULL", "NULL")
 
@@ -37,6 +35,7 @@ async def do_start(id):
     data.users_db.update_message(id, "NULL")
     await bot.display.update_display(id, msg, start_keyboard)
 
+    data.datacollector.update_stats("start", id)
     #await data.bot.send_message(id, text=msg, parse_mode="Markdown", reply_markup=start_keyboard)
 
 
@@ -63,6 +62,7 @@ async def process_group_input(message: types.Message, state: FSMContext):
         reply_text = "🥲 Кажется, вы что-то не так ввели. Либо у меня пока нету расписания для вашей группы..."
         await bot.display.update_display(message.from_user.id, reply_text, home_keyboard, no_menu=True)
         #await message.answer(reply_text, reply_markup=again_keyboard, parse_mode="Markdown")
+
 
     await state.finish()
 

@@ -45,12 +45,14 @@ async def process_ui_command(message: types.Message):
 
 @dispatcher.callback_query_handler(text="goto_options")
 async def process_options_command(call: types.CallbackQuery):
-    bot.data.increment("settings", call.from_user.id)
+
 
     try:
         await call.message.edit_reply_markup(reply_markup=options_keyboard)
     except:
         pass
+
+    data.datacollector.update_stats("options", call.from_user.id)
     await call.answer()
     await advertise(call.from_user.id)
 
@@ -109,7 +111,7 @@ async def process_devinfo_command(call: types.CallbackQuery, state: FSMContext):
 async def process_cancel_command(call: types.CallbackQuery, state: FSMContext):
     await call.answer()
     await state.finish()
-    data.increment("cancel", call.from_user.id)
+
 
     await bot.display.update_display(call.from_user.id, default_mes, home_keyboard, no_menu=True)
 
@@ -124,7 +126,7 @@ async def process_send_report_command(message: types.message, state: FSMContext)
 
     report = message.text
     report_mes = ""
-    id = str(message.chat.id)
+    id = str(message.from_user.id)
 
     group = data.users_db.get_info(id).group
 
@@ -155,6 +157,7 @@ async def process_send_report_command(message: types.message, state: FSMContext)
                                         text="<b>📮 Пришёл отзыв.</b> \n\nПролистайте вверх, чтобы его посмотреть.",
                                         keyboard=bot.ui.home.keyboards.home_keyboard)
 
+    data.datacollector.update_stats("report", id)
     await state.finish()
     await advertise(message.from_user.id)
 

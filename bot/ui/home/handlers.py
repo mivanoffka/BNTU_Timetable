@@ -15,19 +15,22 @@ unauthorized_text = ("⚠️ <b>Для начала укажите группу!
 
 @dispatcher.callback_query_handler(text="show_today")
 async def process_today_command(call: types.CallbackQuery):
+
     txt = unauthorized_text
-    data.increment("today", call.from_user.id)
 
     uinfo = data.users_db.get_info(str(call.from_user.id))
     if uinfo is not None:
         if uinfo.group is not None:
             txt = await procedures.process_day(call.from_user.id, 0)
 
+
     # try:
     #     await call.message.edit_text(txt, parse_mode="Markdown", reply_markup=home_keyboard)
     # except:
     #     pass
     await display.update_display(call.from_user.id, txt, home_keyboard)
+
+    data.datacollector.update_stats("today", call.from_user.id)
 
     await call.answer()
     await advertise(call.from_user.id)
@@ -36,7 +39,6 @@ async def process_today_command(call: types.CallbackQuery):
 @dispatcher.callback_query_handler(text="show_tomorrow")
 async def process_tomorrow_command(call: types.CallbackQuery):
     txt = unauthorized_text
-    data.increment("tomorrow", call.from_user.id)
 
     uinfo = data.users_db.get_info(str(call.from_user.id))
     if uinfo is not None:
@@ -49,6 +51,8 @@ async def process_tomorrow_command(call: types.CallbackQuery):
     #     pass
 
     await display.update_display(call.from_user.id, txt, home_keyboard)
+
+    data.datacollector.update_stats("tomorrow", call.from_user.id)
 
     await call.answer()
     await advertise(call.from_user.id)
@@ -66,6 +70,8 @@ async def process_home_command(call: types.CallbackQuery):
     else:
         txt = unauthorized_text
         await display.update_display(call.from_user.id, txt, bot.ui.home.keyboards.home_keyboard)
+
+    data.datacollector.update_stats("dailymail", call.from_user.id)
     await call.answer()
     await advertise(call.from_user.id)
 

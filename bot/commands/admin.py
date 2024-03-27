@@ -47,7 +47,6 @@ async def process_notify_command(message: types.Message):
     await notify(lst, inf_mes)
 
 
-
 async def notify(lst, inf_mes):
     if len(inf_mes) > 4000:
         return
@@ -74,31 +73,21 @@ async def notify(lst, inf_mes):
             except:
                 pass
 
-        await bot.display.renew_display(config.ADMIN_ID, "Рассылка завершена ({}/{})".format(sent_count, lst_len), home_keyboard)
+        await bot.display.renew_display(config.ADMIN_ID, "Рассылка завершена ({}/{})".format(sent_count, lst_len),
+                                        home_keyboard)
 
         # data.bot.send_message(config.ADMIN_ID, txt="Рассылка завершена ({}/{})".format(sent_count, lst_len),
         #                       reply_markup=bot.ui.keyboards.delete_keyboard)
 
 
+def get_stats_text():
+    text = "Действия пользователей, начиная с {}:\n".format(data.datacollector.reset_time)
 
-def get_stats_text(message: types.Message):
-    arg = message.get_args()
+    for key in data.datacollector.stats:
+        text += '\n   "{}" : {} раз'.format(key, data.datacollector.stats[key])
 
-    text = "Действия пользователей, начиная с {}:\n".format(data.interactions_count["time"])
-
-    for key in data.interactions_count:
-        if key != "time":
-            text += "\n   {}: {} раз(а)".format(key, data.interactions_count[key])
-            if arg == "reset":
-                data.interactions_count[key] = 0
-
-    text += "\n\nВсего пользователей: " + str(len(data.users_db.get_list()))
-    text += "\nНедавно пользовались: " + str(len(data.recent_users))
-
-    if arg == "reset":
-        now = datetime.now()
-        data.interactions_count["time"] = now.strftime("%d/%m/%Y %H:%M:%S")
-        data.recent_users.clear()
+    text += '\n\nПроявили активность {} из {} пользователей.'.format(len(data.datacollector.recent_users),
+                                                                      len(data.users_db.get_list()))
 
     return text
 
@@ -107,9 +96,14 @@ def get_stats_text(message: types.Message):
 async def process_stats_command(message: types.Message):
     await bot.display.try_delete(message)
 
-    txt = get_stats_text(message)
-    #await data.bot.send_message(config.ADMIN_ID, text=txt, reply_markup=o)
-    await bot.display.update_display(config.ADMIN_ID, txt, bot.ui.keyboards.open_menu_keyboard)
+    text = get_stats_text()
+
+    args = message.get_args()
+    if "reset" in args:
+        data.datacollector.reset()
+
+    # await data.bot.send_message(config.ADMIN_ID, text=txt, reply_markup=o)
+    await bot.display.update_display(config.ADMIN_ID, text, bot.ui.keyboards.open_menu_keyboard)
 
 
 @dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["update"])
@@ -121,7 +115,8 @@ async def process_update_command(message: types.Message):
         loop = asyncio.get_event_loop()
         loop.create_task(update())
     except:
-        await bot.display.renew_display(config.ADMIN_ID, "Не удалось обновить расписание. ❌", bot.ui.keyboards.open_menu_keyboard)
+        await bot.display.renew_display(config.ADMIN_ID, "Не удалось обновить расписание. ❌",
+                                        bot.ui.keyboards.open_menu_keyboard)
         raise
 
 
@@ -129,8 +124,10 @@ async def update():
     logging.info("Schedule updating started...")
     autoparser.download_and_parse()
     data.schedule = procedures.load_schedule()
-    await bot.display.renew_display(config.ADMIN_ID, "Расписание успешно обновлено! ✅", bot.ui.keyboards.open_menu_keyboard)
+    await bot.display.renew_display(config.ADMIN_ID, "Расписание успешно обновлено! ✅",
+                                    bot.ui.keyboards.open_menu_keyboard)
     logging.info("Schedule succesfully updated!")
+
 
 @dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["danya"])
 async def process_danya_command(message: types.Message):
@@ -176,9 +173,6 @@ async def process_animations_command(message: types.Message):
     await bot.display.update_display(config.ADMIN_ID, txt, bot.ui.keyboards.open_menu_keyboard)
 
 
-
 @dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["message"])
 async def process_message_command(message: types.Message):
     await update_display(message.from_user.id, "ы", bot.ui.keyboards.delete_keyboard, no_menu=True)
-
-

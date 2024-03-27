@@ -40,8 +40,6 @@ def get_num_of_week(weekday=1):
 def get_day_message(id, weekday):
     id = str(id)
 
-    data.increment("weekdays", id)
-
     #user_group = data.users_and_groups[id]
     #user_group = data.users_db.get_group(id)
     uinfo = data.users_db.get_info(id)

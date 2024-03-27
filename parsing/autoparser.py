@@ -196,13 +196,13 @@ def download_and_parse():
         destination = Path(BASE_DIR / "parsing/sheets/3kurs_fitr.xlsx")
         download_unsafe(ref_1, destination)
 
-        destination = Path(BASE_DIR / "parsing/sheets/4kurs_fitr.xlsx")
+        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_1.xls")
         download_unsafe(ref_2, destination)
 
-        destination = Path(BASE_DIR/"parsing/sheets/34kurs_fitr_1.xls")
+        destination = Path(BASE_DIR/"parsing/sheets/34kurs_fitr_2.xls")
         download_unsafe(ref_3, destination)
 
-        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_2.xls")
+        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_3.xls")
         download_unsafe(ref_4, destination)
 
 #        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_2.xls")

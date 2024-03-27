@@ -13,7 +13,7 @@ async def process_devinfo_command(call: types.CallbackQuery):
     #       "\n\n<a href='vk.com/maksimka_ivanoffka'>ВКонтакте</a> | " \
     #       "<a href='instagram.com/maksimka_ivanoffka/'>Instagram</a>"\
     #       "<i>\n\nМой бесподобный создатель, заботливый администратор да и просто замечательный человек!</i>"
-    data.increment("mivanoffka", call.from_user.id)
+
 
     txt = "<b>🤗 Вот он — Максимка Иваноффка!</b>" \
           "\n\n<i>Этот замечательный человек — мой единоличный создатель," \
@@ -28,6 +28,7 @@ async def process_devinfo_command(call: types.CallbackQuery):
     except:
         pass
 
+    data.datacollector.update_stats("donate", call.from_user.id)
     await call.answer()
     await advertise(call.from_user.id)
 
@@ -54,7 +55,7 @@ async def process_bntu_command(call: types.CallbackQuery):
 
 @dispatcher.callback_query_handler(text="show_help")
 async def process_help_command(call: types.CallbackQuery):
-    data.increment("help", call.from_user.id)
+
 
     txt = "<u>Ответы на вопросы, которые могли у вас возникнуть.</u>" \
           "<b>\n\n❓ Почему расписание 3-го курса и старше доступно студентам лишь некоторых факультетов?</b>" \

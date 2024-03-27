@@ -1,1 +1,1 @@
-__all__ = ["parser", "sector.py", "sheetmap.py"]
+__all__ = ["parser"]
