@@ -11,6 +11,9 @@ import _thread
 import time
 import logging
 
+
+file_index = 0
+
 def get_html(url):
     counter = 0
     f = None
@@ -163,7 +166,9 @@ def get_link_for_cource(course_number):
 
     excel_links = [item['excel_files'] for item in res_json]
 
-    return excel_links[0][0]
+    print(excel_links)
+
+    return excel_links[file_index][0]
 
 
 def download_and_parse():

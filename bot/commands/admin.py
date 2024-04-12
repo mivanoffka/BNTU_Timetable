@@ -23,6 +23,16 @@ from bot.ui.home.keyboards import home_keyboard
 from bot.ui.dailymail.handlers import mail
 
 
+@dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["toggle_index"])
+async def process_index_command(message: types.Message):
+    await bot.display.try_delete(message)
+
+    old_index = copy.copy(autoparser.file_index)
+    autoparser.file_index = 1 if old_index == 0 else 0
+
+    await bot.display.renew_display(config.ADMIN_ID, "Индекс обновлён {} -> {}".format(old_index, autoparser.file_index),  bot.ui.keyboards.open_menu_keyboard)
+
+
 @dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["test"])
 async def process_notify_command(message: types.Message):
     await bot.display.try_delete(message)
