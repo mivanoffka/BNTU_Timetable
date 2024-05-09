@@ -6,6 +6,7 @@ schedule = data.schedule
 import aiogram
 import logging
 
+
 async def try_delete(message):
     try:
         await message.delete()

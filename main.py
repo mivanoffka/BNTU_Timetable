@@ -25,7 +25,6 @@ async def start(dp):
     data.datacollector = DataCollector()
 
     now = datetime.now()
-    #interactions_count["time"] = now.strftime("%d/%m/%Y %H:%M:%S")
 
     loop = asyncio.get_event_loop()
     loop.create_task(log_rotation_and_archiving())

@@ -19,7 +19,6 @@ def parce_workbook_google(out_schedule, filename):
     pass
 
 
-
 def parce_workbook_excel(out_schedule, filename, param="no"):
     workbook = None
     if ".xlsx" in str(filename):
