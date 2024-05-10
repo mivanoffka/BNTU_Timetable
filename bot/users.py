@@ -29,7 +29,7 @@ class UsersDB:
     times: tuple
 
     def __init__(self):
-        self.connection = sqlite3.connect(BASE_DIR / "bot/databases/users.db")
+        self.connection = sqlite3.connect(BASE_DIR / "bot/databases/users.data")
         self.cursor = self.connection.cursor()
 
         self.times = self.execute("SELECT time FROM times")

@@ -1,7 +1,7 @@
 import aiogram
 from aiogram.types import InlineKeyboardMarkup, Message
 from singleton import Singleton
-from usersdb.user import User
+from data.types import User
 
 
 class Dialog(metaclass=Singleton):

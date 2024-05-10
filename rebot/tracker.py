@@ -2,7 +2,7 @@ import asyncio
 
 from singleton import Singleton
 from datetime import datetime
-from usersdb.user import User
+from data.types import User
 
 
 class Tracker(metaclass=Singleton):
@@ -24,6 +24,9 @@ class Tracker(metaclass=Singleton):
         pass
 
     def is_user_muted(self, user: User) -> bool:
+        pass
+
+    def mute_user(self, user: User) -> bool:
         pass
 
     async def __unmuting_loop(self):

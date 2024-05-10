@@ -13,6 +13,7 @@ from singleton import Singleton
 from config import TOKEN
 
 from logger import log_rotation_and_archiving
+from data.database import Database
 
 
 class Core(metaclass=Singleton):
@@ -22,6 +23,7 @@ class Core(metaclass=Singleton):
     __tracker: Tracker = Tracker()
     __dialog: Dialog = Dialog(__bot)
     __distributor: Distributor = Distributor()
+    __database: Database = Database()
 
     @property
     def tracker(self) -> Tracker:
@@ -31,13 +33,13 @@ class Core(metaclass=Singleton):
     def dialog(self) -> Dialog:
         return self.__dialog
 
-    def __init__(self):
-        async def print_startup_message(dispatcher): print("The bot is launching...")
-        async def print_shutdown_message(dispatcher): print("The bot is finished")
+    @property
+    def database(self) -> Database:
+        return self.__database
 
-        executor.start_polling(self.__dispatcher, skip_updates=True,
-                               on_startup=print_startup_message, on_shutdown=print_shutdown_message)
-        asyncio.get_event_loop().create_task(log_rotation_and_archiving())
+    def __init__(self):
+        #asyncio.get_event_loop().create_task(log_rotation_and_archiving())
+        executor.start_polling(self.__dispatcher, skip_updates=True)
 
     def callback_query_handler(self, *args, **kwargs):
         return self.__dispatcher.callback_query_handler(*args, **kwargs)
@@ -45,3 +47,4 @@ class Core(metaclass=Singleton):
 
 if __name__ == '__main__':
     Core()
+
