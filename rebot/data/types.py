@@ -42,6 +42,12 @@ class LessonTime(base):
     time = Column(Time(), unique=True, nullable=False)
 
 
+class LessonType(base):
+    __tablename__ = 'lesson_types'
+    id = Column(Integer(), primary_key=True)
+    name = Column(String(32), unique=True, nullable=False)
+
+
 class Group(base):
     __tablename__ = 'groups'
     id = Column(Integer(), primary_key=True)
@@ -73,6 +79,7 @@ class Lesson(base):
     subgroup_id = Column(Integer(), ForeignKey("subgroups.id"), nullable=False)
 
     info = Column(String(512), nullable=False)
+    lesson_type_id = Column(Integer(), ForeignKey("lesson_types.id"), nullable=True)
 
     revision_id = Column(Integer(), ForeignKey("revisions.id"), nullable=False)
 

@@ -3,8 +3,6 @@ from aiogram.types import ReplyKeyboardRemove, \
     InlineKeyboardMarkup, InlineKeyboardButton
 
 
-
-
 mon_button = InlineKeyboardButton("Пн. ⚫", callback_data="show_mon")
 tue_button = InlineKeyboardButton("Вт. ⚪️", callback_data="show_tue")
 wed_button = InlineKeyboardButton("Ср. ⚫", callback_data="show_wed")

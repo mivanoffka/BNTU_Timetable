@@ -7,8 +7,8 @@ from data.types import User
 
 class Tracker(metaclass=Singleton):
     __statistics: dict[str, int] = {}
-    __recent_users_list: list[User] = []
-    __muted_users_list: list[User] = []
+    __recent_users_id_list: list[int] = []
+    __muted_users_id_list: list[int] = []
     __last_reset_time: datetime = None
 
     def __init__(self):

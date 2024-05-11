@@ -1,14 +1,20 @@
 import sqlalchemy
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import Engine
-from rebot.data.types import base
+from rebot.data.types import *
 
 
 class Database:
-    __engine: Engine = sqlalchemy.create_engine("mysql+mysqlconnector://root:pass@localhost:3306/bntu_timetable")
+    __engine: Engine = sqlalchemy.create_engine("postgresql+psycopg2://postgres:pass@localhost/bntu_timetable")
     __base: declarative_base = base
 
     def __init__(self):
+        pass
+
+    def get_users_list(self) -> list[User]:
+        pass
+
+    def get_user_by_telegram_id(self, telegram_id: int) -> User:
         pass
 
     def reset(self):
