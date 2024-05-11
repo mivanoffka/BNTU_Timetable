@@ -1,4 +1,4 @@
-from aiogram import types
+from aiogram2 import types
 
 import bot.display
 from bot.data import dispatcher

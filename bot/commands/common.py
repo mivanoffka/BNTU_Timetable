@@ -2,7 +2,7 @@ from datetime import datetime
 
 from bot import data, procedures
 
-from aiogram import types
+from aiogram2 import types
 from bot.data import dispatcher
 from bot.ui.handlers import send_ui
 

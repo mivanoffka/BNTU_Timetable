@@ -2,8 +2,8 @@ import asyncio
 import copy
 import os
 import logging
-import aiogram.utils.exceptions
-from aiogram.types import ReplyKeyboardRemove
+import aiogram2.utils.exceptions
+from aiogram2.types import ReplyKeyboardRemove
 
 import bot.ui.keyboards
 from bot.ui.start.keyboards import continue_inline, continue_keyboard
@@ -12,12 +12,12 @@ import config
 from bot import data, procedures
 from datetime import datetime
 from parsing import autoparser
-from aiogram import types
+from aiogram2 import types
 from bot.ui.keyboards import cancel_keyboard
 
 from bot.data import dispatcher
 
-from aiogram.dispatcher import filters
+from aiogram2.dispatcher import filters
 from bot.display import update_display
 from bot.ui.home.keyboards import home_keyboard
 from bot.ui.dailymail.handlers import mail
@@ -73,7 +73,7 @@ async def notify(lst, inf_mes):
                 #                             reply_markup=bot.ui.keyboards.delete_keyboard)
                 sent_count += 1
                 logging.info("Message #{} sent.".format(sent_count))
-            except aiogram.utils.exceptions.BotBlocked:
+            except aiogram2.utils.exceptions.BotBlocked:
                 try:
                     data.users_db.delete(str(uinfo.id))
                 except:

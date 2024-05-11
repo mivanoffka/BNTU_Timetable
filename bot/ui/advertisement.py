@@ -4,7 +4,7 @@ from pathlib import Path
 import asyncio
 from bot import data, procedures
 
-from aiogram import types
+from aiogram2 import types
 from bot.data import dispatcher
 
 from bot.ui.keyboards import cancel_keyboard, open_menu_keyboard, delete_keyboard, donations_and_delete_keyboard

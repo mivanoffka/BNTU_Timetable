@@ -1,14 +1,14 @@
 
 from bot import data, procedures
-from aiogram import types
+from aiogram2 import types
 from bot.data import dispatcher
 
 from bot.states import GroupSettingState
-from aiogram.dispatcher import FSMContext
+from aiogram2.dispatcher import FSMContext
 from bot.ui.home.keyboards import home_keyboard
 
 from bot.ui.start.keyboards import start_keyboard, back_keyboard, next_keyboard, again_keyboard, continue_reply_button
-from aiogram.dispatcher import filters
+from aiogram2.dispatcher import filters
 from bot.ui.handlers import send_ui
 import bot.display
 

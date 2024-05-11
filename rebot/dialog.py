@@ -1,5 +1,5 @@
 import aiogram
-from aiogram.types import InlineKeyboardMarkup, Message
+from aiogram2.types import InlineKeyboardMarkup, Message
 from singleton import Singleton
 from data.types import User
 

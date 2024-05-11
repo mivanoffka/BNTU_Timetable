@@ -12,7 +12,8 @@ class Tracker(metaclass=Singleton):
     __last_reset_time: datetime = None
 
     def __init__(self):
-        asyncio.get_event_loop().create_task(self.__unmuting_loop())
+        #asyncio.get_event_loop().create_task(self.__unmuting_loop())
+        ...
 
     def increment_key(self, key: str):
         pass

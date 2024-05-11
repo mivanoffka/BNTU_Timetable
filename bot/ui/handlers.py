@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from aiogram.types import ReplyKeyboardRemove
+from aiogram2.types import ReplyKeyboardRemove
 
 import bot.ui.options.keyboards
 import config
@@ -8,12 +8,12 @@ from config import BASE_DIR
 
 from bot import data
 
-from aiogram import types
+from aiogram2 import types
 from bot.data import dispatcher
-from aiogram.dispatcher import filters
+from aiogram2.dispatcher import filters
 
 from bot.states import GroupSettingState, ReportingState
-from aiogram.dispatcher import FSMContext
+from aiogram2.dispatcher import FSMContext
 
 from bot.ui.keyboards import cancel_keyboard, open_menu_keyboard, delete_keyboard, reply_keyboard
 from bot.ui.home.keyboards import home_keyboard

@@ -4,7 +4,7 @@ import bot.ui.dailymail.handlers
 from bot import procedures, in_out, data
 from bot.data import dispatcher
 from logger import log_rotation_and_archiving
-from aiogram.utils import executor
+from aiogram2.utils import executor
 from bot.users import UsersDB
 from bot.datacollector import DataCollector
 

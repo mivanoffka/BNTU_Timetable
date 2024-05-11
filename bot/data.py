@@ -1,10 +1,10 @@
-from aiogram.dispatcher import Dispatcher
+from aiogram2.dispatcher import Dispatcher
 from queue import Queue
-from aiogram import Bot, types
+from aiogram2 import Bot, types
 from config import TOKEN
 from bot.datacollector import DataCollector
 from bot.users import UsersDB
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram2.contrib.fsm_storage.memory import MemoryStorage
 
 storage = MemoryStorage()
 bot = Bot(token=TOKEN, parse_mode = "HTML")

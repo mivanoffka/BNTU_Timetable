@@ -1,7 +1,7 @@
 import bot.ui.dailymail.keyboards
 from bot import data, display, procedures
 
-from aiogram import types
+from aiogram2 import types
 from bot.data import dispatcher
 
 from bot.ui.home.keyboards import home_keyboard

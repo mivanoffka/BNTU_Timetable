@@ -3,7 +3,7 @@ from bot import data, procedures
 from datetime import datetime
 import time
 schedule = data.schedule
-import aiogram
+import aiogram2
 import logging
 
 
@@ -17,7 +17,7 @@ async def try_delete(message):
 async def send_emoji_delay(id):
     delay = 0.15
 
-    await data.bot.send_message(id, "✨", reply_markup=aiogram.types.ReplyKeyboardRemove())
+    await data.bot.send_message(id, "✨", reply_markup=aiogram2.types.ReplyKeyboardRemove())
     time.sleep(delay)
     await data.bot.send_message(id, "✨")
     time.sleep(delay)
@@ -71,7 +71,7 @@ async def update_display(id, text, keyboard, animation=True, no_menu=False):
                                              reply_markup=keyboard,
                                              disable_web_page_preview=True)
 
-        except aiogram.exceptions.MessageNotModified:
+        except aiogram2.exceptions.MessageNotModified:
             logging.info("same")
             pass
         except:

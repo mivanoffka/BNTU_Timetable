@@ -1,4 +1,4 @@
-from aiogram.types import ReplyKeyboardRemove, \
+from aiogram2.types import ReplyKeyboardRemove, \
     ReplyKeyboardMarkup, KeyboardButton, \
     InlineKeyboardMarkup, InlineKeyboardButton
 

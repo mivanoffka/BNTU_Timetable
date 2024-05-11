@@ -4,14 +4,14 @@ import time
 import logging
 
 from config import ADMIN_ID
-import aiogram.utils.exceptions
+import aiogram2.utils.exceptions
 
 
 from bot import data, display, procedures
 import bot.ui.dailymail.keyboards
 from bot import data, display, procedures
 
-from aiogram import types
+from aiogram2 import types
 from bot.data import dispatcher
 
 from bot.ui.home.keyboards import home_keyboard
@@ -136,7 +136,7 @@ async def mail(t):
             else:
                 logging.info("Empty...")
 
-        except aiogram.utils.exceptions.BotBlocked:
+        except aiogram2.utils.exceptions.BotBlocked:
             try:
                 data.users_db.delete(str(uinfo.id))
             except:

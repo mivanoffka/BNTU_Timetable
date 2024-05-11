@@ -2,7 +2,7 @@
 
 from bot import procedures
 
-from aiogram import types
+from aiogram2 import types
 from bot.data import dispatcher
 
 from bot import data
