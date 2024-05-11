@@ -36,10 +36,11 @@ class Core(metaclass=Singleton):
     def database(self) -> Database:
         return self.__database
 
-    def __init__(self):
-        executor.start_polling(self.__dispatcher, skip_updates=True, on_startup=self.__on_startup)
+    def launch(self):
+        executor.start_polling(self.__dispatcher, skip_updates=True)
 
     async def __on_startup(self, dispatcher: Dispatcher):
+
         await asyncio.get_event_loop().create_task(self.__mailing_loop())
         await asyncio.get_event_loop().create_task(log_rotation_and_archiving())
 
@@ -51,7 +52,3 @@ class Core(metaclass=Singleton):
 
     def message_handler(self, *args, **kwargs):
         return self.__dispatcher.message_handler(*args, **kwargs)
-
-
-if __name__ == '__main__':
-    Core()
