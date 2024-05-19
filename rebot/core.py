@@ -1,12 +1,13 @@
 import asyncio
 
 import aiogram
-from aiogram import Dispatcher
+from aiogram import Dispatcher, Router
 from aiogram import types
 from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram_dialog import setup_dialogs
 
 from tracker import Tracker
-from dialog import Dialog
+from messenger import Messenger
 
 from singleton import Singleton
 from config import TOKEN
@@ -20,7 +21,7 @@ class Core(metaclass=Singleton):
     __dispatcher: Dispatcher = Dispatcher()
 
     __tracker: Tracker = Tracker()
-    __dialog: Dialog = Dialog(__bot)
+    __messenger: Messenger = Messenger(__bot)
     __database: Database = Database()
 
     @property
@@ -28,8 +29,8 @@ class Core(metaclass=Singleton):
         return self.__tracker
 
     @property
-    def dialog(self) -> Dialog:
-        return self.__dialog
+    def messenger(self) -> Messenger:
+        return self.__messenger
 
     @property
     def database(self) -> Database:
@@ -40,11 +41,12 @@ class Core(metaclass=Singleton):
 
     async def launch(self):
         self.__dispatcher.startup.register(self.__on_startup)
+        setup_dialogs(self.__dispatcher)
         await self.__dispatcher.start_polling(self.__bot, skip_updates=True)
 
     async def __on_startup(self, dispatcher: Dispatcher):
         await asyncio.get_event_loop().create_task(self.__mailing_loop())
-        await asyncio.get_event_loop().create_task(log_rotation_and_archiving())
+        #await asyncio.get_event_loop().create_task(log_rotation_and_archiving())
         print("The bot is running...")
 
     async def __mailing_loop(self):
@@ -55,3 +57,12 @@ class Core(metaclass=Singleton):
 
     def message(self, *args, **kwargs):
         return self.__dispatcher.message(*args, **kwargs)
+
+    def error(self, *args, **kwargs):
+        return self.__dispatcher.error(*args, **kwargs)
+
+    def include_router(self, router):
+        self.__dispatcher.include_router(router)
+
+
+core: Core = Core()
