@@ -1,4 +1,7 @@
-class MessageKeys:
+from enum import Enum
+
+
+class MessageKeys(Enum):
     DEFAULT: int = 0
     HELP: int = 1
     WEBSITE: int = 2
@@ -12,9 +15,14 @@ class MessageKeys:
     DISTRIBUTION_SET_MORNING: int = 10
     DISTRIBUTION_SET_EVENING: int = 11
     DISTRIBUTION_SET_SILENT: int = 12
+    DISTRIBUTION: int = 13
+    PLACEHOLDER: int = 14
+    WELCOME: int = 15
+    GROUP_INPUT_PARSE_ERROR: int = 16
+    REPORT_CONFIRMATION_DIALOG: int = 17
 
 
-messages_rus: dict[int, str] = {
+messages_rus: dict[Enum, str] = {
 
     MessageKeys.OLD_DEFAULT: "<b>Выберите желаемое действие...</b>\n\n<i>🎲 Или просто тыкайте на кнопочки!</i>",
 
@@ -81,9 +89,22 @@ messages_rus: dict[int, str] = {
                                           " получать расписание на следующий день каждый вечер.",
 
     MessageKeys.DISTRIBUTION_SET_SILENT: "<b>☑️ Успешно настроено!</b> \n\nВы"
-                                         " больше не будете получать ежедневную рассылку расписания."
+                                         " больше не будете получать ежедневную рассылку расписания.",
+
+    MessageKeys.DISTRIBUTION: "<i>📬 Хотите, чтобы расписание само отправлялось вам каждый день?"
+                              " Подпишитесь на рассылку! </i>"
+                              "\n\n<b>❓ Когда бы вы хотели получать сообщения с расписанием?</b>",
+
+    MessageKeys.PLACEHOLDER: "Пока что здесь ничего нет...",
+
+    MessageKeys.WELCOME:             "👋<b> Ещё раз здравствуйте!</b> \n\n<i>Перед тем, как продолжить,"
+                                     " вам необходимо указать группу, студентом которой вы являетесь.</i> \n\n",
+
+    MessageKeys.GROUP_INPUT_PARSE_ERROR: "То, что вы ввели, не сильно похоже на номер группы...",
+
+    MessageKeys.REPORT_CONFIRMATION_DIALOG: "Вы ввели:\n\n {}\n\nУверены, что хотите это отправить?"
 }
 
 
-def get_message_text(key: int) -> str:
+def get_message_text(key: MessageKeys) -> str:
     return messages_rus[key]

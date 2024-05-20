@@ -1,12 +1,12 @@
 import asyncio
 
-from singleton import Singleton
+from rebot.singleton import Singleton
 from datetime import datetime
-from data.types import User
+from rebot.data.types.enums import TrackerKeys
 
 
 class Tracker(metaclass=Singleton):
-    __statistics: dict[str, int] = {}
+    __statistics: dict[TrackerKeys, int] = {}
     __recent_users_id_list: list[int] = []
     __muted_users_id_list: list[int] = []
     __last_reset_time: datetime = None
@@ -15,7 +15,7 @@ class Tracker(metaclass=Singleton):
         #asyncio.get_event_loop().create_task(self.__unmuting_loop())
         ...
 
-    def increment_key(self, key: str):
+    def increment_key(self, key: TrackerKeys, user_id: int):
         pass
 
     def reset_all_keys(self):
@@ -24,12 +24,11 @@ class Tracker(metaclass=Singleton):
     def get_report(self) -> str:
         pass
 
-    def is_user_muted(self, user: User) -> bool:
+    def is_user_muted(self, user_id: int) -> bool:
         pass
 
-    def mute_user(self, user: User) -> bool:
+    def mute_user(self, user_id: int) -> bool:
         pass
 
     async def __unmuting_loop(self):
         pass
-

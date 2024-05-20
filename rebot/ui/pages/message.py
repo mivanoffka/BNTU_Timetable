@@ -1,14 +1,12 @@
 from typing import Dict, Any
 
 from aiogram.fsm.state import State
-from aiogram.types import Message, CallbackQuery
-from aiogram_dialog import Window, DialogManager, ShowMode, Dialog
-from aiogram_dialog.api.internal import Widget
-from aiogram_dialog.widgets.input import TextInput
-from aiogram_dialog.widgets.kbd import Row, Cancel, Button, Back, PrevPage, Url, SwitchTo
-from aiogram_dialog.widgets.text import Format, Const
+from aiogram.types import CallbackQuery
+from aiogram_dialog import DialogManager, ShowMode
+from aiogram_dialog.widgets.kbd import Row, Button
+from aiogram_dialog.widgets.text import Format
 
-from rebot.ui.messages import messages_rus, MessageKeys
+from rebot.ui.page import Page
 from rebot.ui.states import States
 
 
@@ -31,7 +29,7 @@ async def getter(dialog_manager: DialogManager, **kwargs) -> Dict[str, Any]:
         "button_text": dialog_manager.dialog_data["message:button_text"]
     }
 
-message_page = Window(
+message_page = Page(
     Format("{text}"),
     Row(Button(Format("{button_text}"), on_click=on_button_click, id="button")),
     state=States.MESSAGE,

@@ -15,4 +15,5 @@ class States(StatesGroup):
     MESSAGE = State()
     REPORT_INPUT = State()
     ALTERNATIVE_MESSAGE = State()
+    DIALOG_MESSAGE = State()
 

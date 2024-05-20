@@ -1,13 +1,17 @@
-from aiogram.types import Message, CallbackQuery
-from aiogram_dialog import Window, DialogManager, ShowMode, StartMode
-from aiogram_dialog.api.internal import Widget
-from aiogram_dialog.widgets.input import TextInput
-from aiogram_dialog.widgets.kbd import Row, Cancel, Button, Start, SwitchTo
-from aiogram_dialog.widgets.text import Format, Const
+from datetime import datetime
 
-from rebot.ui.states import States
-from rebot.ui.pages.message import show_message
+from aiogram.types import CallbackQuery
+from aiogram_dialog import DialogManager, ShowMode
+from aiogram_dialog.widgets.kbd import Row, Button, SwitchTo
+from aiogram_dialog.widgets.text import Const
+
+from rebot.core import core
+from rebot.data.types.enums import TrackerKeys
 from rebot.ui.button_labels import get_button_label, ButtonLabelKeys
+from rebot.ui.common import show_timetable_message_for_weekday
+from rebot.ui.messages import get_message_text, MessageKeys
+from rebot.ui.page import Page
+from rebot.ui.states import States
 
 
 async def on_weekdays_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
@@ -24,17 +28,23 @@ async def on_options_button_click(callback_query: CallbackQuery, button: Button,
 
 
 async def on_today_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    await show_message(dialog_manager,
-                       "Рано или поздно, здесь будет расписание...", "Назад ↩️", States.HOME)
+    weekday_number: int = datetime.today().weekday()
+    await show_timetable_message_for_weekday(weekday_number=weekday_number,
+                                             dialog_manager=dialog_manager,
+                                             callback_query=callback_query,
+                                             button=button, state_to_return=States.HOME)
 
 
 async def on_tomorrow_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    await show_message(dialog_manager,
-                       "Рано или поздно, здесь будет расписание...", "Назад ↩️", States.HOME)
+    weekday_number: int = (datetime.today().weekday() + 1) % 7
+    await show_timetable_message_for_weekday(weekday_number=weekday_number,
+                                             dialog_manager=dialog_manager,
+                                             callback_query=callback_query,
+                                             button=button, state_to_return=States.HOME)
 
 
-home_page = Window(
-    Const("<b>Выберите желаемое действие...</b>\n\n<i>🎲 Или просто тыкайте на кнопочки!</i>"),
+home_page = Page(
+    Const(get_message_text(MessageKeys.DEFAULT)),
     Row(
         Button(Const(get_button_label(ButtonLabelKeys.TODAY)),
                id="today_button",

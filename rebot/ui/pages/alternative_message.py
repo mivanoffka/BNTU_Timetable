@@ -1,19 +1,18 @@
+import asyncio
 from typing import Dict, Any
 
 from aiogram.fsm.state import State
-from aiogram.types import Message, CallbackQuery
-from aiogram_dialog import Window, DialogManager, ShowMode, Dialog
-from aiogram_dialog.api.internal import Widget
-from aiogram_dialog.widgets.input import TextInput
-from aiogram_dialog.widgets.kbd import Row, Cancel, Button, Back, PrevPage, Url, SwitchTo
-from aiogram_dialog.widgets.text import Format, Const
+from aiogram.types import CallbackQuery
+from aiogram_dialog import DialogManager, ShowMode
+from aiogram_dialog.widgets.kbd import Row, Button
+from aiogram_dialog.widgets.text import Format
 
-from rebot.ui.messages import messages_rus, MessageKeys
+from rebot.ui.page import Page
 from rebot.ui.states import States
 
 
 async def show_alternative_message(dialog_manager: DialogManager, message_text: str, button_texts: tuple[str, str],
-                                   states: tuple[State, State]) -> None:
+                                   states: tuple[State, State]):
     dialog_manager.dialog_data["message:text"] = message_text
 
     dialog_manager.dialog_data["message:first:button_text"] = button_texts[0]
@@ -27,7 +26,7 @@ async def show_alternative_message(dialog_manager: DialogManager, message_text: 
 
 async def on_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
     number: str = "first" if button.widget_id == "button_one" else "second"
-    state: State = dialog_manager.dialog_data["message:{}:state_to_go".format(number)]
+    state: State | None = dialog_manager.dialog_data["message:{}:state_to_go".format(number)]
     await dialog_manager.switch_to(state, show_mode=ShowMode.EDIT)
 
 
@@ -40,7 +39,7 @@ async def getter(dialog_manager: DialogManager, **kwargs) -> Dict[str, Any]:
     }
 
 
-alternative_message_page = Window(
+alternative_message_page = Page(
     Format("{text}"),
     Row(Button(Format("{button_one_text}"), on_click=on_button_click, id="button_one"),
         Button(Format("{button_two_text}"), on_click=on_button_click, id="button_two")),

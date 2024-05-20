@@ -23,6 +23,17 @@ class ButtonLabelKeys:
     EVENING: int = 16,
     SILENT: int = 17,
 
+    MONDAY: int = 18,
+    TUESDAY: int = 19,
+    WEDNESDAY: int = 20,
+    THURSDAY: int = 21,
+    FRIDAY: int = 22,
+    SATURDAY: int = 23,
+    SUNDAY: int = 24
+
+    YES: int = 25
+    NO: int = 26
+
 
 _ = ButtonLabelKeys
 
@@ -50,6 +61,16 @@ button_labels_rus: dict[int, str] = {
     _.EVENING: "Вечером 🌃",
     _.SILENT: "Никогда 🔕",
 
+    _.MONDAY: "Пн. ⚫",
+    _.TUESDAY: "Вт. ⚪️",
+    _.WEDNESDAY: "Ср. ⚫",
+    _.THURSDAY: "Чт. ⚪",
+    _.FRIDAY: "Пт. ⚫",
+    _.SATURDAY: "Сб. ⚪",
+
+
+    _.YES: "Да ✅",
+    _.NO: "Нет ❌"
 }
 
 
