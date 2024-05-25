@@ -104,7 +104,3 @@ messages_rus: dict[Enum, str] = {
 
     MessageKeys.REPORT_CONFIRMATION_DIALOG: "Вы ввели:\n\n {}\n\nУверены, что хотите это отправить?"
 }
-
-
-def get_message_text(key: MessageKeys) -> str:
-    return messages_rus[key]

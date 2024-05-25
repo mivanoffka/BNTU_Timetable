@@ -8,14 +8,13 @@ from aiogram_dialog.widgets.kbd import Row, Button, SwitchTo
 from aiogram_dialog.widgets.text import Format, Const
 
 from rebot.core import core
-from rebot.ui.pages.message import show_message
-from rebot.ui.pages.alternative_message import show_alternative_message
+from rebot.ui.pages.special.notification import show_message
+from rebot.ui.pages.special.dialog import show_dialog_message
 from rebot.ui.states import States
-from rebot.ui.messages import get_message_text, MessageKeys
-from rebot.ui.button_labels import get_button_label, ButtonLabelKeys
 
 from rebot.ui.page import Page
 from rebot.data.types.enums import GroupSettingResult
+from rebot.ui.text import text
 
 
 async def getter(dialog_manager: DialogManager, **kwargs) -> Dict[str, Any]:
@@ -36,29 +35,29 @@ async def handle_group_input(message: Message, widget, dialog_manager: DialogMan
 
     group_number: int | None = get_group_number(message.text)
     if group_number is None:
-        await show_alternative_message(dialog_manager,
-                                       message_text=get_message_text(MessageKeys.GROUP_INPUT_PARSE_ERROR),
-                                       button_texts=(get_button_label(ButtonLabelKeys.TRY_AGAIN),
-                                                     get_button_label(ButtonLabelKeys.CONTINUE)),
-                                       states=(States.GROUP_INPUT, States.HOME))
+        await show_dialog_message(dialog_manager,
+                                  message_text=text.get(text.MessageKeys.GROUP_INPUT_PARSE_ERROR),
+                                  button_texts=(text.get(text.ButtonKeys.TRY_AGAIN),
+                                                text.get(text.ButtonKeys.CONTINUE)),
+                                  handlers=(States.GROUP_INPUT, States.HOME))
         return
 
     user_id: int = message.from_user.id
     result: GroupSettingResult = await core.data.users.set_group(user_id=user_id, group_number=group_number)
 
     if result == GroupSettingResult.SUCCESS:
-        await show_message(dialog_manager, message_text=get_message_text(MessageKeys.GROUP_INPUT_SUCCESS),
-                           button_text=get_button_label(ButtonLabelKeys.CONTINUE), state=States.HOME)
+        await show_message(dialog_manager, message_text=text.get(text.MessageKeys.GROUP_INPUT_SUCCESS),
+                           button_text=text.get(text.ButtonKeys.CONTINUE), state=States.HOME)
 
     elif result == GroupSettingResult.NO_SCHEDULE:
-        await show_message(dialog_manager, message_text=get_message_text(MessageKeys.GROUP_INPUT_SUCCESS),
-                           button_text=get_button_label(ButtonLabelKeys.CONTINUE), state=States.HOME)
+        await show_message(dialog_manager, message_text=text.get(text.MessageKeys.GROUP_INPUT_SUCCESS),
+                           button_text=text.get(text.ButtonKeys.CONTINUE), state=States.HOME)
 
     elif result == GroupSettingResult.NO_GROUP:
-        await show_alternative_message(dialog_manager, message_text=get_message_text(MessageKeys.GROUP_INPUT_SUCCESS),
-                                       button_texts=(get_button_label(ButtonLabelKeys.TRY_AGAIN),
-                                                     get_button_label(ButtonLabelKeys.CONTINUE)),
-                                       states=(States.GROUP_INPUT, States.HOME))
+        await show_dialog_message(dialog_manager, message_text=text.get(text.MessageKeys.GROUP_INPUT_SUCCESS),
+                                  button_texts=(text.get(text.ButtonKeys.TRY_AGAIN),
+                                                text.get(text.ButtonKeys.CONTINUE)),
+                                  handlers=(States.GROUP_INPUT, States.HOME))
 
 
 def get_group_number(message_text: str) -> int | None:
@@ -78,17 +77,30 @@ async def on_cancel_button_click(callback_query: CallbackQuery, button: Button, 
 
 group_input_page = Page(
     Format(
-        get_message_text(MessageKeys.GROUPS_INFO)
+        text.get(text.MessageKeys.GROUPS_INFO)
     ),
-    Row(SwitchTo(Const(get_button_label(ButtonLabelKeys.CANCEL)),
-                 id="start_button",
-                 state=States.START, when="show_start_button")),
 
-    Row(SwitchTo(Const(get_button_label(ButtonLabelKeys.CANCEL)),
-                 id="options_button",
-                 state=States.OPTIONS, when="show_options_button")),
+    Row(
+        SwitchTo(
+            Const(text.get(text.ButtonKeys.CANCEL)),
+            id="start_button",
+            state=States.START,
+            when="show_start_button")
+    ),
 
-    TextInput(id="group_input", on_success=handle_group_input),
+    Row(
+        SwitchTo(
+            Const(text.get(text.ButtonKeys.CANCEL)),
+            id="options_button",
+            state=States.OPTIONS,
+            when="show_options_button")
+    ),
+
+    TextInput(
+        id="group_input",
+        on_success=handle_group_input
+    ),
+
     state=States.GROUP_INPUT,
     getter=getter
 )

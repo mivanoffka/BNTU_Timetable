@@ -1,4 +1,7 @@
-class ButtonLabelKeys:
+from enum import Enum
+
+
+class ButtonKeys(Enum):
     BACK: int = 0,
     CANCEL: int = 1,
     GROUP_INPUT: int = 2,
@@ -35,7 +38,7 @@ class ButtonLabelKeys:
     NO: int = 26
 
 
-_ = ButtonLabelKeys
+_ = ButtonKeys
 
 button_labels_rus: dict[int, str] = {
     _.BACK: "Назад ↩️",
@@ -72,9 +75,4 @@ button_labels_rus: dict[int, str] = {
     _.YES: "Да ✅",
     _.NO: "Нет ❌"
 }
-
-
-def get_button_label(key: int) -> str:
-    return button_labels_rus[key]
-
 

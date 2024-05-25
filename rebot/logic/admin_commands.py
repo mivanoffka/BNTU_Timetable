@@ -13,6 +13,6 @@ async def process_echo_command(message: types.Message):
     text: str = message.get_args()
     if not text:
         text = "echo"
-    await core.messenger.send_independent_message(message.from_id, text)
+    await core.messenger.send_message(message.from_id, text)
 
 

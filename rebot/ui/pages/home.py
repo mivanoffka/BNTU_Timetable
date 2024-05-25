@@ -5,11 +5,8 @@ from aiogram_dialog import DialogManager, ShowMode
 from aiogram_dialog.widgets.kbd import Row, Button, SwitchTo
 from aiogram_dialog.widgets.text import Const
 
-from rebot.core import core
-from rebot.data.types.enums import TrackerKeys
-from rebot.ui.button_labels import get_button_label, ButtonLabelKeys
 from rebot.ui.common import show_timetable_message_for_weekday
-from rebot.ui.messages import get_message_text, MessageKeys
+from rebot.ui import text
 from rebot.ui.page import Page
 from rebot.ui.states import States
 
@@ -44,26 +41,26 @@ async def on_tomorrow_button_click(callback_query: CallbackQuery, button: Button
 
 
 home_page = Page(
-    Const(get_message_text(MessageKeys.DEFAULT)),
+    Const(text.get(text.MessageKeys.DEFAULT)),
     Row(
-        Button(Const(get_button_label(ButtonLabelKeys.TODAY)),
+        Button(Const(text.get(text.ButtonKeys.TODAY)),
                id="today_button",
                on_click=on_today_button_click),
 
-        Button(Const(get_button_label(ButtonLabelKeys.TOMORROW)),
+        Button(Const(text.get(text.ButtonKeys.TOMORROW)),
                id="tomorrow_button",
                on_click=on_tomorrow_button_click)
     ),
     Row(
-        Button(Const(get_button_label(ButtonLabelKeys.WEEKDAYS)),
+        Button(Const(text.get(text.ButtonKeys.WEEKDAYS)),
                on_click=on_weekdays_button_click,
                id="weekdays_button")),
     Row(
-        SwitchTo(Const(get_button_label(ButtonLabelKeys.DISTRIBUTION)),
+        SwitchTo(Const(text.get(text.ButtonKeys.DISTRIBUTION)),
                  state=States.DISTRIBUTION,
                  id="distribution_button"),
 
-        SwitchTo(Const(get_button_label(ButtonLabelKeys.OPTIONS)),
+        SwitchTo(Const(text.get(text.ButtonKeys.OPTIONS)),
                  state=States.OPTIONS,
                  id="options_button")),
     state=States.HOME

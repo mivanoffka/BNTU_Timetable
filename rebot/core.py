@@ -3,13 +3,11 @@ import asyncio
 import aiogram
 from aiogram import Dispatcher
 from aiogram_dialog import setup_dialogs, Window, Dialog
-from messenger import Messenger
-from rebot.data.types.enums import TrackerKeys
 
-from singleton import Singleton
 from config import TOKEN
-
 from data.data import Data
+from messenger import Messenger
+from singleton import Singleton
 
 
 class Core(metaclass=Singleton):
@@ -41,8 +39,9 @@ class Core(metaclass=Singleton):
         await self.__dispatcher.start_polling(self.__bot, skip_updates=True)
 
     async def __on_startup(self, dispatcher: Dispatcher):
+        #await asyncio.get_event_loop().create_task(log_rotation_and_archiving())
+
         await asyncio.get_event_loop().create_task(self.__mailing_loop())
-        # await asyncio.get_event_loop().create_task(log_rotation_and_archiving())
         print("The bot is running...")
 
     async def __mailing_loop(self):
@@ -51,7 +50,7 @@ class Core(metaclass=Singleton):
     async def accept_report(self, user_id: int, report_text: str):
         pass
 
-    # region Decorators
+    # region Декораторы
 
     def callback_query(self, *args, **kwargs):
         return self.__dispatcher.callback_query(*args, **kwargs)

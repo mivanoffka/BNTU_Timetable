@@ -10,8 +10,8 @@ class Messenger(metaclass=Singleton):
     def __init__(self, bot: aiogram.Bot):
         self.__bot = bot
 
-    async def send_independent_message(self, user_id: int, text: str,
-                                       keyboard_to_attach: InlineKeyboardMarkup = None):
+    async def send_message(self, user_id: int, text: str,
+                           keyboard_to_attach: InlineKeyboardMarkup = None):
         message: Message = await self.__bot.send_message(chat_id=user_id, text=text, reply_markup=keyboard_to_attach)
 
     async def send_emoji_delay(self, id):
@@ -19,14 +19,6 @@ class Messenger(metaclass=Singleton):
         for i in range(0, 5):
             await self.__bot.send_message(id, "✨")
             await asyncio.sleep(delay)
-        pass
-
-    def send_new_ui_message(self, user_id : int, text: str,
-                            keyboard_to_attach: InlineKeyboardMarkup = None, show_animation: bool = False) -> Message:
-        pass
-
-    def update_ui_message(self, user_id: int, text: str,
-                          keyboard_to_attach: InlineKeyboardMarkup = None) -> Message:
         pass
 
     async def try_edit_message_text(self, message: Message, new_text: str) -> None:

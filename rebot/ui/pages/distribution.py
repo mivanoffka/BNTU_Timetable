@@ -5,10 +5,9 @@ from aiogram_dialog.widgets.text import Const
 
 from rebot.core import core
 from rebot.data.types.enums import DistributionMode
-from rebot.ui.button_labels import get_button_label, ButtonLabelKeys
-from rebot.ui.messages import get_message_text, MessageKeys
+from rebot.ui import text
 from rebot.ui.page import Page
-from rebot.ui.pages.message import show_message
+from rebot.ui.pages.special.notification import show_message
 from rebot.ui.states import States
 
 
@@ -17,30 +16,59 @@ async def on_back_button_click(callback_query: CallbackQuery, button: Button, di
 
 
 async def on_morning_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    core.data.users.set_distribution_mode(callback_query.from_user.id, DistributionMode.MORNING)
-    await show_message(dialog_manager, message_text=get_message_text(MessageKeys.DISTRIBUTION_SET_MORNING),
-                       button_text=get_button_label(ButtonLabelKeys.HOME), state=States.HOME)
+    await core.data.users.set_distribution_mode(callback_query.from_user.id, DistributionMode.MORNING)
+    await show_message(
+        dialog_manager,
+        message_text=text.text.get(text.text.MessageKeys.DISTRIBUTION_SET_MORNING),
+        button_text=text.text.get(text.text.ButtonKeys.HOME),
+        state=States.HOME
+    )
 
 
 async def on_evening_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    core.data.users.set_distribution_mode(callback_query.from_user.id, DistributionMode.EVENING)
-    await show_message(dialog_manager, message_text=get_message_text(MessageKeys.DISTRIBUTION_SET_EVENING),
-                       button_text=get_button_label(ButtonLabelKeys.HOME), state=States.HOME)
+    await core.data.users.set_distribution_mode(callback_query.from_user.id, DistributionMode.EVENING)
+    await show_message(
+        dialog_manager,
+        message_text=text.get(text.MessageKeys.DISTRIBUTION_SET_EVENING),
+        button_text=text.get(text.ButtonKeys.HOME),
+        state=States.HOME
+    )
 
 
 async def on_silent_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    core.data.users.set_distribution_mode(callback_query.from_user.id, DistributionMode.SILENT)
-    await show_message(dialog_manager, message_text=get_message_text(MessageKeys.DISTRIBUTION_SET_SILENT),
-                       button_text=get_button_label(ButtonLabelKeys.HOME), state=States.HOME)
+    await core.data.users.set_distribution_mode(callback_query.from_user.id, DistributionMode.SILENT)
+    await show_message(
+        dialog_manager,
+        message_text=text.get(text.MessageKeys.DISTRIBUTION_SET_SILENT),
+        button_text=text.get(text.ButtonKeys.HOME),
+        state=States.HOME
+    )
+
 
 distribution_page = Page(
-    Const(get_button_label(ButtonLabelKeys.DISTRIBUTION)),
+    Const(text.text.get(text.MessageKeys.DISTRIBUTION)),
+
     Row(
-        Button(Const(get_button_label(ButtonLabelKeys.MORNING)), id="morning_button", on_click=on_morning_button_click),
-        Button(Const(get_button_label(ButtonLabelKeys.EVENING)), id="evening_button", on_click=on_evening_button_click),
-        Button(Const(get_button_label(ButtonLabelKeys.SILENT)), id="silent_button", on_click=on_silent_button_click),
+        Button(
+            Const(text.get(text.ButtonKeys.MORNING)),
+            id="morning_button",
+            on_click=on_morning_button_click),
+
+        Button(
+            Const(text.get(text.ButtonKeys.EVENING)),
+            id="evening_button",
+            on_click=on_evening_button_click),
+
+        Button(
+            Const(text.get(text.ButtonKeys.SILENT)),
+            id="silent_button",
+            on_click=on_silent_button_click),
     ),
 
-    Button(Const(get_button_label(ButtonLabelKeys.BACK)), on_click=on_back_button_click, id="back_button"),
+    Button(
+        Const(text.get(text.ButtonKeys.BACK)),
+        on_click=on_back_button_click,
+        id="back_button"),
+
     state=States.DISTRIBUTION
 )

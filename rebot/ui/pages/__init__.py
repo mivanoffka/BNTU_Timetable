@@ -1,3 +1,3 @@
 from rebot.ui.pages import (
-    alternative_message, distribution, group_input, home, message, options, report_input, start, weekdays)
-
+    distribution, group_input, home, options, report_input, start, weekdays)
+from rebot.ui.pages.special import dialog, notification

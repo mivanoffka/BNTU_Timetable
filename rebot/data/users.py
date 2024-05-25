@@ -12,6 +12,9 @@ class Users(metaclass=Singleton):
     async def set_group(self, user_id: int, group_number: int) -> GroupSettingResult:
         return GroupSettingResult.SUCCESS
 
+    async def get_group(self, user_id) -> int | None:
+        pass
+
     async def register(self, user_id: int):
         pass
 

@@ -4,8 +4,8 @@ from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.kbd import Button
 
 from rebot.core import core
-from rebot.ui.button_labels import ButtonLabelKeys, get_button_label
-from rebot.ui.pages.message import show_message
+from rebot.ui import text
+from rebot.ui.pages.special.notification import show_message
 from rebot.ui.states import States
 
 
@@ -16,4 +16,4 @@ async def show_timetable_message_for_weekday(weekday_number: int, callback_query
     message_text = str(weekday_number) + ": " + message_text
 
     await show_message(dialog_manager,
-                       message_text, get_button_label(ButtonLabelKeys.BACK), state_to_return)
+                       message_text, text.get(text.ButtonKeys.BACK), state_to_return)
