@@ -37,6 +37,16 @@ class ButtonKeys(Enum):
     YES: int = 25
     NO: int = 26
 
+    GROUP_INPUT_SHORTENED: int = 27,
+    WEBSITE_SHORTENED: int = 28
+    ADMIN_PANEL: int = 29,
+
+    BROADCAST: int = 30,
+    TIMETABLE_SETTINGS: int = 31,
+    STATS: int = 32,
+    ROLLBACK: int = 33,
+    MESSENGER: int = 34
+
 
 _ = ButtonKeys
 
@@ -71,8 +81,18 @@ button_labels_rus: dict[int, str] = {
     _.FRIDAY: "Пт. ⚫",
     _.SATURDAY: "Сб. ⚪",
 
-
     _.YES: "Да ✅",
-    _.NO: "Нет ❌"
+    _.NO: "Нет ❌",
+
+    _.GROUP_INPUT_SHORTENED: "Группа ✏️",
+    _.WEBSITE_SHORTENED: "Сайт 🏛️",
+    _.ADMIN_PANEL: "Панель 🛠️",
+
+    _.BROADCAST: "Новость 🗞️",
+    _.STATS: "Статистика 📊",
+    _.TIMETABLE_SETTINGS: "Настройки расписания 📚",
+    _.ROLLBACK: "Откат 🔻",
+    _.MESSENGER: "Сообщения 💬"
+
 }
 

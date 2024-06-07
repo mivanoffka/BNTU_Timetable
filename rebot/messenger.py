@@ -11,15 +11,22 @@ class Messenger(metaclass=Singleton):
         self.__bot = bot
 
     async def send_message(self, user_id: int, text: str,
-                           keyboard_to_attach: InlineKeyboardMarkup = None):
-        message: Message = await self.__bot.send_message(chat_id=user_id, text=text, reply_markup=keyboard_to_attach)
+                           keyboard_to_attach: InlineKeyboardMarkup = None, silent: bool = False):
+        message: Message = await self.__bot.send_message(
+            chat_id=user_id, text=text, reply_markup=keyboard_to_attach,
+            disable_notification=silent, disable_web_page_preview=True
+        )
 
-    async def send_emoji_delay(self, id):
+    async def send_emoji_delay(self, user_id):
         delay = 0.15
         for i in range(0, 5):
-            await self.__bot.send_message(id, "✨")
+            await self.__bot.send_message(user_id, "✨", disable_notification=True)
             await asyncio.sleep(delay)
         pass
+
+
+
+
 
     async def try_edit_message_text(self, message: Message, new_text: str) -> None:
         print(message.message_id)

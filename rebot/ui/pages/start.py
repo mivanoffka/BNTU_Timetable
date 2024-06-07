@@ -1,3 +1,4 @@
+from aiogram import F
 from aiogram.dispatcher.middlewares.user_context import EventContext
 from aiogram.filters import CommandStart
 from aiogram.filters import ExceptionTypeFilter, Command
@@ -12,11 +13,12 @@ from rebot.core import core
 from rebot.ui.page import Page
 from rebot.ui.states import States
 from rebot.ui import text
+from rebot.ui.pages.special.input import show_input_message
+from rebot.ui.common import handle_group_input
 
 
 async def on_group_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    dialog_manager.dialog_data["from_start_flag"] = True
-    await dialog_manager.switch_to(state=States.GROUP_INPUT, show_mode=ShowMode.EDIT)
+    await show_input_message(dialog_manager, text.get(text.MessageKeys.GROUPS_INFO), handle_group_input)
 
 start_page = Page(
         Format(
@@ -35,6 +37,8 @@ async def start(message: Message, dialog_manager: DialogManager):
 
     await core.data.users.register(message.from_user.id)
 
+    print(message.from_user.id)
+
     await core.messenger.send_emoji_delay(message.from_user.id)
     await dialog_manager.start(States.START, show_mode=ShowMode.DELETE_AND_SEND)
 
@@ -46,12 +50,16 @@ async def handle(*args, **kwargs):
     await restart(dialog_manager, event_context.user_id)
 
 
+@core.callback_query(F.data.startswith('restart'))
 @core.message(Command("home"))
 async def on_home_command(message: Message, dialog_manager: DialogManager):
     await restart(dialog_manager, message.from_user.id)
 
 
+@core.foo
 async def restart(dialog_manager: DialogManager, user_id: int):
     await core.messenger.send_emoji_delay(user_id)
     state: State = States.HOME if await core.data.users.get_group(user_id) is not None else States.START
-    await dialog_manager.start(state, show_mode=ShowMode.DELETE_AND_SEND)
+    await dialog_manager.start(state, show_mode=ShowMode.SEND)
+
+

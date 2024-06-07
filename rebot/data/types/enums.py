@@ -30,6 +30,11 @@ class TrackerKeys(Enum):
     REPORT_INPUT = 10
 
 
+class DialogResult(Enum):
+    YES = 1,
+    NO = 0,
+    UNKNOWN = -1
+
 
 
 

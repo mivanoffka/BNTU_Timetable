@@ -1,3 +1,5 @@
+from aiogram_dialog import DialogManager
+
 from rebot.data.source import Source
 from rebot.data.timetable import Timetable
 from rebot.data.tracker.tracker import Tracker
@@ -10,6 +12,11 @@ class Data(metaclass=Singleton):
     __users: Users = Users(__source)
     __timetable: Timetable = Timetable(__source)
     __tracker: Tracker = Tracker()
+    __admin_dialog_managers: dict[int, DialogManager] = {}
+
+    @property
+    def admin_dialog_managers(self):
+        return self.__admin_dialog_managers
 
     @property
     def users(self):

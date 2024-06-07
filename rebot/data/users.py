@@ -13,11 +13,18 @@ class Users(metaclass=Singleton):
         return GroupSettingResult.SUCCESS
 
     async def get_group(self, user_id) -> int | None:
-        pass
+        return 0
 
     async def register(self, user_id: int):
         pass
 
     async def set_distribution_mode(self, user_id: int, distribution_mode: DistributionMode):
         pass
+
+    async def is_admin(self, user_id: int) -> bool:
+        return user_id in await self.get_admins()
+
+    async def get_admins(self) -> tuple[int]:
+        return (640091837,)
+
 

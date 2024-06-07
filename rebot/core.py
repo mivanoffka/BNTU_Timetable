@@ -47,9 +47,6 @@ class Core(metaclass=Singleton):
     async def __mailing_loop(self):
         print("Mailing loop is running...")
 
-    async def accept_report(self, user_id: int, report_text: str):
-        pass
-
     # region Декораторы
 
     def callback_query(self, *args, **kwargs):
@@ -66,6 +63,12 @@ class Core(metaclass=Singleton):
 
     def include_window(self, window: Window):
         self.__windows.append(window)
+
+    def foo(self, f):
+        async def wrapper(*args, **kwargs):
+            print("a")
+            return await f(*args, **kwargs)
+        return wrapper
 
     # endregion
 
