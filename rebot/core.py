@@ -7,6 +7,8 @@ from aiogram_dialog import setup_dialogs, Window, Dialog
 from config import TOKEN
 from data.data import Data
 from messenger import Messenger
+from rebot.tracker import Tracker
+from rebot.data.types.enums import TrackerKeys
 from singleton import Singleton
 
 
@@ -16,6 +18,7 @@ class Core(metaclass=Singleton):
 
     __messenger: Messenger = Messenger(__bot)
     __data: Data = Data()
+    __tracker: Tracker = Tracker(__data.users)
 
     __windows: list[Window] = []
     __dialog: Dialog
@@ -27,6 +30,10 @@ class Core(metaclass=Singleton):
     @property
     def data(self) -> Data:
         return self.__data
+
+    @property
+    def tracker(self) -> Tracker:
+        return self.__tracker
 
     def __init__(self):
         pass
@@ -64,11 +71,8 @@ class Core(metaclass=Singleton):
     def include_window(self, window: Window):
         self.__windows.append(window)
 
-    def foo(self, f):
-        async def wrapper(*args, **kwargs):
-            print("a")
-            return await f(*args, **kwargs)
-        return wrapper
+    def track(self, *args, **kwargs):
+        return self.__tracker.track(*args, **kwargs)
 
     # endregion
 

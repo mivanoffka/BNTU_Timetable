@@ -7,6 +7,7 @@ from rebot.core import core
 from rebot.data.types.enums import GroupSettingResult
 from rebot.ui import text
 from rebot.ui.pages.special.dialog import show_dialog_message
+from rebot.ui.pages.special.input import show_input_message
 from rebot.ui.pages.special.notification import show_message
 from rebot.ui.states import States
 
@@ -21,14 +22,20 @@ async def show_timetable_message_for_weekday(weekday_number: int, callback_query
                        message_text, text.get(text.ButtonKeys.BACK), state_to_return)
 
 
+async def goto_group_input(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    await show_input_message(dialog_manager, text.get(text.MessageKeys.GROUPS_INFO), handle_group_input,
+                             dialog_manager.dialog_data["return_from_group_input_to"])
+
+
 async def handle_group_input(message: Message, widget, dialog_manager: DialogManager, data):
     group_number: int | None = _get_group_number(message.text)
+
     if group_number is None:
         await show_dialog_message(dialog_manager,
                                   message_text=text.get(text.MessageKeys.GROUP_INPUT_PARSE_ERROR),
                                   button_texts=(text.get(text.ButtonKeys.TRY_AGAIN),
                                                 text.get(text.ButtonKeys.CONTINUE)),
-                                  handlers=(States.GROUP_INPUT, States.HOME))
+                                  handlers=(goto_group_input, States.HOME))
         return
 
     user_id: int = message.from_user.id
@@ -46,7 +53,7 @@ async def handle_group_input(message: Message, widget, dialog_manager: DialogMan
         await show_dialog_message(dialog_manager, message_text=text.get(text.MessageKeys.GROUP_INPUT_SUCCESS),
                                   button_texts=(text.get(text.ButtonKeys.TRY_AGAIN),
                                                 text.get(text.ButtonKeys.CONTINUE)),
-                                  handlers=(States.GROUP_INPUT, States.HOME))
+                                  handlers=(goto_group_input, States.HOME))
 
 
 def _get_group_number(message_text: str) -> int | None:

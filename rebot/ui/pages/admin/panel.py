@@ -39,6 +39,11 @@ async def on_broadcast_button_click(callback_query: CallbackQuery, button: Butto
     await show_input_message(dialog_manager, text.get(text.MessageKeys.BROADCAST_INPUT), on_broadcast_text_input)
 
 
+async def on_stats_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    stats_report_text = await core.tracker.get_report()
+    await show_message(dialog_manager, stats_report_text, text.get(text.ButtonKeys.BACK), States.ADMIN)
+
+
 async def getter(dialog_manager: DialogManager, **kwargs) -> Dict[str, Any]:
     admin: bool = await core.data.users.is_admin(dialog_manager.event.from_user.id)
     return {
@@ -49,7 +54,7 @@ admin_page = Page(
     Const(text.get(text.MessageKeys.ADMIN_PANEL)),
     Row(
         Button(Const(text.get(text.ButtonKeys.BROADCAST)), id="broadcast_button", on_click=on_broadcast_button_click),
-        Button(Const(text.get(text.ButtonKeys.STATS)), id="stats_button"),
+        Button(Const(text.get(text.ButtonKeys.STATS)), id="stats_button", on_click=on_stats_button_click),
         when="admin"
     ),
     Row(

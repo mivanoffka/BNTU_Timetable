@@ -9,6 +9,9 @@ class Users(metaclass=Singleton):
     def __init__(self, source: Source):
         self.__source = source
 
+    async def get_all(self) -> tuple[int]:
+        return (640091837,)
+
     async def set_group(self, user_id: int, group_number: int) -> GroupSettingResult:
         return GroupSettingResult.SUCCESS
 

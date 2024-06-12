@@ -24,9 +24,11 @@ class Messenger(metaclass=Singleton):
             await asyncio.sleep(delay)
         pass
 
-
-
-
+    async def try_delete(self, message: Message):
+        try:
+            await message.delete()
+        except:
+            ...
 
     async def try_edit_message_text(self, message: Message, new_text: str) -> None:
         print(message.message_id)

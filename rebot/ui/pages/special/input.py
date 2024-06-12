@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 from aiogram.fsm.state import State
 from aiogram.types import CallbackQuery, Message
@@ -12,10 +12,10 @@ from rebot.ui.states import States
 from rebot.ui.text import *
 
 
-async def show_input_message(dialog_manager: DialogManager, message_text: str, input_handler):
+async def show_input_message(dialog_manager: DialogManager, message_text: str, input_handler, return_to=None):
     dialog_manager.dialog_data["message:text"] = message_text
     dialog_manager.dialog_data["message:input_handler"] = input_handler
-    dialog_manager.dialog_data["message:state_to_go"] = dialog_manager.current_context().state
+    dialog_manager.dialog_data["message:state_to_go"] = return_to if return_to is not None else dialog_manager.current_context().state
     await dialog_manager.switch_to(States.INPUT, show_mode=ShowMode.EDIT)
 
 

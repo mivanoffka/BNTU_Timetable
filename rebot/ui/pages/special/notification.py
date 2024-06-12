@@ -10,8 +10,8 @@ from rebot.ui.page import Page
 from rebot.ui.states import States
 
 
-async def show_message(dialog_manager: DialogManager, message_text: str | tuple[str], button_text: str | tuple[str],
-                       state: State | tuple[State]):
+async def show_message(dialog_manager: DialogManager, message_text: str, button_text: str,
+                       state: State):
     dialog_manager.dialog_data["message:text"] = message_text
     dialog_manager.dialog_data["message:button_text"] = button_text
     dialog_manager.dialog_data["message:state_to_go"] = state

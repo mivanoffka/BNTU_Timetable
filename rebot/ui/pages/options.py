@@ -12,22 +12,27 @@ from rebot.ui.common import handle_group_input
 from rebot.ui.pages.special.input import show_input_message
 from rebot.ui.pages.special.notification import show_message
 from rebot.ui.states import States
+from rebot.ui.common import goto_group_input
 
 
 async def on_group_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    await show_input_message(dialog_manager, text.get(text.MessageKeys.GROUPS_INFO), handle_group_input)
+    dialog_manager.dialog_data["return_from_group_input_to"] = States.OPTIONS
+    await goto_group_input(callback_query, button, dialog_manager)
 
 
 async def on_help_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    await show_message(dialog_manager, text.get(text.MessageKeys.HELP), text.get(text.ButtonKeys.BACK), state=States.OPTIONS)
+    await show_message(dialog_manager, text.get(text.MessageKeys.HELP),
+                       text.get(text.ButtonKeys.BACK), state=States.OPTIONS)
 
 
 async def on_website_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    await show_message(dialog_manager, text.get(text.MessageKeys.WEBSITE), text.get(text.ButtonKeys.BACK), state=States.OPTIONS)
+    await show_message(dialog_manager, text.get(text.MessageKeys.WEBSITE),
+                       text.get(text.ButtonKeys.BACK), state=States.OPTIONS)
 
 
 async def on_donations_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    await show_message(dialog_manager, text.get(text.MessageKeys.DONATIONS), text.get(text.ButtonKeys.BACK), state=States.OPTIONS)
+    await show_message(dialog_manager, text.get(text.MessageKeys.DONATIONS),
+                       text.get(text.ButtonKeys.BACK), state=States.OPTIONS)
 
 
 async def on_report_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
@@ -50,25 +55,58 @@ async def getter(dialog_manager: DialogManager, **kwargs) -> Dict[str, Any]:
         "not_admin": not admin,
     }
 
+
 options_page = Page(
     Const(text.get(text.text.MessageKeys.DEFAULT)),
     Row(
-        Button(Const(text.get(text.ButtonKeys.WEBSITE)), id="bntu_button", on_click=on_website_button_click),
-        Button(Const(text.get(text.ButtonKeys.GROUP_INPUT)), id="group_button", on_click=on_group_button_click),
+        Button(
+            Const(text.get(text.ButtonKeys.WEBSITE)),
+            id="bntu_button", on_click=on_website_button_click
+
+        ),
+        Button(
+            Const(text.get(text.ButtonKeys.GROUP_INPUT)),
+            id="group_button",
+            on_click=on_group_button_click
+        ),
         when="not_admin"
     ),
     Row(
-        Button(Const(text.get(text.ButtonKeys.WEBSITE_SHORTENED)), id="bntu_button", on_click=on_website_button_click),
-        Button(Const(text.get(text.ButtonKeys.ADMIN_PANEL)), id="admin_panel", on_click=on_admin_button_click),
-        Button(Const(text.get(text.ButtonKeys.GROUP_INPUT_SHORTENED)), id="group_button", on_click=on_group_button_click),
+        Button(
+            Const(text.get(text.ButtonKeys.WEBSITE_SHORTENED)),
+            id="bntu_button",
+            on_click=on_website_button_click),
+        Button(
+            Const(text.get(text.ButtonKeys.ADMIN_PANEL)),
+            id="admin_panel",
+            on_click=on_admin_button_click),
+        Button(
+            Const(text.get(text.ButtonKeys.GROUP_INPUT_SHORTENED)),
+            id="group_button",
+            on_click=on_group_button_click),
         when="admin"
     ),
     Row(
-        Button(Const(text.get(text.ButtonKeys.DONATIONS)), id="donations_button", on_click=on_donations_button_click)),
+        Button(
+            Const(text.get(text.ButtonKeys.DONATIONS)),
+            id="donations_button",
+            on_click=on_donations_button_click)),
     Row(
-        Button(Const(text.get(text.ButtonKeys.BACK)), id="back_button", on_click=on_home_button_click),
-        Button(Const(text.get(text.ButtonKeys.REPORT)), id="report_button", on_click=on_report_button_click),
-        Button(Const(text.get(text.ButtonKeys.HELP)), id="help_checkbox", on_click=on_help_button_click)
+        Button(
+            Const(text.get(text.ButtonKeys.BACK)),
+            id="back_button",
+            on_click=on_home_button_click
+        ),
+        Button(
+            Const(text.get(text.ButtonKeys.REPORT)),
+            id="report_button",
+            on_click=on_report_button_click
+        ),
+        Button(
+            Const(text.get(text.ButtonKeys.HELP)),
+            id="help_checkbox",
+            on_click=on_help_button_click
+        )
     ),
     state=States.OPTIONS,
     getter=getter
