@@ -42,6 +42,7 @@ start_page = Page(
 
 
 @core.message(CommandStart())
+@core.track(key="start")
 async def start(message: Message, dialog_manager: DialogManager):
     await core.messenger.try_delete(message)
 
@@ -55,14 +56,7 @@ async def start(message: Message, dialog_manager: DialogManager):
 
 @core.error(ExceptionTypeFilter(UnknownIntent))
 async def handle(*args, **kwargs):
-    for arg in args:
-        print(arg)
-
-    for arg in kwargs:
-        print(str(arg) + " : " + str(kwargs[arg]))
-
     error_event: ErrorEvent = args[0]
-    print(type(args[0]))
     message: Message = error_event.update.callback_query.message
 
     await core.messenger.try_delete(message)

@@ -20,21 +20,25 @@ async def on_group_button_click(callback_query: CallbackQuery, button: Button, d
     await goto_group_input(callback_query, button, dialog_manager)
 
 
+@core.track(key="help")
 async def on_help_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
     await show_message(dialog_manager, text.get(text.MessageKeys.HELP),
                        text.get(text.ButtonKeys.BACK), state=States.OPTIONS)
 
 
+@core.track(key="website")
 async def on_website_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
     await show_message(dialog_manager, text.get(text.MessageKeys.WEBSITE),
                        text.get(text.ButtonKeys.BACK), state=States.OPTIONS)
 
 
+@core.track(key="donations")
 async def on_donations_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
     await show_message(dialog_manager, text.get(text.MessageKeys.DONATIONS),
                        text.get(text.ButtonKeys.BACK), state=States.OPTIONS)
 
 
+@core.track(key="entered_report_page")
 async def on_report_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
     await dialog_manager.switch_to(state=States.REPORT_INPUT, show_mode=ShowMode.EDIT)
 

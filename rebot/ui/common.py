@@ -22,6 +22,7 @@ async def show_timetable_message_for_weekday(weekday_number: int, callback_query
                        message_text, text.get(text.ButtonKeys.BACK), state_to_return)
 
 
+@core.track(key="group_enter")
 async def goto_group_input(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
     await show_input_message(dialog_manager, text.get(text.MessageKeys.GROUPS_INFO), handle_group_input,
                              dialog_manager.dialog_data["return_from_group_input_to"])

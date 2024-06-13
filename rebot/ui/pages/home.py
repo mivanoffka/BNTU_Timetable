@@ -5,6 +5,7 @@ from aiogram_dialog import DialogManager, ShowMode
 from aiogram_dialog.widgets.kbd import Row, Button, SwitchTo
 from aiogram_dialog.widgets.text import Const
 
+from rebot.core import core
 from rebot.ui.common import show_timetable_message_for_weekday
 from rebot.ui import text
 from rebot.ui.page import Page
@@ -16,6 +17,7 @@ async def on_weekdays_button_click(callback_query: CallbackQuery, button: Button
     await dialog_manager.switch_to(state=States.WEEKDAYS, show_mode=ShowMode.EDIT)
 
 
+@core.track(key="distribution")
 async def on_distribution_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
     await dialog_manager.switch_to(state=States.DISTRIBUTION, show_mode=ShowMode.EDIT)
 
@@ -24,6 +26,7 @@ async def on_options_button_click(callback_query: CallbackQuery, button: Button,
     await dialog_manager.switch_to(state=States.OPTIONS, show_mode=ShowMode.EDIT)
 
 
+@core.track(key="today")
 async def on_today_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
     weekday_number: int = datetime.today().weekday()
     await show_timetable_message_for_weekday(weekday_number=weekday_number,
@@ -32,6 +35,7 @@ async def on_today_button_click(callback_query: CallbackQuery, button: Button, d
                                              button=button, state_to_return=States.HOME)
 
 
+@core.track(key="tomorrow")
 async def on_tomorrow_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
     weekday_number: int = (datetime.today().weekday() + 1) % 7
     await show_timetable_message_for_weekday(weekday_number=weekday_number,

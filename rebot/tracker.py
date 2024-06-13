@@ -1,5 +1,9 @@
 import asyncio
 
+from aiogram.types import ErrorEvent
+from aiogram_dialog import DialogManager
+from aiogram_dialog.manager.manager import ManagerImpl
+
 from rebot.singleton import Singleton
 from datetime import datetime
 from rebot.data.types.enums import TrackerKeys
@@ -28,7 +32,7 @@ class Tracker(metaclass=Singleton):
         else:
             self.__statistics[key] = 1
 
-        if user_id not in self.__recent_users_id_list:
+        if user_id not in self.__recent_users_id_list and user_id is not None:
             self.__recent_users_id_list.append(user_id)
 
     def reset_all_keys(self):
@@ -76,8 +80,21 @@ class Tracker(metaclass=Singleton):
     def track(self, key: str):
         def decorator(function):
             async def wrapper(*args, **kwargs):
+                user_id = None
 
-                user_id: int = args[1]
+                for arg in args:
+                    if isinstance(arg, int):
+                        user_id = arg
+                        break
+
+                if user_id is None:
+                    for arg in args:
+                        if isinstance(arg, ManagerImpl):
+                            mgr: ManagerImpl = arg
+                            if not isinstance(mgr.event, ErrorEvent):
+                                user_id = mgr.event.from_user.id
+                        break
+
                 self.increment_key(key, user_id)
 
                 return await function(*args, **kwargs)

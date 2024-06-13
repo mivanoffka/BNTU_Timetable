@@ -3,6 +3,7 @@ from aiogram_dialog import DialogManager, ShowMode
 from aiogram_dialog.widgets.kbd import Row, Button
 from aiogram_dialog.widgets.text import Const
 
+from rebot.core import core
 from rebot.ui.common import show_timetable_message_for_weekday
 from rebot.ui.page import Page
 from rebot.ui.states import States
@@ -17,6 +18,7 @@ async def on_back_button_click(callback_query: CallbackQuery, button: Button, di
     await dialog_manager.switch_to(state=States.HOME, show_mode=ShowMode.EDIT)
 
 
+@core.track(key="weekday")
 async def on_monday_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
     await show_timetable_message_for_weekday(
         weekday_number=0,
@@ -26,6 +28,7 @@ async def on_monday_button_click(callback_query: CallbackQuery, button: Button, 
     )
 
 
+@core.track(key="weekday")
 async def on_tuesday_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
     await show_timetable_message_for_weekday(
         weekday_number=1,
@@ -35,6 +38,7 @@ async def on_tuesday_button_click(callback_query: CallbackQuery, button: Button,
     )
 
 
+@core.track(key="weekday")
 async def on_wednesday_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
     await show_timetable_message_for_weekday(
         weekday_number=2,
@@ -44,6 +48,7 @@ async def on_wednesday_button_click(callback_query: CallbackQuery, button: Butto
     )
 
 
+@core.track(key="weekday")
 async def on_thursday_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
     await show_timetable_message_for_weekday(
         weekday_number=3,
@@ -53,6 +58,7 @@ async def on_thursday_button_click(callback_query: CallbackQuery, button: Button
     )
 
 
+@core.track(key="weekday")
 async def on_friday_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
     await show_timetable_message_for_weekday(
         weekday_number=4,
@@ -62,6 +68,7 @@ async def on_friday_button_click(callback_query: CallbackQuery, button: Button, 
     )
 
 
+@core.track(key="weekday")
 async def on_saturday_button_click(callback_query: CallbackQuery, button: Button, dialog_manager: DialogManager):
     await show_timetable_message_for_weekday(
         weekday_number=5,
