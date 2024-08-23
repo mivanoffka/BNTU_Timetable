@@ -83,6 +83,9 @@ async def mailing_loop():
         current_time = datetime(1900, 1, 1, datetime.now().hour, datetime.now().minute)
 
         for t in times_iteration:
+            if not data.mailing:
+                break
+
             if current_time >= t:
                 dt = abs(current_time.hour * 60 + current_time.minute - t.hour * 60 + t.minute)
                 if dt < 60 and last_time is not t:

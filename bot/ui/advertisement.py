@@ -28,7 +28,7 @@ async def process_cancel_command(call: types.CallbackQuery):
 
 async def advertise(user_id):
     await asyncio.sleep(1)
-    value = random.randint(1, 6)
+    value = random.randint(1, 12)
     if value == 1:
         ad_num = random.randint(1, len(ads)) - 1
         await data.bot.send_message(user_id, text=ads[ad_num], parse_mode="HTML",

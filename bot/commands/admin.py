@@ -132,11 +132,16 @@ async def process_update_command(message: types.Message):
 
 async def update():
     logging.info("Schedule updating started...")
-    autoparser.download_and_parse()
-    data.schedule = procedures.load_schedule()
-    await bot.display.renew_display(config.ADMIN_ID, "Расписание успешно обновлено! ✅",
+    try:
+        autoparser.download_and_parse()
+        data.schedule = procedures.load_schedule()
+        await bot.display.renew_display(config.ADMIN_ID, "Расписание успешно обновлено! ✅",
                                     bot.ui.keyboards.open_menu_keyboard)
-    logging.info("Schedule succesfully updated!")
+        logging.info("Schedule succesfully updated!")
+    except Exception as e:
+        await bot.display.renew_display(config.ADMIN_ID, "Не удалось обновить расписание... ❌",
+                                    bot.ui.keyboards.open_menu_keyboard)
+
 
 
 @dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["danya"])
@@ -179,6 +184,19 @@ async def process_animations_command(message: types.Message):
     txt = "Анимации ВЫКЛ 🔴"
     if data.global_animations:
         txt = "Анимации ВКЛ 🟢"
+
+    await bot.display.update_display(config.ADMIN_ID, txt, bot.ui.keyboards.open_menu_keyboard)
+
+
+@dispatcher.message_handler(filters.IDFilter(config.ADMIN_ID), commands=["mailing"])
+async def process_animations_command(message: types.Message):
+    await bot.display.try_delete(message)
+
+    data.mailing = not data.mailing
+
+    txt = "Рассылка ВЫКЛ 🔴"
+    if data.mailing:
+        txt = "Рассылка ВКЛ 🟢"
 
     await bot.display.update_display(config.ADMIN_ID, txt, bot.ui.keyboards.open_menu_keyboard)
 

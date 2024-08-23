@@ -157,9 +157,9 @@ class UsersDB:
         else:
             return False
 
-    def __del__(self):
-        self.cursor.close()
-        self.connection.close()
+    # def __del__(self):
+    #     self.cursor.close()
+    #     self.connection.close()
 
 
 

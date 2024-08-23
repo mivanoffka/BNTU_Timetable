@@ -36,7 +36,7 @@ async def send_ui(id, mes=default_mes):
 
 
 
-@dispatcher.message_handler(commands=['menu'])
+@dispatcher.message_handler(commands=['menu', 'home'])
 @dispatcher.message_handler(filters.Text(equals=bot.ui.keyboards.open_menu_button.text))
 async def process_ui_command(message: types.Message):
     await bot.display.try_delete(message)

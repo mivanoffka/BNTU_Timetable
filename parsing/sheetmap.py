@@ -296,6 +296,8 @@ class SheetMap:
         for day_num in range(0, 6):
             times = self.times[day_num]
             day = []
+            if times is None:
+                continue
             for time in times:
                 lesson = []
                 for j in range(0, times[time]):

@@ -19,7 +19,6 @@ def parce_workbook_google(out_schedule, filename):
     pass
 
 
-
 def parce_workbook_excel(out_schedule, filename, param="no"):
     workbook = None
     if ".xlsx" in str(filename):
@@ -38,10 +37,9 @@ def parce_workbook_excel(out_schedule, filename, param="no"):
 
         try:
             parce_worksheet_excel(workbook, s, schedule)
-        except:
-            logging.info("An error occured while parsing sheet #{}".format(s + 1))
+        except Exception as e:
+            logging.info("An error occured while parsing sheet #{}: \n\n{}".format(s + 1, e))
             raise
-            continue
 
     for key in schedule:
         out_schedule[key] = schedule[key]
@@ -57,8 +55,8 @@ def parce_worksheet_excel(workbook, index, out_schedule):
             out_schedule[key] = local_schedule[key]
 
         logging.info("Sheet #{} was successfully parsed".format(index + 1))
-    except:
-        logging.info("An error occured while parsing sheet #{}".format(index + 1))
+    except Exception as e:
+        logging.info("An error occured while parsing sheet #{}: \n\n{}".format(index + 1, e))
 
 
 def binary_sector(sector):
@@ -176,19 +174,12 @@ def convert_to_matrix(filename):
         return matrixes
 
 
-
 def main():
     schedule = {}
-    paths = ["parsing/sheets/1kurs.xls",
-             "parsing/sheets/2kurs.xls",
-             "parsing/sheets/3kurs_fitr.xlsx",
-             "parsing/sheets/34kurs_fitr_1.xls",
+
+    paths = ["parsing/sheets/34kurs_fitr_1.xls",
              "parsing/sheets/34kurs_fitr_2.xls",
-             "parsing/sheets/34kurs_fitr_3.xls",
-             "parsing/sheets/3kurs_fmmp_1.xls",
-             "parsing/sheets/3kurs_fmmp_2.xls",
-             "parsing/sheets/3kurs_fmmp_3.xls",
-             "parsing/sheets/3kurs_fmmp_4.xls",]
+             "parsing/sheets/34kurs_fitr_3.xls"]
 
     for path in paths:
         parce_workbook_excel(schedule, Path(BASE_DIR / path))

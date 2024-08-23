@@ -23,3 +23,5 @@ exit_event = False
 
 users_db = None
 global_animations = False
+
+mailing = True
