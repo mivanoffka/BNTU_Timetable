@@ -74,6 +74,7 @@ def find_lines_with_urld_fitr():
     html = html.splitlines()
 
     keys = ('Расписание учебных занятий студентов 3 и 4-го курсов специальности <strong>1-40 01 01</strong>',
+            'Расписание учебных занятий студентов 3 и 4-го курсов специальности <strong>1-40 05 01</strong>',
             '>Расписание учебных занятий студентов 3 и 4-го курсов специальности <strong>1-53 01 01 и 1-53 01 06</strong>',
             'Расписание учебных занятий студентов 3 и 4-го курсов специальности <strong>1-53 01 05</strong>')
     urls = []
@@ -184,7 +185,6 @@ def download_and_parse():
 
         urls = find_lines_with_urld_fitr()
 
-
         destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_1.xls")
         download_unsafe(get_url_from_line_fitr(urls[0]), destination)
 
@@ -193,6 +193,9 @@ def download_and_parse():
 
         destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_3.xls")
         download_unsafe(get_url_from_line_fitr(urls[2]), destination)
+
+        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_4.xls")
+        download_unsafe(get_url_from_line_fitr(urls[3]), destination)
 
         # destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_1.xls")
         # download_unsafe(ref_2, destination)
