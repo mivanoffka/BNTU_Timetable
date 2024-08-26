@@ -180,7 +180,13 @@ def main():
     paths = ["parsing/sheets/34kurs_fitr_1.xls",
              "parsing/sheets/34kurs_fitr_2.xls",
              "parsing/sheets/34kurs_fitr_3.xls",
-             "parsing/sheets/34kurs_fitr_4.xls"]
+             "parsing/sheets/34kurs_fitr_4.xls",
+             "parsing/sheets/3kurs_fmmp_1.xls",
+             "parsing/sheets/3kurs_fmmp_2.xls",
+             "parsing/sheets/3kurs_fmmp_3.xls",
+             "parsing/sheets/4kurs_fmmp_1.xls",
+             "parsing/sheets/4kurs_fmmp_2.xls",
+             "parsing/sheets/4kurs_fmmp_3.xls"]
 
     for path in paths:
         parce_workbook_excel(schedule, Path(BASE_DIR / path))
