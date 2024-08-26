@@ -20,7 +20,7 @@ async def process_devinfo_command(call: types.CallbackQuery):
           " который разрабатывает меня на голом энтузиазме... И он тоже хочет кушать!</i>"\
     "<a href='https://pay.netmonet.alfabank.by/42308250'>\n\n<b>💸 Если вы хотите поддержать проект, то можете отправить нам копеечку на чай!</b></a>"\
             "\n\n<i>Кроме того, Максимка будет очень рад, если вы подпишитесь на его соцсети и напишете ему что-нибудь приятное!</i>"\
-    "\n\n<a href='vk.com/maksimka_ivanoffka'><b>ВКонтакте</b></a> | " \
+    "\n\nTG: @mivanoffka |<a href='vk.com/maksimka_ivanoffka'><b>ВК</b></a> | " \
     "<a href='instagram.com/maksimka_ivanoffka/'><b>Instagram</b></a>"
     try:
         #await call.message.edit_text(txt, reply_markup=options_keyboard, disable_web_page_preview=True)
