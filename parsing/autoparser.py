@@ -171,17 +171,17 @@ def get_link_for_cource(course_number):
 def download_and_parse():
     download_result = False
     try:
-        # ref_1 = get_link_for_cource(1)
-        # ref_2 = get_link_for_cource(2)
-        #
-        # logging.info(ref_1)
-        # logging.info(ref_2)
-        #
-        # destination = Path(BASE_DIR / "parsing/sheets/1kurs.xls")
-        # download_unsafe(ref_1, destination)
-        #
-        # destination = Path(BASE_DIR / "parsing/sheets/2kurs.xls")
-        # download_unsafe(ref_2, destination)
+        ref_1 = get_link_for_cource(1)
+        ref_2 = get_link_for_cource(2)
+
+        logging.info(ref_1)
+        logging.info(ref_2)
+
+        destination = Path(BASE_DIR / "parsing/sheets/1kurs.xls")
+        download_unsafe(ref_1, destination)
+
+        destination = Path(BASE_DIR / "parsing/sheets/2kurs.xls")
+        download_unsafe(ref_2, destination)
 
         urls = find_lines_with_urld_fitr()
 
@@ -254,8 +254,11 @@ def download_and_parse():
     if download_result:
         try:
             p.main()
-        except:
-            logging.info("An exception occured while parsing the sheets.")
+        except Exception as e:
+            logging.info(f"An exception occured while parsing the sheets. \n\n{e}")
             raise
 
-        
+
+
+if __name__ == "__main__":
+    download_and_parse()

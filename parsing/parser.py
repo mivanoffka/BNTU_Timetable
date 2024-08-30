@@ -19,7 +19,7 @@ def parce_workbook_google(out_schedule, filename):
     pass
 
 
-def parce_workbook_excel(out_schedule, filename, param="no"):
+def parce_workbook_excel(out_schedule, filename, sheets=None):
     workbook = None
     if ".xlsx" in str(filename):
         workbook = xlrd.open_workbook(filename)
@@ -30,9 +30,9 @@ def parce_workbook_excel(out_schedule, filename, param="no"):
     schedule = {}
 
     sheet_num = workbook.sheets()
-    sheet_num = len(sheet_num)
+    sheets = range(0, len(sheet_num)) if not sheets else sheets
 
-    for s in range(0, sheet_num):
+    for s in sheets:
         #parce_worksheet(workbook, s, schedule)
 
         try:
@@ -177,7 +177,9 @@ def convert_to_matrix(filename):
 def main():
     schedule = {}
 
-    paths = ["parsing/sheets/34kurs_fitr_1.xls",
+    paths = ["parsing/sheets/1kurs.xls",
+             "parsing/sheets/2kurs.xls",
+             "parsing/sheets/34kurs_fitr_1.xls",
              "parsing/sheets/34kurs_fitr_2.xls",
              "parsing/sheets/34kurs_fitr_3.xls",
              "parsing/sheets/34kurs_fitr_4.xls",
