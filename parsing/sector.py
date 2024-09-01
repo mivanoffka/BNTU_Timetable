@@ -83,7 +83,6 @@ class Sector:
                     [s[3][0], s[3][0], s[3][0], s[3][0]]]
         return new_list
 
-
     def init2x4(self, sector_list):
         s = sector_list
         a = [[s[0][0]], [s[1][0]]]

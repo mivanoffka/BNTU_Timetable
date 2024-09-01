@@ -6,8 +6,6 @@ from bot import data
 import json
 from datetime import datetime
 
-
-
 WEEK_DAYS = ("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресение")
 
 def is_there_such_a_group(group):
@@ -23,16 +21,16 @@ def read_json(filename):
 
 
 def get_num_of_week(weekday=1):
-    week_number = datetime.today().isocalendar()[1] % 2
+    week_number = (datetime.today().isocalendar()[1] + 1) % 2
 
     if week_number == 0:
         week_number = 2
 
-    if weekday > 6:
-        if week_number == 1:
-            week_number = 2
-        else:
-            week_number = 1
+    # if weekday > 6:
+    #     if week_number == 1:
+    #         week_number = 2
+    #     else:
+    #         week_number = 1
 
     return week_number
 
@@ -45,9 +43,10 @@ def get_day_message(id, weekday):
     uinfo = data.users_db.get_info(id)
 
     num_of_week = get_num_of_week(weekday)
+    current_weekday = datetime.today().weekday()
     week_appendix = ""
 
-    if weekday < 6:
+    if current_weekday < 6:
         week_appendix = "\n\nТекущая неделя — {}-я по счёту.".format(num_of_week)
     else:
         num_of_week = 1 if num_of_week == 2 else 2
@@ -68,7 +67,7 @@ def get_day_message(id, weekday):
         if msg_buf != "":
             msg += msg_buf
         else:
-            msg += "\n\n<i>Пар нет. Отдыхаем!</i>"
+            msg += "\n\n<i>Занятий нет. Отдыхаем!</i>"
 
         #msg += day_to_str(user_group, weekday)
 

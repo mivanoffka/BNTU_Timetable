@@ -1,6 +1,9 @@
+import logging
+
 import xlrd
 import copy
 from parsing.sector import Sector
+from parsing.sector_ef import SectorEF
 
 DAYS_LIST = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота']
 
@@ -60,9 +63,11 @@ class SheetMap:
 
     raw_sheet = None
 
-    def __init__(self, raw_sheet, format='excel'):
-        if format == 'excel':
-            self.get = self.get_excel_value
+    sector_type = None
+
+    def __init__(self, raw_sheet, sector_type=Sector):
+        self.sector_type = sector_type
+        self.get = self.get_excel_value
 
         self.raw_sheet = raw_sheet
         self.reformat()
@@ -75,15 +80,26 @@ class SheetMap:
 
     def reformat(self):
         self.explore_horizontal()
-        self.explore_times()
         self.get_group_names()
+        self.explore_times()
 
-        # print("\nY: from {}-{} to {}; {}".format(self.start_y, self.begin_y, self.end_y, self.start_x))
-        # print(self.group_nums)
-        # print(self.times)
+        logging.info("\nY: from {}-{} to {}; X: {}, {}; ".format(self.start_y, self.begin_y, self.end_y, self.days_x, self.start_x))
+        logging.info(self.group_nums)
+        logging.info(self.times)
 
     def explore_horizontal(self):
         raw_sheet = self.raw_sheet
+
+        days_x = -1
+        for x in range(0, 10):
+            for y in range(0, 20):
+                txt: str
+                txt = str(self.get(y, x, raw_sheet))
+                txt = txt.upper()
+                if txt == "ПОНЕДЕЛЬНИК":
+                    days_x = x
+
+        self.days_x = days_x
 
         start = -1
         begin = -1
@@ -92,7 +108,6 @@ class SheetMap:
 
         y_pos = 0
 
-
         txt: str
         txt = "undefined"
         while start < 40:
@@ -100,10 +115,26 @@ class SheetMap:
             txt = self.get(start, 1, raw_sheet)
             txt = txt.upper()
 
-            if txt in ("ЧАСЫ", "ВРЕМЯ"):
+            if txt in ("ЧАСЫ", "ВРЕМЯ", "СЕМЕСТР"):
                 break
 
             start += 1
+
+        self.lessons_start_x = 2
+
+        if start >= 35:
+            self.lessons_start_x = 4
+            start = -1
+
+            while start < 40:
+                txt: str
+                txt = self.get(start, 3, raw_sheet)
+                txt = txt.upper()
+
+                if txt in ("ЧАСЫ", "ВРЕМЯ", "СЕМЕСТР"):
+                    break
+
+                start += 1
 
         begin = start + 1
         while begin < 30:
@@ -115,14 +146,13 @@ class SheetMap:
             if txt not in ("ЧАСЫ", "ВРЕМЯ"):
                 break
 
-
             begin += 1
 
         end = start
         while end < 200:
             txt: str
-            txt1 = self.get(end, 0, raw_sheet).upper()
-            txt2 = self.get(end, 1, raw_sheet).upper()
+            txt1 = self.get(end, self.lessons_start_x - 2, raw_sheet).upper()
+            txt2 = self.get(end, self.lessons_start_x - 1, raw_sheet).upper()
 
             if (txt1 == "" and txt2 == "") or ("НАЧАЛЬНИК УМУ" in txt1 and "НАЧАЛЬНИК УМУ" in txt2) or (txt1 == "" and "НАЧАЛЬНИК УМУ" in txt2):
                 break
@@ -137,7 +167,7 @@ class SheetMap:
         raw_sheet = self.raw_sheet
 
         y = self.begin_y
-        x = 1
+        x = self.lessons_start_x - 1
 
         txt: str
         txt = self.get(y, x, raw_sheet)
@@ -174,7 +204,7 @@ class SheetMap:
             day: str
             time = self.get(y, x, raw_sheet)
 
-            day = self.get(y, x - 1, raw_sheet)
+            day = self.get(y, self.days_x, raw_sheet)
 
             if previous_day != day:
                 index += 1
@@ -197,7 +227,7 @@ class SheetMap:
 
         xs = []
 
-        for x in range(2, 10):
+        for x in range(self.lessons_start_x, 10):
             for y in range(self.start_y, self.begin_y):
                 txt = str(self.get(y, x, None))
                 txt = txt.replace("гр. ", "")
@@ -210,10 +240,9 @@ class SheetMap:
                 group_x = x
                 break
 
-
         self.start_x = group_x
 
-        for y in range(self.start_y, self.begin_y):
+        for y in range(self.start_y - 1, self.begin_y):
             txt = str(self.get(y, group_x, worksheet))
             txt = txt.replace("гр. ", "")
             if is_group_num(txt):
@@ -341,7 +370,7 @@ class SheetMap:
                 for j in range(0, day_len):
                     raw_lesson = raw_day[j]
 
-                    sec = Sector(raw_lesson)
+                    sec = self.sector_type(raw_lesson)
                     info = sec.process()
                     info = self.fix_info(info)
 

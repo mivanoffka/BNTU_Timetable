@@ -98,7 +98,7 @@ async def process_devinfo_command(call: types.CallbackQuery, state: FSMContext):
         await GroupSettingState.awaiting.set()
 
         msg = "<b>❓ Какие группы обслуживаются?</b>"
-        msg += "\n  •  ФИТР и ФММП - группы всех 4-х курсов"
+        msg += "\n  •  ФИТР, ФММП и ЭФ - группы всех курсов"
         msg += "\n  •  Остальные факультеты - только 1 и 2 курсы"
         msg += "\n\n☎️ <b>Просто введите номер группы и отправьте как сообщение.</b>"
 

@@ -2,7 +2,8 @@ import logging
 import asyncio
 import tarfile
 from datetime import datetime, timedelta
-from config import BASE_DIR
+from config import BASE_DIR, LOG_TO_CONSOLE
+import colorlog
 
 
 # Function to create a new log folder based on date
@@ -21,12 +22,31 @@ def rotate_log_file():
     if current_log_file.exists():
         return
 
-    logging.basicConfig(
-        filename=current_log_file,
-        format='%(asctime)s - [%(levelname)s] - %(funcName)s - %(message)s',
-        level=logging.INFO,
-        force=True
-    )
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    logger.handlers = []
+
+    file_handler = logging.FileHandler(current_log_file)
+    file_handler.setFormatter(logging.Formatter('%(asctime)s - [%(levelname)s] - %(funcName)s - %(message)s'))
+    logger.addHandler(file_handler)
+
+    if LOG_TO_CONSOLE:
+        console_handler = logging.StreamHandler()
+        color_formatter = colorlog.ColoredFormatter(
+            "%(log_color)s%(asctime)s - [%(levelname)s] - %(funcName)s - %(message)s",
+            datefmt=None,
+            reset=True,
+            log_colors={
+                'DEBUG': 'cyan',
+                'INFO': 'white',
+                'WARNING': 'yellow',
+                'ERROR': 'red',
+                'CRITICAL': 'bold_red',
+            }
+        )
+
+        console_handler.setFormatter(color_formatter)
+        logger.addHandler(console_handler)
 
 
 # Function to archive older log folders

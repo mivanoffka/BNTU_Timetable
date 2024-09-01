@@ -7,7 +7,7 @@ from bot.users import UsersDB
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 storage = MemoryStorage()
-bot = Bot(token=TOKEN, parse_mode = "HTML")
+bot = Bot(token=TOKEN, parse_mode="HTML")
 dispatcher = Dispatcher(bot, storage=storage)
 
 datacollector: DataCollector
@@ -24,4 +24,4 @@ exit_event = False
 users_db = None
 global_animations = False
 
-mailing = False
+mailing = True
