@@ -478,7 +478,7 @@ class Sector:
             info += "\n      •  " + self.sum_if_not_equal(a, c)
 
             info += "\n   2-я подгруппа:"
-            info += "\n      •  " + "2-я неделя — " + b
+            info += "\n      •  " + "1-я неделя — " + b
         else:
             if a == b:
                 info += "\n   1-я неделя:"
