@@ -5,7 +5,8 @@ from pathlib import Path
 from config import BASE_DIR
 from parsing.sheetmap import SheetMap
 import logging
-
+from parsing.sector import Sector
+from parsing.sector_ef import SectorEF
 
 parsing_mode = "default"
 
@@ -19,7 +20,7 @@ def parce_workbook_google(out_schedule, filename):
     pass
 
 
-def parce_workbook_excel(out_schedule, filename, sheets=None):
+def parce_workbook_excel(out_schedule, filename, sheets=None, sector_type=Sector):
     workbook = None
     if ".xlsx" in str(filename):
         workbook = xlrd.open_workbook(filename)
@@ -36,7 +37,7 @@ def parce_workbook_excel(out_schedule, filename, sheets=None):
         #parce_worksheet(workbook, s, schedule)
 
         try:
-            parce_worksheet_excel(workbook, s, schedule)
+            parce_worksheet_excel(workbook, s, schedule, sector_type=sector_type)
         except Exception as e:
             logging.info("An error occured while parsing sheet #{}: \n\n{}".format(s + 1, e))
             raise
@@ -45,11 +46,11 @@ def parce_workbook_excel(out_schedule, filename, sheets=None):
         out_schedule[key] = schedule[key]
 
 
-def parce_worksheet_excel(workbook, index, out_schedule):
+def parce_worksheet_excel(workbook, index, out_schedule, sector_type=Sector):
     try:
         worksheet = workbook.sheet_by_index(index)
 
-        mp = SheetMap(worksheet)
+        mp = SheetMap(worksheet, sector_type=sector_type)
         local_schedule = mp.parse()
         for key in local_schedule:
             out_schedule[key] = local_schedule[key]
@@ -191,7 +192,17 @@ def main():
              "parsing/sheets/4kurs_fmmp_3.xls"]
 
     for path in paths:
+        logging.info("\n\n\n------------------------------------------------\n")
+        logging.info(path)
         parce_workbook_excel(schedule, Path(BASE_DIR / path))
+
+    paths = ["parsing/sheets/ef_345_1.xls", "parsing/sheets/ef_345_2.xls"]
+
+    for path in paths:
+        logging.info("\n\n\n------------------------------------------------\n")
+        logging.info(path)
+        parce_workbook_excel(schedule, Path(BASE_DIR / path), sector_type=SectorEF)
+
 
     save_json(schedule)
 
