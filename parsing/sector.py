@@ -374,7 +374,6 @@ class Sector:
 
         info = ""
 
-
         if eq:
             info += "\n   1-я подгруппа:"
             info += "\n      •  " + self.sum_if_not_equal(a, c)
@@ -440,6 +439,7 @@ class Sector:
         eq = self.are_brothers(b, d)
 
         info = ""
+
         if eq:
             info += "\n   1-я подгруппа:"
             info += "\n      •  " + "1-я неделя — " + a
@@ -478,7 +478,7 @@ class Sector:
             info += "\n      •  " + self.sum_if_not_equal(a, c)
 
             info += "\n   2-я подгруппа:"
-            info += "\n      •  " + "1-я неделя — " + b
+            info += "\n      •  " + "2-я неделя — " + b
         else:
             if a == b:
                 info += "\n   1-я неделя:"
@@ -590,7 +590,7 @@ class Sector:
         pattern = self.pattern
 
         if pattern in range(0, 16):
-            return self.__processors[pattern]() + " (#{})".format(pattern)
+            #return self.__processors[pattern]() + " (#{})".format(pattern)
             return self.__processors[pattern]()
         else:
             return self.process_error()
