@@ -258,6 +258,9 @@ class SheetMap:
             txt = str(self.get(group_y, x, worksheet))
             txt = txt.replace("гр. ", "")
             group_num = txt[0:8]
+            if group_num == "10604122":
+                if "10604222" in groups.keys():
+                    group_num = "10604222"
 
             dx = self.groups_distance(x, group_y)
             # print(dx)
@@ -265,6 +268,7 @@ class SheetMap:
 
             groups[group_num] = dx
             x += dx
+
 
         self.group_nums = groups
 
