@@ -130,9 +130,13 @@ async def mail(t):
             msg = await procedures.process_day(uinfo.id, delta)
             if delta == 0:
                 msg = "<b>Вот ваше расписание на сегодня!</b>\n" + msg
+                if "Воскресенье" in msg:
+                    msg = "Сегодня воскресенье! Отдыхаем!"
             if delta == 1:
                 msg = "<b>Вот ваше расписание на завтра!</b>\n" + msg
-            if "В данный момент у нас нет расписания для группы" not in msg and "Воскресенье" not in msg:
+                if "Воскресенье" in msg:
+                    msg = "Завтра воскресенье! Отдыхаем!"
+            if "В данный момент у нас нет расписания для группы" not in msg:
                 await bot.display.renew_display(uinfo.id, msg, home_keyboard)
                 sent_count += 1
                 logging.info("Message #{} sent.".format(sent_count))

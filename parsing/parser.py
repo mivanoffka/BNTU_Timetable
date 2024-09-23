@@ -8,6 +8,8 @@ import logging
 from parsing.sector import Sector
 from parsing.sector_ef import SectorEF
 
+from logger import log_rotation_and_archiving
+
 parsing_mode = "default"
 
 # СЛОВАРЬ ТЕРМИНОВ
@@ -191,6 +193,7 @@ def main():
              "parsing/sheets/4kurs_fmmp_2.xls",
              "parsing/sheets/4kurs_fmmp_3.xls"]
 
+
     for path in paths:
         logging.info("\n\n\n------------------------------------------------\n")
         logging.info(path)
@@ -203,9 +206,7 @@ def main():
         logging.info(path)
         parce_workbook_excel(schedule, Path(BASE_DIR / path), sector_type=SectorEF)
 
-
     save_json(schedule)
-
 
 if __name__ == '__main__':
     main()

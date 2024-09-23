@@ -293,7 +293,7 @@ class SheetMap:
 
         return schedule
 
-    def get_group_table(self, pos_x, dx):
+    def get_group_table(self, pos_x, dx, pr=False):
         matrix = []
 
         breaker = False
@@ -307,6 +307,10 @@ class SheetMap:
             for j in range(pos_x, pos_x + dx):
 
                 value = fix_str(fix_sheet_value(self.get(i, j, self.raw_sheet)))
+
+                if pr:
+                    print(value)
+
                 if value != '':
                     if "Начальник УМУ" not in value:
                         value = value.replace('\n', ' ')
