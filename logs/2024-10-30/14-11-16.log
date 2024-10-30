@@ -1,0 +1,41 @@
+2024-10-30 14:11:16,544 - [INFO] - mailing_loop - Mailing set to 06:00 and 18:00
+2024-10-30 14:11:16,545 - [INFO] - mailing_loop - Checking time...
+2024-10-30 14:11:16,546 - [INFO] - start_polling - Start polling.
+2024-10-30 14:11:25,945 - [INFO] - update - Schedule updating started...
+2024-10-30 14:11:26,191 - [INFO] - find_lines_with_url_ef - 
+
+
+
+2024-10-30 14:11:26,192 - [INFO] - find_lines_with_url_ef - ['<td style="width: 26.343%; height: 22px; text-align: center;"><strong><a href="https://files.bntu.by/s/lmmoFmaWCeuDm4A">Скачать</a></strong></td>', '<td style="width: 26.343%; height: 22px; text-align: center;"><strong><a href="https://files.bntu.by/s/wB69DoxBXklziVB" title="Скачать">Скачать</a></strong></td>']
+2024-10-30 14:11:26,193 - [INFO] - find_lines_with_url_ef - 
+
+
+
+2024-10-30 14:11:26,193 - [INFO] - download_and_parse - https://files.bntu.by/s/lmmoFmaWCeuDm4A
+2024-10-30 14:11:26,193 - [INFO] - download_and_parse - https://files.bntu.by/s/wB69DoxBXklziVB
+2024-10-30 14:11:26,609 - [INFO] - get_link_for_cource - [['https://files.bntu.by/s/H934pnB4ZU5NrJQ/download']]
+2024-10-30 14:11:26,732 - [INFO] - get_link_for_cource - [['https://files.bntu.by/s/Yj0P44qUIisprJx/download']]
+2024-10-30 14:11:26,733 - [INFO] - download_and_parse - https://files.bntu.by/s/H934pnB4ZU5NrJQ/download
+2024-10-30 14:11:26,733 - [INFO] - download_and_parse - https://files.bntu.by/s/Yj0P44qUIisprJx/download
+2024-10-30 14:11:31,473 - [INFO] - find_lines_with_urld_fitr - 
+
+
+
+2024-10-30 14:11:31,474 - [INFO] - find_lines_with_urld_fitr - ['<p style="font-size: medium; font-weight: 400; text-align: left;"><a href="https://static.bntu.by/bntu/new/files/file_bdda0fb6ade10c489e39f3d8a9e10b2f.xls"><span style="font-weight: 400;">Расписание учебных занятий студентов 3 и 4-го курсов специальности <strong>1-40 01 01</strong> дневной формы получения образования&nbsp;</span></a></p>', '<p style="font-size: medium; font-weight: 400; text-align: left;"><a href="https://static.bntu.by/bntu/new/files/file_ba476f7a0fbba8d7db2d095c068e7709.xls"><span style="font-weight: 400;">Расписание учебных занятий студентов 3 и 4-го курсов специальности <strong>1-40 05 01</strong> дневной формы получения образования&nbsp;</span></a></p>', '<p style="font-size: medium; font-weight: 400; text-align: left;"><a href="https://static.bntu.by/bntu/new/files/file_c47846c9cfa24d795e735b0ebb0bed11.xls"><span style="font-weight: 400;">Расписание учебных занятий студентов 3 и 4-го курсов специальности <strong>1-53 01 01 и 1-53 01 06</strong> дневной формы получения образования&nbsp;</span></a></p>', '<p style="font-size: medium; font-weight: 400; text-align: left;"><a href="https://static.bntu.by/bntu/new/files/file_eaf995ee50c555ac37f21387bbd97d5b.xls"><span style="font-weight: 400;">Расписание учебных занятий студентов 3 и 4-го курсов специальности <strong>1-53 01 05</strong> дневной формы получения образования&nbsp;</span></a></p>']
+2024-10-30 14:11:31,475 - [INFO] - find_lines_with_urld_fitr - 
+
+
+
+2024-10-30 14:12:00,525 - [INFO] - download_and_parse - Books are downloaded.
+2024-10-30 14:12:00,526 - [INFO] - main - 
+
+
+------------------------------------------------
+
+2024-10-30 14:12:00,527 - [INFO] - main - parsing/sheets/ef_345_1.xls
+2024-10-30 14:12:00,533 - [INFO] - download_and_parse - An exception occured while parsing the sheets. 
+
+Unsupported format, or corrupt file: Expected BOF record; found b'<!DOCTYP'
+2024-10-30 14:12:16,548 - [INFO] - mailing_loop - Checking time...
+2024-10-30 14:12:19,834 - [INFO] - stop_polling - Stop polling...
+2024-10-30 14:12:19,840 - [WARNING] - start_polling - Goodbye!

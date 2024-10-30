@@ -1,0 +1,60 @@
+2024-10-29 21:38:16,641 - [INFO] - mailing_loop - Mailing set to 06:00 and 18:00
+2024-10-29 21:38:16,643 - [INFO] - mailing_loop - Checking time...
+2024-10-29 21:38:16,644 - [INFO] - start_polling - Start polling.
+2024-10-29 21:38:19,837 - [ERROR] - default_exception_handler - Task exception was never retrieved
+future: <Task finished name='Task-11' coro=<Dispatcher._process_polling_updates() done, defined at /Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/.venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py:407> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/.venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 415, in _process_polling_updates
+    for responses in itertools.chain.from_iterable(await self.process_updates(updates, fast)):
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/.venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 235, in process_updates
+    return await asyncio.gather(*tasks)
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/.venv/lib/python3.10/site-packages/aiogram/dispatcher/handler.py", line 117, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/.venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 283, in process_update
+    return await self.callback_query_handlers.notify(update.callback_query)
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/.venv/lib/python3.10/site-packages/aiogram/dispatcher/handler.py", line 117, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/bot/ui/weekdays/handlers.py", line 75, in process_friday_command
+    txt = bot.procedures.get_day_message(call.from_user.id, 4)
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/bot/procedures.py", line 43, in get_day_message
+    uinfo = data.users_db.get_info(id)
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/bot/users.py", line 108, in get_info
+    query_result = self.execute(query)[0]
+IndexError: list index out of range
+2024-10-29 21:38:21,817 - [ERROR] - start_polling - Cause exception while getting updates.
+Traceback (most recent call last):
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/.venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 381, in start_polling
+    updates = await self.bot.get_updates(
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/.venv/lib/python3.10/site-packages/aiogram/bot/bot.py", line 110, in get_updates
+    result = await self.request(api.Methods.GET_UPDATES, payload)
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/.venv/lib/python3.10/site-packages/aiogram/bot/base.py", line 236, in request
+    return await api.make_request(await self.get_session(), self.server, self.__token, method, data, files,
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/.venv/lib/python3.10/site-packages/aiogram/bot/api.py", line 140, in make_request
+    return check_result(method, response.content_type, response.status, await response.text())
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/.venv/lib/python3.10/site-packages/aiogram/bot/api.py", line 119, in check_result
+    exceptions.ConflictError.detect(description)
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/.venv/lib/python3.10/site-packages/aiogram/utils/exceptions.py", line 140, in detect
+    raise err(cls.text or description)
+aiogram.utils.exceptions.TerminatedByOtherGetUpdates: Terminated by other getupdates request; make sure that only one bot instance is running
+2024-10-29 21:38:28,701 - [ERROR] - default_exception_handler - Task exception was never retrieved
+future: <Task finished name='Task-15' coro=<Dispatcher._process_polling_updates() done, defined at /Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/.venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py:407> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/.venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 415, in _process_polling_updates
+    for responses in itertools.chain.from_iterable(await self.process_updates(updates, fast)):
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/.venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 235, in process_updates
+    return await asyncio.gather(*tasks)
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/.venv/lib/python3.10/site-packages/aiogram/dispatcher/handler.py", line 117, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/.venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 283, in process_update
+    return await self.callback_query_handlers.notify(update.callback_query)
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/.venv/lib/python3.10/site-packages/aiogram/dispatcher/handler.py", line 117, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/bot/ui/weekdays/handlers.py", line 61, in process_thursday_command
+    txt = bot.procedures.get_day_message(call.from_user.id, 3)
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/bot/procedures.py", line 43, in get_day_message
+    uinfo = data.users_db.get_info(id)
+  File "/Users/mivanoffka/Documents/Разработка/Python/BNTU_Timetable/bot/users.py", line 108, in get_info
+    query_result = self.execute(query)[0]
+IndexError: list index out of range
+2024-10-29 21:38:29,158 - [INFO] - stop_polling - Stop polling...
+2024-10-29 21:38:29,158 - [WARNING] - start_polling - Goodbye!

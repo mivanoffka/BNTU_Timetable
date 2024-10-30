@@ -1,0 +1,19 @@
+2024-10-30 12:53:27,608 - [INFO] - mailing_loop - Mailing set to 06:00 and 18:00
+2024-10-30 12:53:27,609 - [INFO] - mailing_loop - Checking time...
+2024-10-30 12:53:27,609 - [INFO] - start_polling - Start polling.
+2024-10-30 12:53:32,401 - [INFO] - update - Schedule updating started...
+2024-10-30 12:53:32,595 - [INFO] - find_lines_with_url_ef - 
+
+
+
+2024-10-30 12:53:32,595 - [INFO] - find_lines_with_url_ef - ['<td style="width: 26.343%; height: 22px; text-align: center;"><strong><a href="https://files.bntu.by/s/lmmoFmaWCeuDm4A">Скачать</a></strong></td>']
+2024-10-30 12:53:32,595 - [INFO] - find_lines_with_url_ef - 
+
+
+
+2024-10-30 12:53:32,596 - [INFO] - download_and_parse - https://files.bntu.by/s/lmmoFmaWCeuDm4A
+2024-10-30 12:53:32,596 - [INFO] - download_and_parse - Cannot download the books.
+ list index out of range
+2024-10-30 12:54:27,608 - [INFO] - mailing_loop - Checking time...
+2024-10-30 12:54:48,979 - [INFO] - stop_polling - Stop polling...
+2024-10-30 12:54:48,980 - [WARNING] - start_polling - Goodbye!

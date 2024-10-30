@@ -1,0 +1,19 @@
+2024-10-30 14:21:53,310 - [INFO] - mailing_loop - Mailing set to 06:00 and 18:00
+2024-10-30 14:21:53,311 - [INFO] - mailing_loop - Checking time...
+2024-10-30 14:21:53,312 - [INFO] - start_polling - Start polling.
+2024-10-30 14:21:56,617 - [INFO] - update - Schedule updating started...
+2024-10-30 14:21:56,927 - [INFO] - download_and_parse - https://files.bntu.by/s/lmmoFmaWCeuDm4A
+2024-10-30 14:21:56,928 - [INFO] - download_and_parse - https://files.bntu.by/s/wB69DoxBXklziVB
+2024-10-30 14:21:57,345 - [INFO] - download_and_parse - Books are downloaded.
+2024-10-30 14:21:57,346 - [INFO] - main - 
+
+
+------------------------------------------------
+
+2024-10-30 14:21:57,346 - [INFO] - main - parsing/sheets/ef_345_1.xls
+2024-10-30 14:21:57,355 - [INFO] - download_and_parse - An exception occured while parsing the sheets. 
+
+Unsupported format, or corrupt file: Expected BOF record; found b'<!DOCTYP'
+2024-10-30 14:22:53,313 - [INFO] - mailing_loop - Checking time...
+2024-10-30 14:23:03,928 - [INFO] - stop_polling - Stop polling...
+2024-10-30 14:23:03,929 - [WARNING] - start_polling - Goodbye!

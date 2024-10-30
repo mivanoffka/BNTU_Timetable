@@ -1,0 +1,19 @@
+2024-10-30 14:09:18,709 - [INFO] - mailing_loop - Mailing set to 06:00 and 18:00
+2024-10-30 14:09:18,710 - [INFO] - mailing_loop - Checking time...
+2024-10-30 14:09:18,715 - [INFO] - start_polling - Start polling.
+2024-10-30 14:09:21,994 - [INFO] - update - Schedule updating started...
+2024-10-30 14:09:22,228 - [INFO] - find_lines_with_url_ef - 
+
+
+
+2024-10-30 14:09:22,229 - [INFO] - find_lines_with_url_ef - ['<td style="width: 26.343%; height: 22px; text-align: center;"><strong><a href="https://files.bntu.by/s/lmmoFmaWCeuDm4A">Скачать</a></strong></td>', '<td style="width: 26.343%; height: 22px; text-align: center;"><strong><a href="https://files.bntu.by/s/wB69DoxBXklziVB" title="Скачать">Скачать</a></strong></td>']
+2024-10-30 14:09:22,229 - [INFO] - find_lines_with_url_ef - 
+
+
+
+2024-10-30 14:09:22,231 - [INFO] - download_and_parse - https://files.bntu.by/s/lmmoFmaWCeuDm4A
+2024-10-30 14:09:22,231 - [INFO] - download_and_parse - <a href="https://files.bntu.by/s/wB69DoxBXklziVB
+2024-10-30 14:09:22,804 - [INFO] - download_and_parse - Cannot download the books.
+ No connection adapters were found for '<a href="https://files.bntu.by/s/wB69DoxBXklziVB'
+2024-10-30 14:09:44,376 - [INFO] - stop_polling - Stop polling...
+2024-10-30 14:09:44,377 - [WARNING] - start_polling - Goodbye!

@@ -39,6 +39,9 @@ def get_html(url):
 
 
 def download_unsafe(url, dest):
+    if "/download" not in url:
+        if "google" not in url and "static" not in url and "bntu" in url:
+            url += "/download"
     response = requests.get(url, verify=False)
     open(dest, "wb").write(response.content)
 
@@ -68,21 +71,49 @@ def download(url, dest):
 def find_lines_with_url_ef():
     ref = 'https://bntu.by/faculties/ef/pages/raspisanie-zanyatij-dnevnoe-otdelenie'
 
-    key = 'title="Скачать">Скачать</a>'
+
+    # html = requests.get(ref, verify=False)
+    # html = html.text
+
+    # html = html.splitlines()
+
+    # patterns = [r'<a href="([^"]+)">Скачать</a>']
+
+    # refs = []
+    # for pattern in patterns:
+    #     refs.append(*[re.search(pattern, line).group(1) for line in html if re.search(pattern, line)])
+
+    # return refs[0], refs[1]
+
+    # ref = 'https://bntu.by/faculties/fitr/pages/raspisanie-zanyatij-i-ekzamenov'
 
     html = requests.get(ref, verify=False)
     html = html.text
 
     html = html.splitlines()
 
-    patterns = [r'<td style="width: 26.343%; height: 22px; text-align: center;"><strong><a href="([^"]+)">Скачать</a></strong></td>',
-    r'<td style="width: 26.343%; height: 22px; text-align: center;"><strong><a href="([^"]+)" title="Скачать">Скачать</a></strong></td>']
+    keys = [">Скачать</a>", 'title="Скачать"']
+    urls = []
 
-    refs = []
-    for pattern in patterns:
-        refs.append(*[re.search(pattern, line).group(1) for line in html if re.search(pattern, line)])
+    for key in keys:
+        for line in html:
+            if key in line:
+                urls.append(line)
+                break
+    
+    new_urls = []
 
-    return refs
+    new_url_1 = urls[0]
+    new_url_1 = new_url_1.replace('<td style="width: 26.343%; height: 22px; text-align: center;"><strong><a href="', "",)
+    new_url_1 = new_url_1.replace('">Скачать</a></strong></td>', "")
+    new_urls.append(new_url_1) 
+
+    new_url_2 = urls[1]
+    new_url_2 = new_url_2.replace('<td style="width: 26.343%; height: 22px; text-align: center;"><strong><a href="', "")
+    new_url_2 = new_url_2.replace('" title="Скачать">Скачать</a></strong></td>', "")
+    new_urls.append(new_url_2) 
+
+    return new_urls
 
 def find_lines_with_urld_fitr():
     ref = 'https://bntu.by/faculties/fitr/pages/raspisanie-zanyatij-i-ekzamenov'
@@ -226,24 +257,27 @@ def download_and_parse():
         destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_4.xls")
         download_unsafe(get_url_from_line_fitr(urls[3]), destination)
 
-        download_unsafe("https://drive.google.com/uc?export=download&id=1j95U8OSP-t-XfaCEQVYxmSSo7CkpRP2j",
+        download_unsafe("https://drive.google.com/uc?export=download&id=1uxeeya7kk4I3Gz8OP8EtrA_EGVFlLC51",
                         Path(BASE_DIR/"parsing/sheets/3kurs_fmmp_1.xls"))
 
-        download_unsafe("https://drive.google.com/uc?export=download&id=1oaEhWo_AcE544GErN59c0JFnbaksR0Ut",
+        download_unsafe("https://drive.google.com/uc?export=download&id=1261eBDZbkIJhQ-GC90DcZpmrBVgUBYPA",
                         Path(BASE_DIR/"parsing/sheets/3kurs_fmmp_2.xls"))
 
-        download_unsafe("https://drive.google.com/uc?export=download&id=1rBpYq9ToGUikzb15vw6BWXYWrMb_xyHE",
+        download_unsafe("https://drive.google.com/uc?export=download&id=1FSQcYWkJT8qJT_HlZAqSKL32uHu8uAxV",
                         Path(BASE_DIR/"parsing/sheets/3kurs_fmmp_3.xls"))
 
-        download_unsafe("https://drive.google.com/uc?export=download&id=1hqM1ID0jSzsCwN39z8_p_AafVWzUo6qL",
+        download_unsafe("https://drive.google.com/uc?export=download&id=1OGP8foHUwDUkFzsooj_xjRzw7ncVmcIN",
+                        Path(BASE_DIR/"parsing/sheets/3kurs_fmmp_4.xls"))
+
+        download_unsafe("https://drive.google.com/uc?export=download&id=1zKGFUKook4SGWxNxHU-WOidA3eBIAWf0",
                         Path(BASE_DIR / "parsing/sheets/4kurs_fmmp_1.xls"))
 
-        download_unsafe("https://drive.google.com/uc?export=download&id=1ciBEsjWKQNqr-JCpIlNAFkLZS4TTspyZ",
+        download_unsafe("https://drive.google.com/uc?export=download&id=1nHVcpT-qh4JHmhvVAhFPLE7CbXFSsWjB",
                         Path(BASE_DIR/"parsing/sheets/4kurs_fmmp_2.xls"))
 
-        download_unsafe("https://drive.google.com/uc?export=download&id=1DvErSBENSuD-GxULtvv3wjxS9ceEby0Z",
+        download_unsafe("https://drive.google.com/uc?export=download&id=1ESphldIUpRno7Hbn3uglCipJMuS5CkKj",
                         Path(BASE_DIR/"parsing/sheets/4kurs_fmmp_3.xls"))
-
+        
         logging.info("Books are downloaded.")
         download_result = True
 
