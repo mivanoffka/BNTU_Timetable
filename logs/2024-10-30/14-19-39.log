@@ -1,9 +1,0 @@
-2024-10-30 14:19:39,951 - [INFO] - mailing_loop - Mailing set to 06:00 and 18:00
-2024-10-30 14:19:39,952 - [INFO] - mailing_loop - Checking time...
-2024-10-30 14:19:39,954 - [INFO] - start_polling - Start polling.
-2024-10-30 14:19:42,473 - [INFO] - update - Schedule updating started...
-2024-10-30 14:19:42,996 - [INFO] - download_and_parse - https://files.bntu.by/s/lmmoFmaWCeuDm4A
-2024-10-30 14:19:42,999 - [INFO] - download_and_parse - https://files.bntu.by/s/wB69DoxBXklziVB
-2024-10-30 14:19:44,569 - [INFO] - update - Schedule succesfully updated!
-2024-10-30 14:20:16,265 - [INFO] - stop_polling - Stop polling...
-2024-10-30 14:20:16,266 - [WARNING] - start_polling - Goodbye!

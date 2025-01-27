@@ -1,0 +1,26 @@
+2025-01-27 09:31:32,844 - [INFO] - mailing_loop - Mailing set to 06:00 and 18:00
+2025-01-27 09:31:32,845 - [INFO] - mailing_loop - Checking time...
+2025-01-27 09:31:32,845 - [INFO] - start_polling - Start polling.
+2025-01-27 09:31:42,341 - [INFO] - update - Schedule updating started...
+2025-01-27 09:31:42,521 - [INFO] - find_lines_with_urld_fitr - 
+
+
+
+2025-01-27 09:31:42,522 - [INFO] - find_lines_with_urld_fitr - ['<p style="font-size: medium; font-weight: 400; text-align: left;"><a href="https://static.bntu.by/bntu/new/files/file_159ae318c7d98e26c3317b29fbb52719.xlsx"><span style="font-weight: 400;">Расписание учебных занятий студентов 3-го курса специальности <strong>1-40 01 01</strong> дневной формы получения образования с 27 января по 17 мая 2024-2025 учебного года</span></a></p>', '<p style="font-size: medium; font-weight: 400; text-align: left;"><a href="https://static.bntu.by/bntu/new/files/file_398ecbfb78e1ce2468ed18cea590abe9.xlsx"><span style="font-weight: 400;">Расписание учебных занятий студентов 3-го курса специальности <strong>1-40 05 01</strong> дневной формы получения образования с 27 января по 17 мая 2024-2025 учебного года</span></a></p>']
+2025-01-27 09:31:42,522 - [INFO] - find_lines_with_urld_fitr - 
+
+
+
+2025-01-27 09:31:43,326 - [INFO] - download_and_parse - Books are downloaded.
+2025-01-27 09:31:43,327 - [INFO] - main - 
+
+
+------------------------------------------------
+
+2025-01-27 09:31:43,328 - [INFO] - main - parsing/sheets/34kurs_fitr_1.xls
+2025-01-27 09:31:43,371 - [INFO] - download_and_parse - An exception occured while parsing the sheets. 
+
+formatting_info=True not yet implemented
+2025-01-27 09:32:32,847 - [INFO] - mailing_loop - Checking time...
+2025-01-27 09:33:22,319 - [INFO] - stop_polling - Stop polling...
+2025-01-27 09:33:22,320 - [WARNING] - start_polling - Goodbye!

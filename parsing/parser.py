@@ -3,7 +3,7 @@ import copy
 import json
 from pathlib import Path
 from config import BASE_DIR
-from parsing.sheetmap import SheetMap
+from parsing.sheetmap import SheetMap, unmerged_value
 import logging
 from parsing.sector import Sector
 from parsing.sector_ef import SectorEF
@@ -180,28 +180,30 @@ def convert_to_matrix(filename):
 def main():
     schedule = {}
 
-    paths = ["parsing/sheets/ef_345_1.xls", "parsing/sheets/ef_345_2.xls"]
+    # paths = ["parsing/sheets/ef_345_1.xls", "parsing/sheets/ef_345_2.xls"]
 
-    for path in paths:
-        logging.info("\n\n\n------------------------------------------------\n")
-        logging.info(path)
-        parce_workbook_excel(schedule, Path(BASE_DIR / path), sector_type=SectorEF)
+    # for path in paths:
+    #     logging.info("\n\n\n------------------------------------------------\n")
+    #     logging.info(path)
+    #     parce_workbook_excel(schedule, Path(BASE_DIR / path), sector_type=SectorEF)
 
-    paths = [
-            "parsing/sheets/1kurs.xls",
-             "parsing/sheets/2kurs.xls",
-             "parsing/sheets/34kurs_fitr_1.xls",
-             "parsing/sheets/34kurs_fitr_2.xls",
-             "parsing/sheets/34kurs_fitr_3.xls",
-             "parsing/sheets/34kurs_fitr_4.xls",
-             "parsing/sheets/3kurs_fmmp_1.xls",
-             "parsing/sheets/3kurs_fmmp_2.xls",
-             "parsing/sheets/3kurs_fmmp_3.xls",
-             "parsing/sheets/3kurs_fmmp_4.xls",
-             "parsing/sheets/4kurs_fmmp_1.xls",
-             "parsing/sheets/4kurs_fmmp_2.xls",
-             "parsing/sheets/4kurs_fmmp_3.xls"]
+    # paths = [
+    #         "parsing/sheets/1kurs.xls",
+    #          "parsing/sheets/2kurs.xls",
+    #          "parsing/sheets/34kurs_fitr_1.xls",
+    #          "parsing/sheets/34kurs_fitr_2.xls",
+    #          "parsing/sheets/34kurs_fitr_3.xls",
+    #          "parsing/sheets/34kurs_fitr_4.xls",
+    #          "parsing/sheets/3kurs_fmmp_1.xls",
+    #          "parsing/sheets/3kurs_fmmp_2.xls",
+    #          "parsing/sheets/3kurs_fmmp_3.xls",
+    #          "parsing/sheets/3kurs_fmmp_4.xls",
+    #          "parsing/sheets/4kurs_fmmp_1.xls",
+    #          "parsing/sheets/4kurs_fmmp_2.xls",
+    #          "parsing/sheets/4kurs_fmmp_3.xls"]
 
+    paths = ["parsing/sheets/34kurs_fitr_1.xlsx",
+             "parsing/sheets/34kurs_fitr_2.xlsx"]
 
     for path in paths:
         logging.info("\n\n\n------------------------------------------------\n")

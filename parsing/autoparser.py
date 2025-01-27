@@ -123,10 +123,8 @@ def find_lines_with_urld_fitr():
 
     html = html.splitlines()
 
-    keys = ('Расписание учебных занятий студентов 3 и 4-го курсов специальности <strong>1-40 01 01</strong>',
-            'Расписание учебных занятий студентов 3 и 4-го курсов специальности <strong>1-40 05 01</strong>',
-            '>Расписание учебных занятий студентов 3 и 4-го курсов специальности <strong>1-53 01 01 и 1-53 01 06</strong>',
-            'Расписание учебных занятий студентов 3 и 4-го курсов специальности <strong>1-53 01 05</strong>')
+    keys = ('Расписание учебных занятий студентов 3-го курса специальности <strong>1-40 01 01</strong> дневной формы получения образования с 27 января по 17 мая 2024-2025 учебного года</span></a></p>',
+            'Расписание учебных занятий студентов 3-го курса специальности <strong>1-40 05 01</strong> дневной формы получения образования с 27 января по 17 мая 2024-2025 учебного года</span></a></p>')
     urls = []
 
     for key in keys:
@@ -221,62 +219,62 @@ def get_link_for_cource(course_number):
 def download_and_parse():
     download_result = False
     try:
-        ef = find_lines_with_url_ef()
-        logging.info(ef[0])
-        logging.info(ef[1])
+        # ef = find_lines_with_url_ef()
+        # logging.info(ef[0])
+        # logging.info(ef[1])
 
-        destination = Path(BASE_DIR / "parsing/sheets/ef_345_1.xls")
-        download_unsafe(ef[0], destination)
+        # destination = Path(BASE_DIR / "parsing/sheets/ef_345_1.xls")
+        # download_unsafe(ef[0], destination)
 
-        destination = Path(BASE_DIR / "parsing/sheets/ef_345_2.xls")
-        download_unsafe(ef[1], destination)
+        # destination = Path(BASE_DIR / "parsing/sheets/ef_345_2.xls")
+        # download_unsafe(ef[1], destination)
 
-        ref_1 = get_link_for_cource(1)
-        ref_2 = get_link_for_cource(2)
+        # ref_1 = get_link_for_cource(1)
+        # ref_2 = get_link_for_cource(2)
 
-        logging.info(ref_1)
-        logging.info(ref_2)
+        # logging.info(ref_1)
+        # logging.info(ref_2)
 
-        destination = Path(BASE_DIR / "parsing/sheets/1kurs.xls")
-        download_unsafe(ref_1, destination)
+        # destination = Path(BASE_DIR / "parsing/sheets/1kurs.xls")
+        # download_unsafe(ref_1, destination)
 
-        destination = Path(BASE_DIR / "parsing/sheets/2kurs.xls")
-        download_unsafe(ref_2, destination)
+        # destination = Path(BASE_DIR / "parsing/sheets/2kurs.xls")
+        # download_unsafe(ref_2, destination)
 
         urls = find_lines_with_urld_fitr()
 
-        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_1.xls")
+        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_1.xlsx")
         download_unsafe(get_url_from_line_fitr(urls[0]), destination)
 
-        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_2.xls")
+        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_2.xlsx")
         download_unsafe(get_url_from_line_fitr(urls[1]), destination)
 
-        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_3.xls")
-        download_unsafe(get_url_from_line_fitr(urls[2]), destination)
+        # destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_3.xls")
+        # download_unsafe(get_url_from_line_fitr(urls[2]), destination)
 
-        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_4.xls")
-        download_unsafe(get_url_from_line_fitr(urls[3]), destination)
+        # destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_4.xls")
+        # download_unsafe(get_url_from_line_fitr(urls[3]), destination)
 
-        download_unsafe("https://drive.google.com/uc?export=download&id=1uxeeya7kk4I3Gz8OP8EtrA_EGVFlLC51",
-                        Path(BASE_DIR/"parsing/sheets/3kurs_fmmp_1.xls"))
+        # download_unsafe("https://drive.google.com/uc?export=download&id=1uxeeya7kk4I3Gz8OP8EtrA_EGVFlLC51",
+        #                 Path(BASE_DIR/"parsing/sheets/3kurs_fmmp_1.xls"))
 
-        download_unsafe("https://drive.google.com/uc?export=download&id=1261eBDZbkIJhQ-GC90DcZpmrBVgUBYPA",
-                        Path(BASE_DIR/"parsing/sheets/3kurs_fmmp_2.xls"))
+        # download_unsafe("https://drive.google.com/uc?export=download&id=1261eBDZbkIJhQ-GC90DcZpmrBVgUBYPA",
+        #                 Path(BASE_DIR/"parsing/sheets/3kurs_fmmp_2.xls"))
 
-        download_unsafe("https://drive.google.com/uc?export=download&id=1FSQcYWkJT8qJT_HlZAqSKL32uHu8uAxV",
-                        Path(BASE_DIR/"parsing/sheets/3kurs_fmmp_3.xls"))
+        # download_unsafe("https://drive.google.com/uc?export=download&id=1FSQcYWkJT8qJT_HlZAqSKL32uHu8uAxV",
+        #                 Path(BASE_DIR/"parsing/sheets/3kurs_fmmp_3.xls"))
 
-        download_unsafe("https://drive.google.com/uc?export=download&id=1OGP8foHUwDUkFzsooj_xjRzw7ncVmcIN",
-                        Path(BASE_DIR/"parsing/sheets/3kurs_fmmp_4.xls"))
+        # download_unsafe("https://drive.google.com/uc?export=download&id=1OGP8foHUwDUkFzsooj_xjRzw7ncVmcIN",
+        #                 Path(BASE_DIR/"parsing/sheets/3kurs_fmmp_4.xls"))
 
-        download_unsafe("https://drive.google.com/uc?export=download&id=1zKGFUKook4SGWxNxHU-WOidA3eBIAWf0",
-                        Path(BASE_DIR / "parsing/sheets/4kurs_fmmp_1.xls"))
+        # download_unsafe("https://drive.google.com/uc?export=download&id=1zKGFUKook4SGWxNxHU-WOidA3eBIAWf0",
+        #                 Path(BASE_DIR / "parsing/sheets/4kurs_fmmp_1.xls"))
 
-        download_unsafe("https://drive.google.com/uc?export=download&id=1nHVcpT-qh4JHmhvVAhFPLE7CbXFSsWjB",
-                        Path(BASE_DIR/"parsing/sheets/4kurs_fmmp_2.xls"))
+        # download_unsafe("https://drive.google.com/uc?export=download&id=1nHVcpT-qh4JHmhvVAhFPLE7CbXFSsWjB",
+        #                 Path(BASE_DIR/"parsing/sheets/4kurs_fmmp_2.xls"))
 
-        download_unsafe("https://drive.google.com/uc?export=download&id=1ESphldIUpRno7Hbn3uglCipJMuS5CkKj",
-                        Path(BASE_DIR/"parsing/sheets/4kurs_fmmp_3.xls"))
+        # download_unsafe("https://drive.google.com/uc?export=download&id=1ESphldIUpRno7Hbn3uglCipJMuS5CkKj",
+        #                 Path(BASE_DIR/"parsing/sheets/4kurs_fmmp_3.xls"))
         
         logging.info("Books are downloaded.")
         download_result = True
