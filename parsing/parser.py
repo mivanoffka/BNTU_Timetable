@@ -36,12 +36,14 @@ def parce_workbook_excel(out_schedule, filename, sheets=None, sector_type=Sector
     sheets = range(0, len(sheet_num)) if not sheets else sheets
 
     for s in sheets:
-        #parce_worksheet(workbook, s, schedule)
+        # parce_worksheet(workbook, s, schedule)
 
         try:
             parce_worksheet_excel(workbook, s, schedule, sector_type=sector_type)
         except Exception as e:
-            logging.info("An error occured while parsing sheet #{}: \n\n{}".format(s + 1, e))
+            logging.info(
+                "An error occured while parsing sheet #{}: \n\n{}".format(s + 1, e)
+            )
             raise
 
     for key in schedule:
@@ -59,7 +61,9 @@ def parce_worksheet_excel(workbook, index, out_schedule, sector_type=Sector):
 
         logging.info("Sheet #{} was successfully parsed".format(index + 1))
     except Exception as e:
-        logging.info("An error occured while parsing sheet #{}: \n\n{}".format(index + 1, e))
+        logging.info(
+            "An error occured while parsing sheet #{}: \n\n{}".format(index + 1, e)
+        )
 
 
 def binary_sector(sector):
@@ -67,7 +71,7 @@ def binary_sector(sector):
 
     for i in range(0, 4):
         for j in range(0, 4):
-            if sector[i][j] != '_':
+            if sector[i][j] != "_":
                 binary_sector[i][j] = 1
             else:
                 binary_sector[i][j] = 0
@@ -78,11 +82,11 @@ def binary_sector(sector):
 def fix_str(txt):
     txt = str(txt)
     num = 0
-    new_txt = ''
-    prev = '   '
+    new_txt = ""
+    prev = "   "
 
     for c in txt:
-        will_do = not (c == ' ' and prev == ' ')
+        will_do = not (c == " " and prev == " ")
         if will_do:
             new_txt += c
         prev = c
@@ -137,7 +141,7 @@ def remove_spaces(txt):
 
 
 def save_json(schedule):
-    with open(Path(BASE_DIR / 'datasource/schedule.json'), 'w', encoding='UTF-8') as f:
+    with open(Path(BASE_DIR / "datasource/schedule.json"), "w", encoding="UTF-8") as f:
         json.dump(schedule, f, ensure_ascii=False, indent=3)
 
 
@@ -156,7 +160,7 @@ def convert_to_matrix(filename):
     sheet_num = len(sheet_num)
 
     for i in range(0, sheet_num):
-        #parce_worksheet(workbook, s, schedule)
+        # parce_worksheet(workbook, s, schedule)
 
         try:
             worksheet = workbook.sheet_by_index(i)
@@ -167,7 +171,6 @@ def convert_to_matrix(filename):
                     line.append(str(unmerged_value(r, c, worksheet)))
                 matrix.append(line)
             matrixes.append(matrix)
-
 
         except:
             logging.info("An error occured while parsing sheet #{}".format(i + 1))
@@ -180,30 +183,25 @@ def convert_to_matrix(filename):
 def main():
     schedule = {}
 
-    # paths = ["parsing/sheets/ef_345_1.xls", "parsing/sheets/ef_345_2.xls"]
+    paths = ["parsing/sheets/ef_345_1.xls", "parsing/sheets/ef_345_2.xls"]
 
-    # for path in paths:
-    #     logging.info("\n\n\n------------------------------------------------\n")
-    #     logging.info(path)
-    #     parce_workbook_excel(schedule, Path(BASE_DIR / path), sector_type=SectorEF)
+    for path in paths:
+        logging.info("\n\n\n------------------------------------------------\n")
+        logging.info(path)
+        parce_workbook_excel(schedule, Path(BASE_DIR / path), sector_type=SectorEF)
 
-    # paths = [
-    #         "parsing/sheets/1kurs.xls",
-    #          "parsing/sheets/2kurs.xls",
-    #          "parsing/sheets/34kurs_fitr_1.xls",
-    #          "parsing/sheets/34kurs_fitr_2.xls",
-    #          "parsing/sheets/34kurs_fitr_3.xls",
-    #          "parsing/sheets/34kurs_fitr_4.xls",
-    #          "parsing/sheets/3kurs_fmmp_1.xls",
-    #          "parsing/sheets/3kurs_fmmp_2.xls",
-    #          "parsing/sheets/3kurs_fmmp_3.xls",
-    #          "parsing/sheets/3kurs_fmmp_4.xls",
-    #          "parsing/sheets/4kurs_fmmp_1.xls",
-    #          "parsing/sheets/4kurs_fmmp_2.xls",
-    #          "parsing/sheets/4kurs_fmmp_3.xls"]
-
-    paths = ["parsing/sheets/34kurs_fitr_1.xlsx",
-             "parsing/sheets/34kurs_fitr_2.xlsx"]
+    paths = [
+        "parsing/sheets/1kurs.xls",
+        "parsing/sheets/2kurs.xls",
+        "parsing/sheets/34kurs_fitr_1.xlsx",
+        "parsing/sheets/34kurs_fitr_2.xlsx",
+        "parsing/sheets/34kurs_fitr_3.xls",
+        "parsing/sheets/34kurs_fitr_4.xls",
+        "parsing/sheets/3kurs_fmmp_1.xls",
+        "parsing/sheets/3kurs_fmmp_2.xls",
+        "parsing/sheets/3kurs_fmmp_3.xls",
+        "parsing/sheets/4kurs_fmmp_1.xls",
+    ]
 
     for path in paths:
         logging.info("\n\n\n------------------------------------------------\n")
@@ -212,6 +210,6 @@ def main():
 
     save_json(schedule)
 
-if __name__ == '__main__':
-    main()
 
+if __name__ == "__main__":
+    main()
