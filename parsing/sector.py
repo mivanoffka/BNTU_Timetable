@@ -1,4 +1,7 @@
 import logging
+import re
+
+
 class Sector:
     list = None
 
@@ -14,10 +17,25 @@ class Sector:
     mode = ""
 
     def __init__(self, sector_list, mode="default"):
-        self.__processors = [self.process_0, self.process_1, self.process_2, self.process_3, self.process_4,
-                             self.process_5, self.process_6, self.process_7, self.process_8, self.process_9,
-                             self.process_10, self.process_11, self.process_12, self.process_13, self.process_14,
-                             self.process_15, self.process_error]
+        self.__processors = [
+            self.process_0,
+            self.process_1,
+            self.process_2,
+            self.process_3,
+            self.process_4,
+            self.process_5,
+            self.process_6,
+            self.process_7,
+            self.process_8,
+            self.process_9,
+            self.process_10,
+            self.process_11,
+            self.process_12,
+            self.process_13,
+            self.process_14,
+            self.process_15,
+            self.process_error,
+        ]
 
         w = len(sector_list[0])
         h = len(sector_list)
@@ -28,8 +46,10 @@ class Sector:
             sector_list = self.reformat_2x4(sector_list)
         elif w == 1 and h == 4:
             sector_list = self.reformat_1x4(sector_list)
-        elif w==6 and h == 4:
+        elif w == 6 and h == 4:
             sector_list = self.reformat_6x4(sector_list)
+        elif w == 4 and h == 5:
+            sector_list = self.reformat_4_5(sector_list)
         else:
             self.list = None
             return
@@ -50,38 +70,109 @@ class Sector:
     @staticmethod
     def reformat_2x4(sector_list):
         s = sector_list
-        new_list = [[s[0][0], s[0][0], s[0][1], s[0][1]],
-                    [s[1][0], s[1][0], s[1][1], s[1][1]],
-                    [s[2][0], s[2][0], s[2][1], s[2][1]],
-                    [s[3][0], s[3][0], s[3][1], s[3][1]]]
+        new_list = [
+            [s[0][0], s[0][0], s[0][1], s[0][1]],
+            [s[1][0], s[1][0], s[1][1], s[1][1]],
+            [s[2][0], s[2][0], s[2][1], s[2][1]],
+            [s[3][0], s[3][0], s[3][1], s[3][1]],
+        ]
         return new_list
 
     @staticmethod
     def reformat_6x4(sector_list):
         s = sector_list
-        new_list = [[s[0][0], s[0][0], s[0][3], s[0][3]],
-                    [s[1][0], s[1][0], s[1][3], s[1][3]],
-                    [s[2][0], s[2][0], s[2][3], s[2][3]],
-                    [s[3][0], s[3][0], s[3][3], s[3][3]]]
+        new_list = [
+            [s[0][0], s[0][0], s[0][3], s[0][3]],
+            [s[1][0], s[1][0], s[1][3], s[1][3]],
+            [s[2][0], s[2][0], s[2][3], s[2][3]],
+            [s[3][0], s[3][0], s[3][3], s[3][3]],
+        ]
         return new_list
 
     @staticmethod
     def reformat_2x2(sector_list):
         s = sector_list
-        new_list = [[s[0][0], s[0][0], s[0][1], s[0][1]],
-                    [s[0][0], s[0][0], s[0][1], s[0][1]],
-                    [s[2][0], s[2][0], s[2][1], s[2][1]],
-                    [s[2][0], s[2][0], s[2][1], s[2][1]]]
+        new_list = [
+            [s[0][0], s[0][0], s[0][1], s[0][1]],
+            [s[0][0], s[0][0], s[0][1], s[0][1]],
+            [s[2][0], s[2][0], s[2][1], s[2][1]],
+            [s[2][0], s[2][0], s[2][1], s[2][1]],
+        ]
         return new_list
 
     @staticmethod
     def reformat_1x4(sector_list):
         s = sector_list
-        new_list = [[s[0][0], s[0][0], s[0][0], s[0][0]],
-                    [s[1][0], s[1][0], s[1][0], s[1][0]],
-                    [s[2][0], s[2][0], s[2][0], s[2][0]],
-                    [s[3][0], s[3][0], s[3][0], s[3][0]]]
+        new_list = [
+            [s[0][0], s[0][0], s[0][0], s[0][0]],
+            [s[1][0], s[1][0], s[1][0], s[1][0]],
+            [s[2][0], s[2][0], s[2][0], s[2][0]],
+            [s[3][0], s[3][0], s[3][0], s[3][0]],
+        ]
         return new_list
+
+    @staticmethod
+    def reformat_4_5(sector_list):
+        labels = {
+            "лабораторное занятие": "[ Лаб. ]",
+            "лекционное занятие": "[ Лекц. ]",
+            "практическое занятие": "[ Практ. ]",
+        }
+        patterns = ("({})", "( {} )", "({} )", "( {})")
+
+        def censor(line):
+            for key in labels:
+                for pattern in patterns:
+                    line = line.replace(pattern.format(key), "")
+            return Sector.clean_spaces(line)
+
+        def split_after_second(sector_list):
+            for line in sector_list[2]:
+                for key in labels:
+                    for pattern in patterns:
+                        if pattern.format(key) in line:
+                            return True
+            return False
+
+        def unite(a, b):
+            if a != b:
+                return f"{a} {b}"
+            else:
+                return a
+
+        s = sector_list
+        new_list = []
+
+        if split_after_second(s):
+            new_list = [
+                [s[0][0], s[0][1], s[0][2], s[0][3]],
+                [s[1][0], s[1][1], s[1][2], s[1][3]],
+                [
+                    unite(s[2][0], s[3][0]),
+                    unite(s[2][1], s[3][1]),
+                    unite(s[2][2], s[3][2]),
+                    unite(s[2][3], s[3][3]),
+                ],
+                [s[4][0], s[4][1], s[4][2], s[4][3]],
+            ]
+        else:
+            new_list = [
+                [s[0][0], s[0][1], s[0][2], s[0][3]],
+                [
+                    unite(s[1][0], s[2][0]),
+                    unite(s[1][1], s[2][1]),
+                    unite(s[1][2], s[2][2]),
+                    unite(s[1][3], s[2][3]),
+                ],
+                [s[3][0], s[3][1], s[3][2], s[3][3]],
+                [s[4][0], s[4][1], s[4][2], s[4][3]],
+            ]
+
+        return [[censor(x) for x in sublist] for sublist in new_list]
+
+    @staticmethod
+    def clean_spaces(s: str) -> str:
+        return re.sub(r"\s+", " ", s.replace("_", "")).strip()
 
     def init2x4(self, sector_list):
         s = sector_list
@@ -123,12 +214,13 @@ class Sector:
             except:
                 pass
 
-
         words = txt.split()
         # logging.info(words)
 
         for word in words:
-            if word.isdigit() or (word[-1] in ('а', 'б', 'в', 'a') and word[:-1].isdigit()):
+            if word.isdigit() or (
+                word[-1] in ("а", "б", "в", "a") and word[:-1].isdigit()
+            ):
                 return True
 
         return False
@@ -140,13 +232,14 @@ class Sector:
         if x == y:
             return x
         else:
-            return x+y
+            return x + y
+
     def binary_sector(self):
         binary_sector = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
 
         for i in range(0, 4):
             for j in range(0, 4):
-                if self.list[i][j] != '_':
+                if self.list[i][j] != "_":
                     binary_sector[i][j] = 1
                 else:
                     binary_sector[i][j] = 0
@@ -155,15 +248,24 @@ class Sector:
 
     def is_time(txt: str):
         if len(txt) == 5:
-            return txt[0].isdigit() and txt[1].isdigit() and (txt[2] == "." or txt[2] == ":") \
-                and txt[3].isdigit() and txt[4].isdigit()
+            return (
+                txt[0].isdigit()
+                and txt[1].isdigit()
+                and (txt[2] == "." or txt[2] == ":")
+                and txt[3].isdigit()
+                and txt[4].isdigit()
+            )
 
         elif len(txt) == 4:
-            return txt[0].isdigit() and (txt[1] == "." or txt[1] == ":") and txt[2].isdigit() and txt[3].isdigit()
+            return (
+                txt[0].isdigit()
+                and (txt[1] == "." or txt[1] == ":")
+                and txt[2].isdigit()
+                and txt[3].isdigit()
+            )
 
         else:
             return False
-
 
     def process_0(self):
         return "<Пусто>"
@@ -189,8 +291,11 @@ class Sector:
         info = ""
 
         # 1.1
-        if (a == b and c == d and eq_ac and eq_bd) or (
-                l1 == l2 and l2 == l3 and l3 != l4) or "физическая культура" in a1:
+        if (
+            (a == b and c == d and eq_ac and eq_bd)
+            or (l1 == l2 and l2 == l3 and l3 != l4)
+            or "физическая культура" in a1
+        ):
             info += "\n      •  " + self.L(1, 4)
 
         # 1.2
@@ -200,7 +305,9 @@ class Sector:
             r41 = self.list[3][0]
             r42 = self.list[3][2]
 
-            if (self.has_nums(r21) and not self.has_nums(r22)) or (self.has_nums(r22) and not self.has_nums(r21)):
+            if (self.has_nums(r21) and not self.has_nums(r22)) or (
+                self.has_nums(r22) and not self.has_nums(r21)
+            ):
                 r1 = ""
                 r2 = ""
 
@@ -224,7 +331,6 @@ class Sector:
                 info += "\n   2-я неделя:"
                 info += "\n      •  " + "1-я подгруппа — " + c
                 info += "\n      •  " + "2-я подгруппа — " + d
-
 
         # 1.3
         elif a == b and c == d and not eq_ac and not eq_bd:
@@ -573,6 +679,7 @@ class Sector:
 
         for line in list:
             for el in line:
+                el = self.clean_spaces(el)
                 if el not in unique_list:
                     if el != "_":
                         unique_list.append(el)
@@ -581,7 +688,7 @@ class Sector:
         for item in unique_list:
             unique_str += str(item) + " "
 
-        return unique_str
+        return self.clean_spaces(unique_str)
 
     def process(self):
         if self.list is None:
@@ -590,7 +697,7 @@ class Sector:
         pattern = self.pattern
 
         if pattern in range(0, 16):
-            #return self.__processors[pattern]() + " (#{})".format(pattern)
+            # return self.__processors[pattern]() + " (#{})".format(pattern)
             return self.__processors[pattern]()
         else:
             return self.process_error()

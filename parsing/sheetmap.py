@@ -5,7 +5,7 @@ import copy
 from parsing.sector import Sector
 from parsing.sector_ef import SectorEF
 
-DAYS_LIST = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота']
+DAYS_LIST = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
 
 
 def unmerged_value(rowx, colx, thesheet):
@@ -29,11 +29,11 @@ def is_group_num(txt):
 def fix_str(txt):
     txt = str(txt)
     num = 0
-    new_txt = ''
-    prev = '   '
+    new_txt = ""
+    prev = "   "
 
     for c in txt:
-        will_do = not (c == ' ' and prev == ' ')
+        will_do = not (c == " " and prev == " ")
         if will_do:
             new_txt += c
         prev = c
@@ -83,9 +83,13 @@ class SheetMap:
         self.get_group_names()
         self.explore_times()
 
-        logging.info("\nY: from {}-{} to {}; X: {}, {}; ".format(self.start_y, self.begin_y, self.end_y, self.days_x, self.start_x))
-        logging.info(self.group_nums)
-        logging.info(self.times)
+        # logging.info(
+        #     "\nY: from {}-{} to {}; X: {}, {}; ".format(
+        #         self.start_y, self.begin_y, self.end_y, self.days_x, self.start_x
+        #     )
+        # )
+        # logging.info(self.group_nums)
+        # logging.info(self.times)
 
     def explore_horizontal(self):
         raw_sheet = self.raw_sheet
@@ -154,7 +158,11 @@ class SheetMap:
             txt1 = self.get(end, self.lessons_start_x - 2, raw_sheet).upper()
             txt2 = self.get(end, self.lessons_start_x - 1, raw_sheet).upper()
 
-            if (txt1 == "" and txt2 == "") or ("НАЧАЛЬНИК УМУ" in txt1 and "НАЧАЛЬНИК УМУ" in txt2) or (txt1 == "" and "НАЧАЛЬНИК УМУ" in txt2):
+            if (
+                (txt1 == "" and txt2 == "")
+                or ("НАЧАЛЬНИК УМУ" in txt1 and "НАЧАЛЬНИК УМУ" in txt2)
+                or (txt1 == "" and "НАЧАЛЬНИК УМУ" in txt2)
+            ):
                 break
 
             end += 1
@@ -269,7 +277,6 @@ class SheetMap:
             groups[group_num] = dx
             x += dx
 
-
         self.group_nums = groups
 
     def groups_distance(self, x, y):
@@ -312,21 +319,18 @@ class SheetMap:
 
                 value = fix_str(fix_sheet_value(self.get(i, j, self.raw_sheet)))
 
-                if pr:
-                    print(value)
-
-                if value != '':
+                if value != "":
                     if "Начальник УМУ" not in value:
-                        value = value.replace('\n', ' ')
+                        value = value.replace("\n", " ")
                         line.append(value)
                     else:
                         breaker = True
                         break
 
                 else:
-                    line.append('_')
+                    line.append("_")
             matrix.append(line)
-            #print(line)
+            # print(line)
         table = []
 
         index = -1
@@ -345,7 +349,6 @@ class SheetMap:
                         break
 
                     lesson.append(matrix[index])
-
 
                 day.append(lesson)
             table.append(day)
@@ -393,7 +396,9 @@ class SheetMap:
         if info == "<Пусто>" or info is None or info == "":
             return info
 
-        info = info.replace("ф и з и ч е с к а я к у л ь т у р а", "Физическая культура")
+        info = info.replace(
+            "ф и з и ч е с к а я к у л ь т у р а", "Физическая культура"
+        )
         info = info.replace("физическая культура", "Физическая культура")
         info = info.replace(" к ", ", корп. ")
         info = info.replace(" 8.30 ", " ❗ 8.30 ❗ ")
