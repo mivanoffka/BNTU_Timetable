@@ -19,35 +19,47 @@ from bot.ui.weekdays.keyboards import weekdays_keyboard
 from bot.ui.advertisement import advertise
 from datetime import datetime
 
+
 @dispatcher.callback_query_handler(text="set_morning")
 async def process_set_morning_command(call: types.CallbackQuery):
     data.users_db.update_time(call.from_user.id, "morning")
 
-    await display.update_display(call.from_user.id, "<b>☑️ Успешно настроено!</b> \n\nТеперь вы будете"
-                                                    " получать расписание на текущий день каждое утро.", home_keyboard)
+    await display.update_display(
+        call.from_user.id,
+        "<b>☑️ Успешно настроено!</b> \n\nТеперь вы будете"
+        " получать расписание на текущий день каждое утро.",
+        home_keyboard,
+    )
 
     await call.answer()
     await advertise(call.from_user.id)
 
 
 @dispatcher.callback_query_handler(text="set_evening")
-async def process_set_morning_command(call: types.CallbackQuery):
+async def process_set_evening_command(call: types.CallbackQuery):
     data.users_db.update_time(call.from_user.id, "evening")
 
-    await display.update_display(call.from_user.id, "<b>☑️ Успешно настроено!</b> \n\nТеперь вы будете"
-                                                    " получать расписание на следующий день каждый вечер.", home_keyboard)
+    await display.update_display(
+        call.from_user.id,
+        "<b>☑️ Успешно настроено!</b> \n\nТеперь вы будете"
+        " получать расписание на следующий день каждый вечер.",
+        home_keyboard,
+    )
 
     await call.answer()
     await advertise(call.from_user.id)
 
 
 @dispatcher.callback_query_handler(text="set_none")
-async def process_set_morning_command(call: types.CallbackQuery):
+async def process_set_none_command(call: types.CallbackQuery):
     data.users_db.update_time(call.from_user.id, "none")
 
-    await display.update_display(call.from_user.id, "<b>☑️ Успешно настроено!</b> \n\nВы"
-                                                    " больше не будете получать ежедневную рассылку расписания.", home_keyboard)
-
+    await display.update_display(
+        call.from_user.id,
+        "<b>☑️ Успешно настроено!</b> \n\nВы"
+        " больше не будете получать ежедневную рассылку расписания.",
+        home_keyboard,
+    )
 
     await call.answer()
     await advertise(call.from_user.id)
@@ -63,9 +75,9 @@ async def mailing_loop():
 
     logging.info("Mailing set to {} and {}".format(times_raw[0][0], times_raw[1][0]))
     for item in times_raw:
-        times.append(datetime.strptime(item[0], '%H:%M'))
+        times.append(datetime.strptime(item[0], "%H:%M"))
 
-    zero_time = datetime.strptime('23:55', '%H:%M')
+    zero_time = datetime.strptime("23:55", "%H:%M")
     times.append(zero_time)
 
     times_iteration = []
@@ -87,22 +99,28 @@ async def mailing_loop():
                 break
 
             if current_time >= t:
-                dt = abs(current_time.hour * 60 + current_time.minute - t.hour * 60 + t.minute)
+                dt = abs(
+                    current_time.hour * 60
+                    + current_time.minute
+                    - t.hour * 60
+                    + t.minute
+                )
                 if dt < 60 and last_time is not t:
                     last_time = t
 
                     if t != zero_time:
                         await mail(t)
                     else:
-                        await display.renew_display(ADMIN_ID, str(times_iteration),
-                                                    home_keyboard)
+                        await display.renew_display(
+                            ADMIN_ID, str(times_iteration), home_keyboard
+                        )
 
         await asyncio.sleep(60)
 
 
 async def mail(t):
     try:
-        t = datetime.strptime(t, '%H:%M')
+        t = datetime.strptime(t, "%H:%M")
     except:
         pass
 
@@ -113,7 +131,7 @@ async def mail(t):
         times.append(item[0])
 
     msg = "Рассылка... Пустая, правда"
-    t_str = t.strftime('%H:%M')
+    t_str = t.strftime("%H:%M")
     delta = times.index(t_str)
 
     new_lst = []
@@ -152,9 +170,3 @@ async def mail(t):
             pass
         except:
             pass
-
-
-
-
-
-
