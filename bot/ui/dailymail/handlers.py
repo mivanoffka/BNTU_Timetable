@@ -105,7 +105,7 @@ async def mailing_loop():
                     - t.hour * 60
                     + t.minute
                 )
-                if dt < 60 and last_time is not t:
+                if dt < 15 and last_time is not t:
                     last_time = t
 
                     if t != zero_time:
