@@ -266,24 +266,24 @@ def download_and_parse():
         download_unsafe(get_url_from_line_fitr(urls[3]), destination)
 
         download_unsafe(
-            "https://drive.google.com/uc?export=download&id=1UwvtDysgPIVdNyNIDi-f_zkqASJrnZLz",
+            "https://drive.google.com/uc?export=download&id=1Qu_OPcC8cm_uZNregRq5sI4ZOIwZ3XHs",
             Path(BASE_DIR / "parsing/sheets/3kurs_fmmp_1.xls"),
         )
 
         download_unsafe(
-            "https://drive.google.com/uc?export=download&id=1RNrL10SO_0EOpOSPgipw2iqx3iCidcPC",
+            "https://drive.google.com/uc?export=download&id=1qXdIRUrz7VYuONtY9HFs8M80FPYLO_69",
             Path(BASE_DIR / "parsing/sheets/3kurs_fmmp_2.xls"),
         )
 
         download_unsafe(
-            "https://drive.google.com/uc?export=download&id=1OZblTd85WnWxi6KYHk9kx3aE4A-R5F2W",
+            "https://drive.google.com/uc?export=download&id=1jIByEXm2BkwtVfLiyZmq6Rk6vXAaI3IW",
             Path(BASE_DIR / "parsing/sheets/3kurs_fmmp_3.xls"),
         )
 
-        download_unsafe(
-            "https://drive.google.com/uc?export=download&id=1k3Ff4AZJP6PL3TH3ilEHrbav369n4WTj",
-            Path(BASE_DIR / "parsing/sheets/4kurs_fmmp_1.xls"),
-        )
+        # download_unsafe(
+        #     "https://drive.google.com/uc?export=download&id=1k3Ff4AZJP6PL3TH3ilEHrbav369n4WTj",
+        #     Path(BASE_DIR / "parsing/sheets/4kurs_fmmp_1.xls"),
+        # )
 
         logging.info("Books are downloaded.")
         download_result = True

@@ -18,11 +18,11 @@ parsing_mode = "default"
 #       Schedule - совокупность всех timetable'ов
 
 
-def parce_workbook_google(out_schedule, filename):
+def parse_workbook_google(out_schedule, filename):
     pass
 
 
-def parce_workbook_excel(out_schedule, filename, sheets=None, sector_type=Sector):
+def parse_workbook_excel(out_schedule, filename, sheets=None, sector_type=Sector):
     workbook = None
     if ".xlsx" in str(filename):
         workbook = xlrd.open_workbook(filename)
@@ -188,7 +188,7 @@ def main():
     for path in paths:
         logging.info("\n\n\n------------------------------------------------\n")
         logging.info(path)
-        parce_workbook_excel(schedule, Path(BASE_DIR / path), sector_type=SectorEF)
+        parse_workbook_excel(schedule, Path(BASE_DIR / path), sector_type=SectorEF)
 
     paths = [
         "parsing/sheets/1kurs.xls",
@@ -200,13 +200,13 @@ def main():
         "parsing/sheets/3kurs_fmmp_1.xls",
         "parsing/sheets/3kurs_fmmp_2.xls",
         "parsing/sheets/3kurs_fmmp_3.xls",
-        "parsing/sheets/4kurs_fmmp_1.xls",
+        # "parsing/sheets/4kurs_fmmp_1.xls",
     ]
 
     for path in paths:
         logging.info("\n\n\n------------------------------------------------\n")
         logging.info(path)
-        parce_workbook_excel(schedule, Path(BASE_DIR / path))
+        parse_workbook_excel(schedule, Path(BASE_DIR / path))
 
     save_json(schedule)
 
