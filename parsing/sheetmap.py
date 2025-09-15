@@ -83,13 +83,13 @@ class SheetMap:
         self.get_group_names()
         self.explore_times()
 
-        # logging.info(
-        #     "\nY: from {}-{} to {}; X: {}, {}; ".format(
-        #         self.start_y, self.begin_y, self.end_y, self.days_x, self.start_x
-        #     )
-        # )
-        # logging.info(self.group_nums)
-        # logging.info(self.times)
+        logging.info(
+            "\nY: from {}-{} to {}; X: {}, {}; ".format(
+                self.start_y, self.begin_y, self.end_y, self.days_x, self.start_x
+            )
+        )
+        logging.info(self.group_nums)
+        logging.info(self.times)
 
     def explore_horizontal(self):
         raw_sheet = self.raw_sheet
@@ -160,8 +160,8 @@ class SheetMap:
 
             if (
                 (txt1 == "" and txt2 == "")
-                or ("НАЧАЛЬНИК УМУ" in txt1 and "НАЧАЛЬНИК УМУ" in txt2)
-                or (txt1 == "" and "НАЧАЛЬНИК УМУ" in txt2)
+                or ("НАЧАЛЬНИК УМУ" in txt1 and "НАЧАЛЬНИК УМУ" in txt2) or ("ЗАМ.НАЧАЛЬНИКА УМУ" in txt1 and "ЗАМ.НАЧАЛЬНИКА УМУ" in txt2)
+                or (txt1 == "" and "НАЧАЛЬНИК УМУ" in txt2) or (txt1 == "" and "ЗАМ.НАЧАЛЬНИКА УМУ" in txt2)
             ):
                 break
 

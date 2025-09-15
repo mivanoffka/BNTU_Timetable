@@ -13,7 +13,6 @@ import time
 import logging
 import re
 
-
 file_index = 0
 
 
@@ -71,44 +70,32 @@ def download(url, dest):
 
 
 def find_lines_with_url_ef():
-    ref = "https://bntu.by/faculties/ef/pages/raspisanie-zanyatij-dnevnoe-otdelenie"
+    ref = "https://bntu.by/faculties/ef/pages/raspisanie-zanyatij-osen-2025-2026-3-5-kurs"
 
     html = requests.get(ref, verify=False)
     html = html.text
 
     html = html.splitlines()
 
-    keys = [">Скачать</a>", 'title="Скачать"']
+    keys = ('<p>Теплоэнергетика и теплотехника<a href=', 'p>Электроэнергетика и электротехника&nbsp; <a href=')
     urls = []
 
     for key in keys:
         for line in html:
             if key in line:
-                urls.append(line)
+                url = re.search(r'href="([^"]+)"', line).group(1)
+
+                urls.append(url)
                 break
 
-    new_urls = []
+    logging.info("\n\n\n")
+    logging.info(urls)
+    logging.info("\n\n\n")
 
-    new_url_1 = urls[0]
-    new_url_1 = new_url_1.replace(
-        '<td style="width: 26.343%; height: 22px; text-align: center;"><strong><a href="',
-        "",
-    )
-    new_url_1 = new_url_1.replace('">Скачать</a></strong></td>', "")
-    new_urls.append(new_url_1)
-
-    new_url_2 = urls[1]
-    new_url_2 = new_url_2.replace(
-        '<td style="width: 26.343%; height: 22px; text-align: center;"><strong><a href="',
-        "",
-    )
-    new_url_2 = new_url_2.replace('" title="Скачать">Скачать</a></strong></td>', "")
-    new_urls.append(new_url_2)
-
-    return new_urls
+    return urls
 
 
-def find_lines_with_urld_fitr():
+def find_lines_with_urls_fitr():
     ref = "https://bntu.by/faculties/fitr/pages/raspisanie-zanyatij-i-ekzamenov"
 
     html = requests.get(ref, verify=False)
@@ -117,11 +104,10 @@ def find_lines_with_urld_fitr():
     html = html.splitlines()
 
     keys = (
-        "Расписание учебных занятий студентов 3-го курса специальности <strong>1-40 01 01</strong> дневной формы получения образования с 27 января по 17 мая 2024-2025 учебного года</span></a></p>",
-        "Расписание учебных занятий студентов 3-го курса специальности <strong>1-40 05 01</strong> дневной формы получения образования с 27 января по 17 мая 2024-2025 учебного года</span></a></p>",
-        "Расписание учебных занятий студентов 3 и 4-го курсов специальности <strong>1-53 01 01 и 1-53 01 06</strong> дневной формы получения образования&nbsp;</span></a></p>",
-        "Расписание учебных занятий студентов 3 и 4-го курсов специальности <strong>1-53 01 05</strong> дневной формы получения образования с 10 февраля по 7 июня 2024-2025 учебного года</span></a></p>",
-    )
+        'Расписание учебных занятий студентов 3-го курса специальности <strong>6-05-0612-01 "Программная инженерия"</strong>&nbsp; и 4-го курса специальности <strong>1-40 01 01 "Программное обеспечение информационных технологий"</strong> дневной формы получения образования с 1 сентября 2025-2026 учебного года</span></a></p>',
+        'Расписание учебных занятий студентов 3-го курса специальности <strong>6-05-0611-01 профилизация "Информационные системы и технологии в проектировании и производстве"</strong>&nbsp; и 4-го курса специальности <strong>1-40 05 01 "Информационные системы и технологии (по направлениям)"</strong> дневной формы получения образования с 1 сентября 2025-2026 учебного года</span></a></p>',
+        'Расписание учебных занятий студентов 3-го&nbsp; курса специальности <strong>6-05-0713-04 профилизация "Автоматизированные электроприводы" </strong>и 4-го курса специальности<strong> 1-53 01 05 "Автоматизированные электроприводы"</strong> дневной формы получения образования с 1 сентября&nbsp; 2025-2026 учебного года</span></a></p>',
+        'Расписание учебных занятий студентов 3-го курса специальности <strong>6-05-0713-04 "Автоматизация технологических процессов и производств", </strong>специальности<strong> 6-05-0713-05 "Робототехнические системы"</strong>&nbsp;и 4-го курса специальности <strong>1-53 01 01 "Автоматизация технологических процессов и производств (по направлениям)", </strong>специальности<strong> 1-53 01 06 "Промышленные роботы и робототехнические комплексы" </strong>дневной формы получения образования с 1 сентября 2025-2026 учебного года</span></a></p>',)
     urls = []
 
     for key in keys:
@@ -251,39 +237,54 @@ def download_and_parse():
         destination = Path(BASE_DIR / "parsing/sheets/2kurs.xls")
         download_unsafe(ref_2, destination)
 
-        urls = find_lines_with_urld_fitr()
+        urls = find_lines_with_urls_fitr()
 
-        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_1.xlsx")
+        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_1.xls")
         download_unsafe(get_url_from_line_fitr(urls[0]), destination)
 
-        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_2.xlsx")
+        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_2.xls")
         download_unsafe(get_url_from_line_fitr(urls[1]), destination)
 
         destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_3.xls")
         download_unsafe(get_url_from_line_fitr(urls[2]), destination)
 
-        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_4.xls")
+        destination = Path(BASE_DIR / "parsing/sheets/34kurs_fitr_4xls")
         download_unsafe(get_url_from_line_fitr(urls[3]), destination)
 
         download_unsafe(
-            "https://drive.google.com/uc?export=download&id=1Qu_OPcC8cm_uZNregRq5sI4ZOIwZ3XHs",
-            Path(BASE_DIR / "parsing/sheets/3kurs_fmmp_1.xls"),
+            "https://drive.google.com/uc?export=download&id=1PRJD-0ATmwSMtqX0mftqAAjiXMks4WOL",
+            Path(BASE_DIR / "parsing/sheets/34kurs_fmmp_1.xls"),
         )
 
         download_unsafe(
-            "https://drive.google.com/uc?export=download&id=1qXdIRUrz7VYuONtY9HFs8M80FPYLO_69",
-            Path(BASE_DIR / "parsing/sheets/3kurs_fmmp_2.xls"),
+            "https://drive.google.com/uc?export=download&id=1WotmB9B5mhItw8WJhKZzM35LVnub1RQv",
+            Path(BASE_DIR / "parsing/sheets/34kurs_fmmp_2.xls"),
         )
 
         download_unsafe(
-            "https://drive.google.com/uc?export=download&id=1jIByEXm2BkwtVfLiyZmq6Rk6vXAaI3IW",
-            Path(BASE_DIR / "parsing/sheets/3kurs_fmmp_3.xls"),
+            "https://drive.google.com/uc?export=download&id=105ee2OgXHu8Ha4N5Xn6O_-rTqMNaaOOg",
+            Path(BASE_DIR / "parsing/sheets/34kurs_fmmp_3.xls"),
         )
 
-        # download_unsafe(
-        #     "https://drive.google.com/uc?export=download&id=1k3Ff4AZJP6PL3TH3ilEHrbav369n4WTj",
-        #     Path(BASE_DIR / "parsing/sheets/4kurs_fmmp_1.xls"),
-        # )
+        download_unsafe(
+            "https://drive.google.com/uc?export=download&id=1CarCySkdVdcLs3LbtRj8hvHRSEq4o_Ss",
+            Path(BASE_DIR / "parsing/sheets/34kurs_fmmp_4.xls"),
+        )
+
+        download_unsafe(
+            "https://drive.google.com/uc?export=download&id=1mXvmRu4zc9LoDlezI8f3aTyStwnVCmkL",
+            Path(BASE_DIR / "parsing/sheets/34kurs_fmmp_5.xls"),
+        )
+
+        download_unsafe(
+            "https://drive.google.com/uc?export=download&id=1NoZyUbG2UThBJ69O8G566JdsDrJvSqOP",
+            Path(BASE_DIR / "parsing/sheets/34kurs_fmmp_6.xls"),
+        )
+
+        download_unsafe(
+            "https://drive.google.com/uc?export=download&id=1wKlTfI6EQGf3kNz-9rItMsKitONzNM2Y",
+            Path(BASE_DIR / "parsing/sheets/34kurs_fmmp_7.xls"),
+        )
 
         logging.info("Books are downloaded.")
         download_result = True

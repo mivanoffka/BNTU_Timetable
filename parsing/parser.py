@@ -37,7 +37,6 @@ def parse_workbook_excel(out_schedule, filename, sheets=None, sector_type=Sector
 
     for s in sheets:
         # parce_worksheet(workbook, s, schedule)
-
         try:
             parce_worksheet_excel(workbook, s, schedule, sector_type=sector_type)
         except Exception as e:
@@ -56,6 +55,7 @@ def parce_worksheet_excel(workbook, index, out_schedule, sector_type=Sector):
 
         mp = SheetMap(worksheet, sector_type=sector_type)
         local_schedule = mp.parse()
+
         for key in local_schedule:
             out_schedule[key] = local_schedule[key]
 
@@ -193,14 +193,16 @@ def main():
     paths = [
         "parsing/sheets/1kurs.xls",
         "parsing/sheets/2kurs.xls",
-        "parsing/sheets/34kurs_fitr_1.xlsx",
-        "parsing/sheets/34kurs_fitr_2.xlsx",
+        "parsing/sheets/34kurs_fitr_1.xls",
+        "parsing/sheets/34kurs_fitr_2.xls",
         "parsing/sheets/34kurs_fitr_3.xls",
-        "parsing/sheets/34kurs_fitr_4.xls",
-        "parsing/sheets/3kurs_fmmp_1.xls",
-        "parsing/sheets/3kurs_fmmp_2.xls",
-        "parsing/sheets/3kurs_fmmp_3.xls",
-        # "parsing/sheets/4kurs_fmmp_1.xls",
+        "parsing/sheets/34kurs_fmmp_1.xls",
+        "parsing/sheets/34kurs_fmmp_2.xls",
+        "parsing/sheets/34kurs_fmmp_3.xls",
+        "parsing/sheets/34kurs_fmmp_4.xls",
+        "parsing/sheets/34kurs_fmmp_5.xls",
+        "parsing/sheets/34kurs_fmmp_6.xls",
+        "parsing/sheets/34kurs_fmmp_7.xls",
     ]
 
     for path in paths:
