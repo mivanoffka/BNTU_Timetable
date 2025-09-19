@@ -116,7 +116,6 @@ class UsersDB:
 
             info = UserInfo(query_result[0], query_result[1], query_result[2], query_result[3], t)
         except:
-            raise
             pass
 
         return info
