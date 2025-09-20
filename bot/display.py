@@ -53,6 +53,8 @@ async def send_symbol_delay(chat_id, message_id, keyboard):
 async def update_display(id, text, keyboard, animation=True, no_menu=False):
     user_info = data.users_db.get_info(id)
 
+    if user_info is None:
+        data.users_db.insert(id, None, None)
     if user_info.message is None:
         await send_display(id, text, keyboard, animation)
     else:

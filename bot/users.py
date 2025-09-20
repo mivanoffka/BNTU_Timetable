@@ -38,6 +38,9 @@ class UsersDB:
         if name is None:
             name = "NULL"
 
+        if group is None:
+            group = "NULL"
+
         exists = self.execute("SELECT EXISTS(SELECT * FROM {} where id = {})".format(TABLE_NAME, uid))[0][0]
 
         if not exists:
